@@ -1,8 +1,8 @@
 # PWP SPRING 2019
-# PROJECT NAME
+# Movie API
 # Group information
-* Student 1. Name and email
-* Student 2. Name and email
-* Student 3. Name and email
+* Student 1. Jaakko Seppännen jaakko.seppanen@student.oulu.fi
+* Student 2. Markus Savusalo markus.savusalo@windowslive.com
+* Student 3. Tuomas Savusalo tuomas.savusalo@windowslive.com
 
 
