@@ -15,23 +15,40 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-
-urlpatterns = [
-    path('admin/', admin.site.urls),
-]
-
-from django.urls import include, path
-from rest_framework import routers
+from rest_framework.urlpatterns import format_suffix_patterns
+from django.conf.urls import include
 from movieapi.app import views
 
-router = routers.DefaultRouter()
-router.register(r'users', views.UserViewSet)
-router.register(r'groups', views.GroupViewSet)
-router.register(r'movies', views.MovieViewSet)
+"""
+TODO:
+- Comment
+- Add all the views
+"""
 
 # Wire up our API using automatic URL routing.
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
-    path('', include(router.urls)),
-    path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
+    path('admin/', admin.site.urls),
+    path('', views.api_root),
+    path('reviews/',
+        views.ReviewList.as_view(),
+        name='review-list'),
+    path('reviews/<int:pk>',
+        views.ReviewDetail.as_view(),
+        name='review-detail'),
+    path('movies/',
+        views.MovieList.as_view(),
+        name='movie-list'),
+    path('movies/<int:pk>',
+        views.MovieDetail.as_view(),
+        name='movie-detail'),
+    path('users/',
+        views.UserList.as_view(),
+        name='user-list'),
+    path('users/<int:pk>/',
+        views.UserDetail.as_view(),
+        name='user-detail'),
+    path('api-auth/', include('rest_framework.urls')),
 ]
+
+urlpatterns = format_suffix_patterns(urlpatterns)
