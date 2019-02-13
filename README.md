@@ -48,3 +48,25 @@ To run the test run the following command (in the main Movie-API folder):
 ```python
 python manage.py test
 ```
+## Main files
+Location of ORM models (code) in project:
+```
+Movie-API  
+└───movieapi
+    └───app
+        │   models.py
+```        
+
+All other main files containing our code (updated 13.02.):
+```
+Movie-API  
+└───movieapi
+    │   settings.py
+    │   urls.py
+    └───app
+        │   models.py
+        │   permissions.py
+        │   serializers.py
+        │   tests.py
+        │   views.py
+```    
