@@ -10,14 +10,14 @@ TODO:
 """
 
 class UserSerializer(serializers.HyperlinkedModelSerializer):
-    #Because 'reviews' is a reverse relationship on the User model, it will not be included by default when using the ModelSerializer class, so we needed to add an explicit field for it.
+    # Because 'reviews' is a reverse relationship on the User model, it will not be included by default when using the ModelSerializer class, so we needed to add an explicit field for it.
     reviews = serializers.HyperlinkedRelatedField(many=True, view_name='review-detail', read_only=True)
     comments = serializers.HyperlinkedRelatedField(many=True, view_name='comment-detail', read_only=True)
-    added_actors = serializers.HyperlinkedRelatedField(many=True, view_name='actor-detail', read_only=True)
+    actors = serializers.HyperlinkedRelatedField(many=True, view_name='actor-detail', read_only=True)
 
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'groups', 'reviews', 'comments', 'added_actors')
+        fields = ('url', 'username', 'email', 'groups', 'reviews', 'comments', 'actors')
 
 
 class GroupSerializer(serializers.HyperlinkedModelSerializer):
