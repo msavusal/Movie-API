@@ -20,7 +20,7 @@ pip install djangorestframework==3.9.1
 
 ## Database and version utilized
 Database used is SQLite. In this project we use sqlite3 module, since it provides a SQL interface compliant with the DB-API 2.0 specification as described by [PEP 249](https://www.python.org/dev/peps/pep-0249/).
-## Instructions how to setup the database framework and external libraries
+## How to setup the database framework and external libraries
 To set up the database for the first time **two** steps are required (in the main Movie-API folder):
 ```python
 python manage.py makemigrations
@@ -37,13 +37,13 @@ python manage.py runserver
 ```
 This starts a local server **localhost:8000**
 
-## Instructions on how to setup and populate the database.
+## How to setup and populate the database
 To populate database run the following command (in the main Movie-API folder):
 ```python
 python manage.py loaddata db.json
 ```
 This uses a json dump file to populate the database. Howerver, an already populated database file is already included in the repository.
-## Instruction on how to run the tests on the database.
+## How to run the tests
 To run the test run the following command (in the main Movie-API folder):
 ```python
 python manage.py test
