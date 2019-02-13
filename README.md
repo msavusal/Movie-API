@@ -6,3 +6,33 @@
 * Student 3. Tuomas Savusalo tuomas.savusalo@windowslive.com
 
 
+## All dependencies (external libraries) and how to install them
+This project uses Django and Django REST Framework:
+```
+pip install django
+pip install djangorestframework
+```
+
+## Database and version utilized
+Database used is SQLite. In this project we use sqlite3 module, since it provides a SQL interface compliant with the DB-API 2.0 specification as described by [PEP 249](https://www.python.org/dev/peps/pep-0249/).
+## Instructions how to setup the database framework and external libraries
+To set up the database **two** steps are required (in the main Movie-API folder):
+```python
+python manage.py makemigrations
+```
+Which is responsible for creating new migrations based on the changes made to the ORM models.
+```python
+python manage.py migrate
+```
+Which is responsible for applying and unapplying migrations, aka. the actual changes to the DB.
+## Instructions on how to setup and populate the database.
+To populate database run the following command (in the main Movie-API folder):
+```python
+python manage.py loaddata db.json
+```
+This uses a json dump file to populate the database.
+## Instruction on how to run the tests of your database.
+To run the test run the following command (in the main Movie-API folder):
+```python
+python manage.py test
+```
