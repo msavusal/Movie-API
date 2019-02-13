@@ -7,10 +7,15 @@
 
 
 ## All dependencies (external libraries) and how to install them
-This project uses Django and Django REST Framework:
+This project uses Django and Django REST Framework.
+To install use *requirements.txt*:
 ```
-pip install django
-pip install djangorestframework
+pip install -r requirements.txt
+```
+*Alternatively* you can manually install the two packages:
+```
+pip install django==2.1.5
+pip install djangorestframework==3.9.1
 ```
 
 ## Database and version utilized
@@ -31,7 +36,7 @@ To populate database run the following command (in the main Movie-API folder):
 python manage.py loaddata db.json
 ```
 This uses a json dump file to populate the database.
-## Instruction on how to run the tests of your database.
+## Instruction on how to run the tests on the database.
 To run the test run the following command (in the main Movie-API folder):
 ```python
 python manage.py test
