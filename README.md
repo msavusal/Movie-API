@@ -19,6 +19,8 @@ pip install djangorestframework==3.9.1
 ```
 
 ## Database and version utilized
+Name of the database file is *db.sqlite3* and can be found in the root of the project.
+
 Database used is SQLite. In this project we use sqlite3 module, since it provides a SQL interface compliant with the DB-API 2.0 specification as described by [PEP 249](https://www.python.org/dev/peps/pep-0249/).
 ## How to setup the database framework and external libraries
 To set up the database for the first time **two** steps are required (in the main Movie-API folder):
