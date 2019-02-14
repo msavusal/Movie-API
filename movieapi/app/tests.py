@@ -1,25 +1,21 @@
 from django.test import TestCase
 from django.urls import reverse
+from django.http import JsonResponse
+from rest_framework.test import APIClient, APITestCase, APIRequestFactory
 from rest_framework import status
-from rest_framework.test import APITestCase
 from django.contrib.auth.models import User, Group
-from movieapi.app.models import Movie, Review, Comment, Actor, MovieActor, Trailer, Category, MovieCategory
+from movieapi.app.models import Movie, Review, Comment, Actor, Trailer, Category
+from movieapi.app import views
+
 
 """
 Test case for Movie model
 """
 class MovieTestCase(APITestCase):
-    print("==============================================")
-    print("Tests for Movie model")
-    print("==============================================")
-
     url = reverse('movie-list')
 
-    def setUp(self):
-        print("\n")
-
     # Test object creation
-    def test_object_creation(self):
+    def test_1_object_creation(self):
         print("Testing object creation for object Movie")
         Movie.objects.create(id=1, title="TestMovie", length="01:45:44", rating="5")
         testMovie = Movie.objects.get(title="TestMovie")
@@ -31,7 +27,7 @@ class MovieTestCase(APITestCase):
             print("FAILED")
 
     # Test GET method
-    def test_get(self):
+    def test_2_get(self):
         print("Testing GET method for model Movie")
 
         response = self.client.get(self.url, format='json')
@@ -44,47 +40,52 @@ class MovieTestCase(APITestCase):
             print("FAILED")
 
     # Test POST method
-    def test_post(self):
+    def test_3_post(self):
         print("Testing POST method for model Movie")
 
         data = {
-                "title":"TestMovie",
-                "length":"01:45:44",
-                "rating":"5",
-                "related_categories": [],
-                "related_actors": []
+            "title":"TestMovie",
+            "length":"01:45:44",
+            "rating":"5",
+            "related_categories": [],
+            "related_actors": []
         }
 
         response = self.client.post(self.url, data, format='json')
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertEqual(Movie.objects.count(), 1)
+            self.assertEqual(Movie.objects.get().title, 'TestMovie')
+            print("SUCCESS")
+        except:
+            print("FAILED")
 
 
 """
 Test case for Review model
 """
 class ReviewTestCase(APITestCase):
-    print("==============================================")
-    print("Tests for Review model")
-    print("==============================================")
-    
-    url = reverse('movie-list')
+    url = reverse('review-list')
 
     def setUp(self):
-        print("\n")
-        
+        self.factory = APIRequestFactory()
+        self.user = User.objects.create_user(username='test_admin', email='test_admin@…', password='password')
+
     # Test object creation
-    def test_object_creation(self):
+    def test_1_object_creation(self):
         print("Testing object creation for object Review")
-        Review.objects.create(text="Excellent movie.", rating=5)
-        testReview = Review.objects.get(title="TestReview")
-        
+        Review.objects.create(text="Excellent movie.", rating=5, related_movie_id=1, related_user_id=1)
+        testReview = Review.objects.get(text="Excellent movie.")
+
         try:
-            self.assertEqual(testReview.title, 'TestReview')
+            self.assertEqual(testReview.text, 'Excellent movie.')
             print("SUCCESS")
         except:
             print("FAILED")
-            
+
     # Test GET method
-    def test_get(self):
+    def test_2_get(self):
         print("Testing GET method for model Review")
 
         response = self.client.get(self.url, format='json')
@@ -97,46 +98,57 @@ class ReviewTestCase(APITestCase):
             print("FAILED")
 
     # Test POST method
-    def test_post(self):
+    def test_3_post(self):
         print("Testing POST method for model Review")
 
         data = {
-                "title":"TestReview",
-                "text":"Excellent movie.",
-                "rating":"5",
-                "related_user": [],
-                "related_movie": []
+            "text":"Excellent movie.",
+            "rating":5,
+            "related_movie_id":1,
+            "related_actor_id":1
         }
 
-        response = self.client.post(self.url, data, format='json')
+        # Create requrest
+        request = self.factory.post(self.url, data, format="json")
+
+        # Add user to request session
+        request.user = self.user
+
+        # Get data from view with the user tied to the session
+        response = views.ReviewList.as_view()(request)
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertEqual(Review.objects.count(), 1)
+            self.assertEqual(Review.objects.get().text, 'Excellent movie.')
+            print("SUCCESS")
+        except:
+            print("FAILED")
 
 
 """
 Test case for Comment model
 """
 class CommentTestCase(APITestCase):
-    print("==============================================")
-    print("Tests for Comment model")
-    print("==============================================")
-
-    url = reverse('movie-list')
+    url = reverse('comment-list')
 
     def setUp(self):
-        print("\n")
+        self.factory = APIRequestFactory()
+        self.user = User.objects.create_user(username='test_admin', email='test_admin@…', password='password')
 
     # Test object creation
-    def test_object_creation(self):
+    def test_1_object_creation(self):
         print("Testing object creation for object Comment")
-        Comment.objects.create(text="It was okay.", timestamp="00:00:00")
-        testComment = Comment.objects.get(title="TestComment")
+        Comment.objects.create(text="It was okay.", timestamp="00:00:00", related_movie_id=1, related_user_id=1)
+        testComment = Comment.objects.get(text="It was okay.")
         try:
-            self.assertEqual(testComment.title, 'TestComment')
+            self.assertEqual(testComment.text, 'It was okay.')
             print("SUCCESS")
         except:
             print("FAILED")
-            
+
     # Test GET method
-    def test_get(self):
+    def test_2_get(self):
         print("Testing GET method for model Comment")
 
         response = self.client.get(self.url, format='json')
@@ -149,47 +161,61 @@ class CommentTestCase(APITestCase):
             print("FAILED")
 
     # Test POST method
-    def test_post(self):
+    def test_3_post(self):
         print("Testing POST method for model Comment")
 
         data = {
-                "title":"TestComment",
-                "text":"It was okay.",
-                "timestamp":"00:00:00",
-                "related_user": [],
-                "related_movie": []
+            "title":"TestComment",
+            "text":"It was okay.",
+            "timestamp":"00:00:00",
+            "related_user": 1,
+            "related_movie": 1
         }
 
-        response = self.client.post(self.url, data, format='json')
+        # Create requrest
+        request = self.factory.post(self.url, data, format="json")
+
+        # Add user to request session
+        request.user = self.user
+
+        # Get data from view with the user tied to the session
+        response = views.CommentList.as_view()(request)
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertEqual(Comment.objects.count(), 1)
+            self.assertEqual(Comment.objects.get().text, 'It was okay.')
+            print("SUCCESS")
+        except:
+            print("FAILED")
 
 
 """
 Test case for Actor model
 """
 class ActorTestCase(APITestCase):
-    print("==============================================")
-    print("Tests for Actor model")
-    print("==============================================")
+    url = reverse('actor-list')
 
-    url = reverse('movie-list')
+    user = User.objects.get(id=1)
 
     def setUp(self):
-        print("\n")
+        self.factory = APIRequestFactory()
+        self.user = User.objects.create_user(username='test_admin', email='test_admin@…', password='password')
 
     # Test object creation
-    def test_object_creation(self):
+    def test_1_object_creation(self):
         print("Testing object creation for object Actor")
-        Actor.objects.create(firstname="John", lastname= "Doe")
-        testActor = Actor.objects.get(title="TestActor")
-        
+        Actor.objects.create(firstname="John", lastname= "Doe", related_user=self.user)
+        testActor = Actor.objects.get(firstname="John")
+
         try:
-            self.assertEqual(testActor.title, 'TestActor')
+            self.assertEqual(testActor.firstname, 'John')
             print("SUCCESS")
         except:
             print("FAILED")
-            
+
     # Test GET method
-    def test_get(self):
+    def test_2_get(self):
         print("Testing GET method for model Actor")
 
         response = self.client.get(self.url, format='json')
@@ -202,45 +228,56 @@ class ActorTestCase(APITestCase):
             print("FAILED")
 
     # Test POST method
-    def test_post(self):
+    def test_3_post(self):
         print("Testing POST method for model Actor")
 
         data = {
-                "firstname":"John",
-                "lastname":"Doe",
-                "related_user": [],
+            "firstname":"John",
+            "lastname":"Doe",
         }
 
-        response = self.client.post(self.url, data, format='json')
+        # Create requrest
+        request = self.factory.post(self.url, data, format="json")
+
+        # Add user to request session
+        request.user = self.user
+
+        # Get data from view with the user tied to the session
+        response = views.ActorList.as_view()(request)
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertEqual(Actor.objects.count(), 1)
+            self.assertEqual(Actor.objects.get().firstname, 'John')
+            print("SUCCESS")
+        except:
+            print("FAILED")
 
 
 """
 Test case for Trailer model
 """
 class TrailerTestCase(APITestCase):
-    print("==============================================")
-    print("Tests for Trailer model")
-    print("==============================================")
-
-    url = reverse('movie-list')
+    url = reverse('trailer-list')
 
     def setUp(self):
-        print("\n")
+        self.factory = APIRequestFactory()
+        self.user = User.objects.create_user(username='test_admin', email='test_admin@…', password='password')
 
     # Test object creation
-    def test_object_creation(self):
+    def test_1_object_creation(self):
         print("Testing object creation for object Trailer")
-        Trailer.objects.create(video_path="VIDEO_PATH")
-        testTrailer = Trailer.objects.get(title="TestTrailer")
-        
+        Trailer.objects.create(video_path="VIDEO_PATH", related_movie_id=1, related_user_id=1)
+        testTrailer = Trailer.objects.get(video_path="VIDEO_PATH")
+
         try:
-            self.assertEqual(testTrailer.title, 'TestTrailer')
+            self.assertEqual(testTrailer.video_path, 'VIDEO_PATH')
             print("SUCCESS")
         except:
             print("FAILED")
-            
+
     # Test GET method
-    def test_get(self):
+    def test_2_get(self):
         print("Testing GET method for model Trailer")
 
         response = self.client.get(self.url, format='json')
@@ -253,45 +290,57 @@ class TrailerTestCase(APITestCase):
             print("FAILED")
 
     # Test POST method
-    def test_post(self):
+    def test_3_post(self):
         print("Testing POST method for model Trailer")
 
         data = {
-                "video_path":"VIDEO_PATH",
-                "related_user": [],
-                "related_movie": []
+            "video_path":"VIDEO_PATH",
+            "related_user": 1,
+            "related_movie": 1
         }
 
-        response = self.client.post(self.url, data, format='json')
+        # Create requrest
+        request = self.factory.post(self.url, data, format="json")
 
-        
+        # Add user to request session
+        request.user = self.user
+
+        # Get data from view with the user tied to the session
+        response = views.ActorList.as_view()(request)
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertEqual(Trailer.objects.count(), 1)
+            self.assertEqual(Trailer.objects.get().video_path, 'VIDEO_PATH')
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+
 """
 Test case for Category model
 """
 class CategoryTestCase(APITestCase):
-    print("==============================================")
-    print("Tests for Category model")
-    print("==============================================")
-
-    url = reverse('movie-list')
+    url = reverse('category-list')
 
     def setUp(self):
-        print("\n")
+        self.factory = APIRequestFactory()
+        self.user = User.objects.create_user(username='test_admin', email='test_admin@…', password='password')
 
     # Test object creation
-    def test_object_creation(self):
+    def test_1_object_creation(self):
         print("Testing object creation for object Category")
-        Category.objects.create(name="Action")
-        testCategory = Category.objects.get(title="TestCategory")
+        Category.objects.create(name="TestCategory")
+        testCategory = Category.objects.get(name="TestCategory")
 
         try:
-            self.assertEqual(testCategory.title, 'TestCategory')
+            self.assertEqual(testCategory.name, 'TestCategory')
             print("SUCCESS")
         except:
             print("FAILED")
-            
+
     # Test GET method
-    def test_get(self):
+    def test_2_get(self):
         print("Testing GET method for model Category")
 
         response = self.client.get(self.url, format='json')
@@ -304,11 +353,19 @@ class CategoryTestCase(APITestCase):
             print("FAILED")
 
     # Test POST method
-    def test_post(self):
+    def test_3_post(self):
         print("Testing POST method for model Category")
 
         data = {
-                "name":"Action"
+            "name":"Action"
         }
 
         response = self.client.post(self.url, data, format='json')
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+            self.assertEqual(Category.objects.count(), 1)
+            self.assertEqual(Category.objects.get().name, 'Action')
+            print("SUCCESS")
+        except:
+            print("FAILED")
