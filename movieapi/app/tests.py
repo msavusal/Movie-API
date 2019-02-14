@@ -19,7 +19,7 @@ Test case for Review model
 """
 class ReviewTestCase(TestCase):
     def setUp(self):
-        Review.objects.create(title="TestReview", length="00:05:33", rating="3")
+        Review.objects.create(text="Excellent movie.", rating=5)
 
     def test_object_creation(self):
         print("Testing object creation for object Review")
@@ -31,7 +31,7 @@ Test case for Comment model
 """
 class CommentTestCase(TestCase):
     def setUp(self):
-        Comment.objects.create(title="TestComment", length=21)
+        Comment.objects.create(text="It was okay.", timestamp="00:00:00")
 
     def test_object_creation(self):
         print("Testing object creation for object Comment")
@@ -43,33 +43,36 @@ Test case for Actor model
 """
 class ActorTestCase(TestCase):
     def setUp(self):
-        Actor.objects.create(title="TestActor", name="John Doe", age=27)
+        Actor.objects.create(firstname="John", lastname= "Doe")
 
     def test_object_creation(self):
         print("Testing object creation for object Actor")
         testActor = Actor.objects.get(title="TestActor")
         self.assertEqual(testActor.title, 'TestActor')
-        
-"""
-Test case for MovieActor model
-"""
-class MovieActorTestCase(TestCase):
-    def setUp(self):
-        MovieActor.objects.create(title="TestMovieActor", name="John Doe", age=27)
 
-    def test_object_creation(self):
-        print("Testing object creation for object MovieActor")
-        testMovie = MovieActor.objects.get(title="TestMovie")
-        self.assertEqual(testMovie.title, 'TestMovie')
 
 """
 Test case for Trailer model
 """
 class TrailerTestCase(TestCase):
     def setUp(self):
-        Trailer.objects.create(title="TestTrailer", length="00:02:11", rating="5")
+        Trailer.objects.create(video_path="VIDEO_PATH")
 
     def test_object_creation(self):
         print("Testing object creation for object Trailer")
         testTrailer = Trailer.objects.get(title="TestTrailer")
-        self.assertEqual(testTrailer.title, 'TestTrailer')        
+        self.assertEqual(testTrailer.title, 'TestTrailer')
+        
+"""
+Test case for Category model
+"""
+class CategoryTestCase(TestCase):
+    def setUp(self):
+        Category.objects.create(name="Action")
+
+    def test_object_creation(self):
+        print("Testing object creation for object Category")
+        testCategory = Category.objects.get(title="TestCategory")
+        self.assertEqual(testCategory.title, 'TestCategory')
+
+        
