@@ -113,7 +113,7 @@ You can get a maximum of 3 points after completing this section.
 |:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
 |Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
 |id|Foreign Key|||||
-|user_id|||||| 
+|user_id||||||
 |movie_id||||||
 |text||||||
 |timestamp||||||
