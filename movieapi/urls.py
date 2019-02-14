@@ -29,25 +29,79 @@ TODO:
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('admin/', admin.site.urls),
+
     path('', views.api_root),
+
     path('reviews/',
         views.ReviewList.as_view(),
         name='review-list'),
     path('reviews/<int:pk>',
         views.ReviewDetail.as_view(),
         name='review-detail'),
+
+    path('comments/',
+        views.CommentList.as_view(),
+        name='comment-list'),
+    path('comments/<int:pk>',
+        views.CommentDetail.as_view(),
+        name='comment-detail'),
+
     path('movies/',
         views.MovieList.as_view(),
         name='movie-list'),
     path('movies/<int:pk>',
         views.MovieDetail.as_view(),
         name='movie-detail'),
+
+    path('actors/',
+        views.ActorList.as_view(),
+        name='actor-list'),
+    path('actors/<int:pk>',
+        views.ActorDetail.as_view(),
+        name='actor-detail'),
+
+    path('movieactors/',
+        views.MovieActorList.as_view(),
+        name='movieactor-list'),
+    path('movieactors/<int:pk>',
+        views.MovieActorDetail.as_view(),
+        name='movieactor-detail'),
+
+    path('trailers/',
+        views.TrailerList.as_view(),
+        name='trailer-list'),
+    path('trailers/<int:pk>',
+        views.TrailerDetail.as_view(),
+        name='trailer-detail'),
+
+    path('categories/',
+        views.CategoryList.as_view(),
+        name='category-list'),
+    path('categories/<int:pk>',
+        views.CategoryDetail.as_view(),
+        name='category-detail'),
+
+    path('moviecategories/',
+        views.MovieCategoryList.as_view(),
+        name='moviecategory-list'),
+    path('moviecategories/<int:pk>',
+        views.MovieCategoryDetail.as_view(),
+        name='moviecategory-detail'),
+
     path('users/',
         views.UserList.as_view(),
         name='user-list'),
     path('users/<int:pk>/',
         views.UserDetail.as_view(),
         name='user-detail'),
+
+    path('groups/',
+        views.GroupList.as_view(),
+        name='group-list'),
+    path('groups/<int:pk>/',
+        views.GroupDetail.as_view(),
+        name='group-detail'),
+        
     path('api-auth/', include('rest_framework.urls')),
 ]
 

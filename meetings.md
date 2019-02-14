@@ -1,16 +1,27 @@
 # Meetings notes
 
 ## Meeting 1.
-* **DATE:**
-* **ASSISTANTS:**
+* **DATE: 13.02.2019**
+* **ASSISTANTS: Mika Oja**
 * **GRADE:** *To be filled by course staff*
 
 ### Minutes
-*Summary of what was discussed during the meeting*
+
+General discussion about the current state of the project.
+During the meeting we went through the requirements of the first deadline and checked that the project was advancing properly. One key-point was to clarify more the API-use in machine point of view (in automation, etc.). Although the subject was discussed in preliminary planning, the subject was not originally included in the documentation.
+
+There was also discussion about the quality of resources used in this project: required scale and unimportance of business logic. The aim of the course is not business logic, but API and hypermedia implementation. The conclusion was that the project's current state is very good.
 
 ### Action points
-*List here the actions points discussed with assistants*
-
+The action points of the meeting were the following:
+* Current state of the project
+* Relevance of the RESTful technology/architecture
+* Quality, scalability and size of the resources
+* Importance of business logic
+* How to mark code as your own
+* The most important points of the project
+* Django and Django REST Framework implementation
+* API-use from machine point of view
 
 ### Comments from staff
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
@@ -90,4 +101,3 @@
 
 ### Comments from staff
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
-
