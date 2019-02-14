@@ -1,19 +1,63 @@
 from django.test import TestCase
-from rest_framework.test import APIRequestFactory
+from django.urls import reverse
+from rest_framework import status
+from rest_framework.test import APITestCase
+from django.contrib.auth.models import User, Group
 from movieapi.app.models import Movie, Review, Comment, Actor, MovieActor, Trailer, Category, MovieCategory
 
 """
 Test case for Movie model
 """
-class MovieTestCase(TestCase):
-    def setUp(self):
-        Movie.objects.create(title="TestMovie", length="01:45:44", rating="5")
+class MovieTestCase(APITestCase):
+    print("==============================================")
+    print("Tests for Movie model")
+    print("==============================================")
 
+    url = reverse('movie-list')
+
+    def setUp(self):
+        print("\n")
+
+    # Test object creation
     def test_object_creation(self):
         print("Testing object creation for object Movie")
+        Movie.objects.create(id=1, title="TestMovie", length="01:45:44", rating="5")
         testMovie = Movie.objects.get(title="TestMovie")
-        self.assertEqual(testMovie.title, 'TestMovie')
-        
+
+        try:
+            self.assertEqual(testMovie.title, 'TestMovie')
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+    # Test GET method
+    def test_get(self):
+        print("Testing GET method for model Movie")
+
+        response = self.client.get(self.url, format='json')
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(len(response.data), 4)
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+    # Test POST method
+    def test_post(self):
+        print("Testing POST method for model Movie")
+
+        data = {
+                "title":"TestMovie",
+                "length":"01:45:44",
+                "rating":"5",
+                "related_categories": [],
+                "related_actors": []
+        }
+
+        response = self.client.post(self.url, data, format='json')
+
+
 """
 Test case for Review model
 """
@@ -25,7 +69,8 @@ class ReviewTestCase(TestCase):
         print("Testing object creation for object Review")
         testReview = Review.objects.get(title="TestReview")
         self.assertEqual(testReview.title, 'TestReview')
-        
+
+
 """
 Test case for Comment model
 """
@@ -37,7 +82,8 @@ class CommentTestCase(TestCase):
         print("Testing object creation for object Comment")
         testComment = Comment.objects.get(title="TestComment")
         self.assertEqual(testComment.title, 'TestComment')
-        
+
+
 """
 Test case for Actor model
 """
@@ -62,6 +108,7 @@ class TrailerTestCase(TestCase):
         print("Testing object creation for object Trailer")
         testTrailer = Trailer.objects.get(title="TestTrailer")
         self.assertEqual(testTrailer.title, 'TestTrailer')
+
         
 """
 Test case for Category model
@@ -74,5 +121,3 @@ class CategoryTestCase(TestCase):
         print("Testing object creation for object Category")
         testCategory = Category.objects.get(title="TestCategory")
         self.assertEqual(testCategory.title, 'TestCategory')
-
-        
