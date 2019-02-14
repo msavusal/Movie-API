@@ -96,7 +96,7 @@ You can get a maximum of 3 points after completing this section.
 <li>Details for attributes are provided (datatype, default value, characteristics etc.): <strong>0.5</strong></li>
 <li>Foreign keys follow the relationship diagram from deadline 1: <strong>1.0</strong>
 	<ul></li>
-		if necessary, you can update your diagram 
+		if necessary, you can update your diagram
 	</li></ul>
 </li>
 </ul>
@@ -108,12 +108,66 @@ You can get a maximum of 3 points after completing this section.
 
 :pencil2: *The table can have the following structure*
 
-|**Name** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+
+|**Comment** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
 |:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
 |Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
-||||||| 
-||||||| 
-||||||| 
+|id|Foreign Key|||||
+|user_id||||||
+|movie_id||||||
+|text||||||
+|timestamp||||||
+|created||||||
+
+|**MovieCategory** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|id||||||
+
+|**Category** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|id||||||
+
+|**User** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|id||||||
+
+|**Review** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|id||||||
+
+|**Movie** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|id||||||
+
+|**UserGroup** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|id||||||
+
+|**Actor** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|id||||||
+
+|**MovieActor** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|id||||||
+
+|**Trailer** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|id||||||
+
+|**Group** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
+|:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
+|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
+|id||||||
 
 :pencil2: *Do not forget to include a diagram presenting the relations*
 
@@ -130,7 +184,7 @@ You can get a maximum of 3 points after completing this section.
 <li>The ORM models and functions</li>
 <li>A <var>.sql dump</var> of a database or the <var>.db file</var> (if you are using SQlite). You must provide a populated database in order to test your models.</li>
 <li>The scripts used to generate your database (if any)</li>
-<li>If you are using python, the requirements.txt file.</li> 
+<li>If you are using python, the requirements.txt file.</li>
 
 <li>A README.md file containing:
 	<ul>
@@ -252,11 +306,11 @@ In this section you can get a maximum of 2.5 points.
 :pencil2: *You do not need to write anything here. Just complete the implementation*
 
 ---
-## Resources allocation 
+## Resources allocation
 |**Task** | **Student**|**Estimated time**|
 |:------: |:----------:|:----------------:|
-|||| 
-|||| 
-|||| 
-|||| 
-|||| 
+||||
+||||
+||||
+||||
+||||
