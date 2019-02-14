@@ -111,13 +111,12 @@ You can get a maximum of 3 points after completing this section.
 
 |**Comment** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
 |:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
-|Name of the attribute|Attribute type|Values that the type can take|Description of the attribute|Uniquenes, default...| keys and foreign keys|
-|id|Foreign Key|||||
-|user_id||||||
-|movie_id||||||
-|text||||||
-|timestamp||||||
-|created||||||
+|id|integer||Integer number|||
+|user_id|integer||Integer number|||
+|movie_id|integer||Integer number|||
+|text|text(400)||Text up to 400|||
+|timestamp|string(30)||String of character(max display size 30)|||
+|created|timestamp||Timestamp HH:MM:SS||||
 
 |**MovieCategory** | **Type**|**Restrictions**|**Description**|**Characteristics** | **Links**|
 |:------: |:-------:|:--------------:|:-------------:|:-----------------: |:--------:|
