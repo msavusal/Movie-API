@@ -101,11 +101,12 @@ class ReviewTestCase(APITestCase):
     def test_3_post(self):
         print("Testing POST method for model Review")
 
+        testmovie = Movie.objects.create(title="TestMovie", length="01:45:44", rating="5")
+
         data = {
             "text":"Excellent movie.",
             "rating":5,
-            "related_movie_id":1,
-            "related_actor_id":1
+            "related_movie": "http://localhost/movies/" + str(testmovie.id),
         }
 
         # Create requrest
@@ -164,12 +165,12 @@ class CommentTestCase(APITestCase):
     def test_3_post(self):
         print("Testing POST method for model Comment")
 
+        testmovie = Movie.objects.create(title="TestMovie", length="01:45:44", rating="5")
+
         data = {
-            "title":"TestComment",
             "text":"It was okay.",
             "timestamp":"00:00:00",
-            "related_user": 1,
-            "related_movie": 1
+            "related_movie": "http://localhost/movies/" + str(testmovie.id)
         }
 
         # Create requrest
@@ -293,10 +294,11 @@ class TrailerTestCase(APITestCase):
     def test_3_post(self):
         print("Testing POST method for model Trailer")
 
+        testmovie = Movie.objects.create(title="TestMovie", length="01:45:44", rating="5")
+
         data = {
             "video_path":"VIDEO_PATH",
-            "related_user": 1,
-            "related_movie": 1
+            "related_movie": "http://localhost/movies/" + str(testmovie.id)
         }
 
         # Create requrest
@@ -306,7 +308,11 @@ class TrailerTestCase(APITestCase):
         request.user = self.user
 
         # Get data from view with the user tied to the session
-        response = views.ActorList.as_view()(request)
+        response = views.TrailerList.as_view()(request)
+
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertEqual(Trailer.objects.count(), 1)
+        self.assertEqual(Trailer.objects.get().video_path, 'VIDEO_PATH')
 
         try:
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)

@@ -129,7 +129,7 @@ class TrailerSerializer(serializers.HyperlinkedModelSerializer):
     related_user = serializers.ReadOnlyField(source='related_user.username')
     related_movie = serializers.HyperlinkedRelatedField(
         queryset=queryset_movie,
-        view_name='actor-detail'
+        view_name='movie-detail'
     )
     video_path = serializers.CharField(required=False, allow_blank=True, max_length=500)
 
