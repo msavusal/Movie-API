@@ -310,10 +310,6 @@ class TrailerTestCase(APITestCase):
         # Get data from view with the user tied to the session
         response = views.TrailerList.as_view()(request)
 
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(Trailer.objects.count(), 1)
-        self.assertEqual(Trailer.objects.get().video_path, 'VIDEO_PATH')
-
         try:
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             self.assertEqual(Trailer.objects.count(), 1)
