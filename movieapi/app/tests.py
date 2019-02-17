@@ -81,6 +81,26 @@ class MovieTestCase(APITestCase):
         except:
             print("FAILED")
 
+    # Test UPDATE method
+    def test_5_delete(self):
+        print("Testing UPDATE method for model Movie")
+
+        testObject = Movie.objects.create(id=1, title="TestMovie", length="01:45:44", rating="5")
+
+        data = {
+            "title": "TestMovie CHANGED"
+        }
+
+        # Create response
+        response = self.client.patch(reverse('movie-detail', kwargs={'pk': testObject.pk}), data=data)
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(Movie.objects.get().title, 'TestMovie CHANGED')
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
 
 """
 Test case for Review model
@@ -160,6 +180,32 @@ class ReviewTestCase(APITestCase):
         try:
             self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
             self.assertEqual(Review.objects.count(), 0)
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+        self.client.logout()
+
+    # Test UPDATE method
+    def test_5_delete(self):
+        print("Testing UPDATE method for model Review")
+
+        testObject = Review.objects.create(text="Excellent movie.", rating=5, related_movie_id=1, related_user_id=1)
+
+        self.client.login(username='test_admin', password='password')
+
+        data = {
+            "text": "Excellent movie. CHANGED"
+        }
+
+        # Create response
+        response = self.client.patch(reverse('review-detail', kwargs={'pk': testObject.pk}), data=data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(Review.objects.get().text, 'Excellent movie. CHANGED')
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(Review.objects.get().text, 'Excellent movie. CHANGED')
             print("SUCCESS")
         except:
             print("FAILED")
@@ -247,6 +293,27 @@ class CommentTestCase(APITestCase):
             print("FAILED")
 
 
+    # Test UPDATE method
+    def test_5_delete(self):
+        print("Testing UPDATE method for model Comment")
+
+        testObject = Comment.objects.create(text="It was okay.", timestamp="00:00:00", related_movie_id=1, related_user_id=1)
+
+        data = {
+            "text": "It was okay. CHANGED"
+        }
+
+        # Create response
+        response = self.client.patch(reverse('comment-detail', kwargs={'pk': testObject.pk}), data=data)
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(Comment.objects.get().text, 'It was okay. CHANGED')
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+
 """
 Test case for Actor model
 """
@@ -325,6 +392,27 @@ class ActorTestCase(APITestCase):
             print("SUCCESS")
         except:
             print("FAILED")
+
+    # Test UPDATE method
+    def test_5_delete(self):
+        print("Testing UPDATE method for model Actor")
+
+        testObject = Actor.objects.create(firstname="John", lastname= "Doe", related_user=self.user)
+
+        data = {
+            "firstname": "John CHANGED"
+        }
+
+        # Create response
+        response = self.client.patch(reverse('actor-detail', kwargs={'pk': testObject.pk}), data=data)
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(Actor.objects.get().firstname, 'John CHANGED')
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
 
 
 """
@@ -406,6 +494,26 @@ class TrailerTestCase(APITestCase):
         except:
             print("FAILED")
 
+    # Test UPDATE method
+    def test_5_delete(self):
+        print("Testing UPDATE method for model Trailer")
+
+        testObject = Trailer.objects.create(video_path="VIDEO_PATH", related_movie_id=1, related_user_id=1)
+
+        data = {
+            "video_path": "VIDEO_PATH CHANGED"
+        }
+
+        # Create response
+        response = self.client.patch(reverse('trailer-detail', kwargs={'pk': testObject.pk}), data=data)
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(Trailer.objects.get().video_path, 'VIDEO_PATH CHANGED')
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
 
 """
 Test case for Category model
@@ -472,6 +580,26 @@ class CategoryTestCase(APITestCase):
         try:
             self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
             self.assertEqual(Review.objects.count(), 0)
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+    # Test UPDATE method
+    def test_5_delete(self):
+        print("Testing UPDATE method for model Category")
+
+        testObject = Category.objects.create(name="TestCategory")
+
+        data = {
+            "name": "TestCategory CHANGED"
+        }
+
+        # Create response
+        response = self.client.patch(reverse('category-detail', kwargs={'pk': testObject.pk}), data=data)
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(Category.objects.get().name, 'TestCategory CHANGED')
             print("SUCCESS")
         except:
             print("FAILED")
