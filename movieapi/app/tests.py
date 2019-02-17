@@ -14,6 +14,10 @@ Test case for Movie model
 class MovieTestCase(APITestCase):
     url = reverse('movie-list')
 
+    def setUp(self):
+        self.factory = APIRequestFactory()
+        self.user = User.objects.create_superuser(username='test_admin', email='test_admin@…', password='password')
+
     # Test object creation
     def test_1_object_creation(self):
         print("Testing object creation for object Movie")
@@ -57,6 +61,22 @@ class MovieTestCase(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             self.assertEqual(Movie.objects.count(), 1)
             self.assertEqual(Movie.objects.get().title, 'TestMovie')
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+    # Test DELETE method
+    def test_4_delete(self):
+        print("Testing DELETE method for model Movie")
+
+        testObject = Movie.objects.create(id=1, title="TestMovie", length="01:45:44", rating="5")
+
+        # Create response
+        response = self.client.delete(reverse('movie-detail', kwargs={'pk': testObject.pk}))
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+            self.assertEqual(Review.objects.count(), 0)
             print("SUCCESS")
         except:
             print("FAILED")
@@ -109,7 +129,7 @@ class ReviewTestCase(APITestCase):
             "related_movie": "http://localhost/movies/" + str(testmovie.id),
         }
 
-        # Create requrest
+        # Create request
         request = self.factory.post(self.url, data, format="json")
 
         # Add user to request session
@@ -125,6 +145,26 @@ class ReviewTestCase(APITestCase):
             print("SUCCESS")
         except:
             print("FAILED")
+
+    # Test DELETE method
+    def test_4_delete(self):
+        print("Testing DELETE method for model Review")
+
+        testObject = Review.objects.create(text="Excellent movie.", rating=5, related_movie_id=1, related_user_id=1)
+
+        self.client.login(username='test_admin', password='password')
+
+        # Create response
+        response = self.client.delete(reverse('review-detail', kwargs={'pk': testObject.pk}))
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+            self.assertEqual(Review.objects.count(), 0)
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+        self.client.logout()
 
 
 """
@@ -173,7 +213,7 @@ class CommentTestCase(APITestCase):
             "related_movie": "http://localhost/movies/" + str(testmovie.id)
         }
 
-        # Create requrest
+        # Create request
         request = self.factory.post(self.url, data, format="json")
 
         # Add user to request session
@@ -186,6 +226,22 @@ class CommentTestCase(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             self.assertEqual(Comment.objects.count(), 1)
             self.assertEqual(Comment.objects.get().text, 'It was okay.')
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+    # Test DELETE method
+    def test_4_delete(self):
+        print("Testing DELETE method for model Comment")
+
+        testObject = Comment.objects.create(text="It was okay.", timestamp="00:00:00", related_movie_id=1, related_user_id=1)
+
+        # Create response
+        response = self.client.delete(reverse('comment-detail', kwargs={'pk': testObject.pk}))
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+            self.assertEqual(Review.objects.count(), 0)
             print("SUCCESS")
         except:
             print("FAILED")
@@ -237,7 +293,7 @@ class ActorTestCase(APITestCase):
             "lastname":"Doe",
         }
 
-        # Create requrest
+        # Create request
         request = self.factory.post(self.url, data, format="json")
 
         # Add user to request session
@@ -250,6 +306,22 @@ class ActorTestCase(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             self.assertEqual(Actor.objects.count(), 1)
             self.assertEqual(Actor.objects.get().firstname, 'John')
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+    # Test DELETE method
+    def test_4_delete(self):
+        print("Testing DELETE method for model Actor")
+
+        testObject = Actor.objects.create(firstname="John", lastname= "Doe", related_user=self.user)
+
+        # Create response
+        response = self.client.delete(reverse('actor-detail', kwargs={'pk': testObject.pk}))
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+            self.assertEqual(Review.objects.count(), 0)
             print("SUCCESS")
         except:
             print("FAILED")
@@ -301,7 +373,7 @@ class TrailerTestCase(APITestCase):
             "related_movie": "http://localhost/movies/" + str(testmovie.id)
         }
 
-        # Create requrest
+        # Create request
         request = self.factory.post(self.url, data, format="json")
 
         # Add user to request session
@@ -314,6 +386,22 @@ class TrailerTestCase(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             self.assertEqual(Trailer.objects.count(), 1)
             self.assertEqual(Trailer.objects.get().video_path, 'VIDEO_PATH')
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+    # Test DELETE method
+    def test_4_delete(self):
+        print("Testing DELETE method for model Trailer")
+
+        testObject = Trailer.objects.create(video_path="VIDEO_PATH", related_movie_id=1, related_user_id=1)
+
+        # Create response
+        response = self.client.delete(reverse('trailer-detail', kwargs={'pk': testObject.pk}))
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+            self.assertEqual(Review.objects.count(), 0)
             print("SUCCESS")
         except:
             print("FAILED")
@@ -368,6 +456,22 @@ class CategoryTestCase(APITestCase):
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
             self.assertEqual(Category.objects.count(), 1)
             self.assertEqual(Category.objects.get().name, 'Action')
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+    # Test DELETE method
+    def test_4_delete(self):
+        print("Testing DELETE method for model Category")
+
+        testObject = Category.objects.create(name="TestCategory")
+
+        # Create response
+        response = self.client.delete(reverse('category-detail', kwargs={'pk': testObject.pk}))
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+            self.assertEqual(Review.objects.count(), 0)
             print("SUCCESS")
         except:
             print("FAILED")
