@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django import db as exception
 from django.urls import reverse
 from django.http import JsonResponse
 from rest_framework.test import APIClient, APITestCase, APIRequestFactory
@@ -29,6 +30,20 @@ class MovieTestCase(APITestCase):
             print("SUCCESS")
         except:
             print("FAILED")
+
+    # Test unique constraint
+    def test_1_2_object_unique(self):
+        print("Testing unique constraint for object Movie")
+
+        Movie.objects.create(id=1, title="TestMovie", length="01:45:44", rating="5")
+
+        try:
+            Movie.objects.create(id=1, title="TestMovie", length="01:45:44", rating="5")
+            self.fail("FAILED")
+            print("FAILED")
+        except exception.IntegrityError:
+            print("SUCCESS")
+            pass
 
     # Test GET method
     def test_2_get(self):
@@ -123,6 +138,20 @@ class ReviewTestCase(APITestCase):
             print("SUCCESS")
         except:
             print("FAILED")
+
+    # Test unique constraint
+    def test_1_2_object_unique(self):
+        print("Testing unique constraint for object Review")
+
+        Review.objects.create(id=1, text="Excellent movie.", rating=5, related_movie_id=1, related_user_id=1)
+
+        try:
+            Review.objects.create(id=1, text="Excellent movie.", rating=5, related_movie_id=1, related_user_id=1)
+            self.fail("FAILED")
+            print("FAILED")
+        except exception.IntegrityError:
+            print("SUCCESS")
+            pass
 
     # Test GET method
     def test_2_get(self):
@@ -234,6 +263,20 @@ class CommentTestCase(APITestCase):
         except:
             print("FAILED")
 
+    # Test unique constraint
+    def test_1_2_object_unique(self):
+        print("Testing unique constraint for object Comment")
+
+        Comment.objects.create(id=1, text="It was okay.", timestamp="00:00:00", related_movie_id=1, related_user_id=1)
+
+        try:
+            Comment.objects.create(id=1, text="It was okay.", timestamp="00:00:00", related_movie_id=1, related_user_id=1)
+            self.fail("FAILED")
+            print("FAILED")
+        except exception.IntegrityError:
+            print("SUCCESS")
+            pass
+
     # Test GET method
     def test_2_get(self):
         print("Testing GET method for model Comment")
@@ -338,6 +381,20 @@ class ActorTestCase(APITestCase):
         except:
             print("FAILED")
 
+    # Test unique constraint
+    def test_1_2_object_unique(self):
+        print("Testing unique constraint for object Actor")
+
+        Actor.objects.create(id=1, firstname="John", lastname= "Doe", related_user=self.user)
+
+        try:
+            Actor.objects.create(id=1, firstname="John", lastname= "Doe", related_user=self.user)
+            self.fail("FAILED")
+            print("FAILED")
+        except exception.IntegrityError:
+            print("SUCCESS")
+            pass
+
     # Test GET method
     def test_2_get(self):
         print("Testing GET method for model Actor")
@@ -436,6 +493,20 @@ class TrailerTestCase(APITestCase):
             print("SUCCESS")
         except:
             print("FAILED")
+
+    # Test unique constraint
+    def test_1_2_object_unique(self):
+        print("Testing unique constraint for object Trailer")
+
+        Trailer.objects.create(id=1, video_path="VIDEO_PATH", related_movie_id=1, related_user_id=1)
+
+        try:
+            Trailer.objects.create(id=1, video_path="VIDEO_PATH", related_movie_id=1, related_user_id=1)
+            self.fail("FAILED")
+            print("FAILED")
+        except exception.IntegrityError:
+            print("SUCCESS")
+            pass
 
     # Test GET method
     def test_2_get(self):
@@ -536,6 +607,20 @@ class CategoryTestCase(APITestCase):
             print("SUCCESS")
         except:
             print("FAILED")
+
+    # Test unique constraint
+    def test_1_2_object_unique(self):
+        print("Testing unique constraint for object Category")
+
+        Category.objects.create(id=1, name="TestCategory")
+
+        try:
+            Category.objects.create(id=1, name="TestCategory")
+            self.fail("FAILED")
+            print("FAILED")
+        except exception.IntegrityError:
+            print("SUCCESS")
+            pass
 
     # Test GET method
     def test_2_get(self):
