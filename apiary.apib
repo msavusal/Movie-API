@@ -3,51 +3,123 @@ HOST: http://polls.apiblueprint.org/
 
 # Movie-API
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+The Movie API offers sharing and displaying of video materials in a structured environment and the ability to create and distribute text based reviews and comments connected to the video materials. Video resources can be fetched using the API. Text based reviews and comments can be created by users with credentials, which are structured around video materials.
 
-## Questions Collection [/questions]
+Clients using this service can use the API to fetch video related information such as reviews of the whole video, opinions (user comments) on certain parts of the video and trailers. This information could be used for journalism purposes. The API can be easily modified to curate different types of video content in different types of setting, including recorded academic lectures and public information distribution.
 
-### List All Questions [GET]
+# Group User
+## Profile
+
+### Description
+User model containing user profile information.
+
+### Related Profiles
+ - *Group*
+ - *Review*
+ - *Comment*
+ - *Actor*
+
+### Link relations
+ - **groups**: List of all the groups this user belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **reviews**: List of all the reviews made by this user. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **comments**: List of all the comments made by this user. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **actors**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+
+### Semantic descriptors
+ - **url**: STRING. Hyperlink to the user.
+ - **username**: STRING. User's username.
+ - **email**: STRING. User's email address.
+ - **groups**: ARRAY of STRING. All groups the user belongs to represented as hyperlinks to the related group.
+ - **reviews**: ARRAY of STRING. All reviews the user has created represented as hyperlinks to the related review.
+ - **comments**: ARRAY of STRING. All comments the user has created represented as hyperlinks to the related comment.
+ - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
+
+## User [/users/{id}]
+A single user containing all its information.
+
++ Parameters
+    + id (integer) ... the id of the user.
+
++ Model (application/hal+json)
+
+    + Body
+    
+            {
+                "url": "http://localhost:8000/users/1/",
+                "username": "admin",
+                "email": "admin@test.com",
+                "groups": [
+                    "http://localhost:8000/groups/1"
+                ],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
+                ]
+            }
+
+### Get a single user [GET] 
+Get the information of a certain user, such as the reviews and comments the user has created.
 
 + Response 200 (application/json)
 
-        [
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
+    {
+        "url": "http://localhost:8000/users/1/",
+        "username": "admin",
+        "email": "admin@test.com",
+        "groups": [
+            "http://localhost:8000/groups/1"
+        ],
+        "reviews": [
+            "http://localhost:8000/reviews/1",
+            "http://localhost:8000/reviews/2",
+            "http://localhost:8000/reviews/3"
+        ],
+        "comments": [
+            "http://localhost:8000/comments/1",
+            "http://localhost:8000/comments/2",
+            "http://localhost:8000/comments/3"
+        ],
+        "actors": [
+            "http://localhost:8000/actors/1",
+            "http://localhost:8000/actors/2"
         ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
+    }
+    
+### Modify User [PUT]
+Modify user information. Only admin user can modify user information. Only username and email address can be modified.
 
 + Request (application/json)
 
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
+            "url": "http://localhost:8000/users/1/",
+            "username": "admin",
+            "email": "admin_MODIFIED@test.com",
+            "groups": [
+            "http://localhost:8000/groups/1"
+            ],
+            "reviews": [
+                "http://localhost:8000/reviews/1",
+                "http://localhost:8000/reviews/2",
+                "http://localhost:8000/reviews/3"
+            ],
+            "comments": [
+                "http://localhost:8000/comments/1",
+                "http://localhost:8000/comments/2",
+                "http://localhost:8000/comments/3"
+            ],
+            "actors": [
+                "http://localhost:8000/actors/1",
+                "http://localhost:8000/actors/2"
             ]
         }
 
@@ -55,26 +127,102 @@ form of choices.
 
     + Headers
 
-            Location: /questions/2
+            Location:  /users/1/
 
     + Body
 
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
+                "url": "http://localhost:8000/users/1/",
+                "username": "admin",
+                "email": "admin_MODIFIED@test.com",
+                "groups": [],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
                 ]
             }
+            
++ Response 404 (application/json)
+
++ Response 401 (application/json)
+
+## Users [/users]
+
+### Get all Users [GET]
+
+Get list of all created users containing their data.
+
++ Response 200 (application/json)
+
+        {
+            "count": 1,
+            "next": null,
+            "previous": null,
+            "results": [
+                {
+                    "url": "http://localhost:8000/users/1/",
+                    "username": "admin",
+                    "email": "",
+                    "groups": [],
+                    "reviews": [
+                        "http://localhost:8000/reviews/1",
+                        "http://localhost:8000/reviews/2",
+                        "http://localhost:8000/reviews/3"
+                    ],
+                    "comments": [
+                        "http://localhost:8000/comments/1",
+                        "http://localhost:8000/comments/2",
+                        "http://localhost:8000/comments/3"
+                    ],
+                    "actors": [
+                        "http://localhost:8000/actors/1",
+                        "http://localhost:8000/actors/2"
+                    ]
+                }
+            ]
+        }
+
+### Create a new User [POST]
+
+You may create your own user using this action. It takes a JSON
+object containing a username, email-address and a optional collection of groups user belongs to.
+
++ Request (application/json)
+
+        {
+            "username": "testuser",
+            "email": "test@test.com",
+            "groups": []
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location:  /users/2/
+
+    + Body
+
+            {
+                "url": "http://localhost:8000/users/2/",
+                "username": "testuser",
+                "email": "test@test.com",
+                "groups": [],
+                "reviews": [],
+                "comments": [],
+                "actors": []
+            }
+            
++ Response 500 (application/json)
+
++ Response 401 (application/json)
