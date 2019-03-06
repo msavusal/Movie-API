@@ -52,6 +52,9 @@ urlpatterns = [
     path('movies/<int:pk>',
         views.MovieDetail.as_view(),
         name='movie-detail'),
+    path('movies/<int:pk>/categories',
+        views.MovieDetailCategories.as_view(),
+        name='movie-detail-categories'),
 
     path('actors/',
         views.ActorList.as_view(),
