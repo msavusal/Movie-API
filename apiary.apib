@@ -226,3 +226,1325 @@ object containing a username, email-address and a optional collection of groups 
 + Response 500 (application/json)
 
 + Response 401 (application/json)
+
+
+# Group Group
+## Profile
+
+### Description
+Group model containing group profile information.
+
+### Related Profiles
+ - *User*
+ - *Review*
+ - *Comment*
+ - *Actor*
+
+### Link relations
+ - **groups**: List of all the groups this user belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **reviews**: List of all the reviews made by this group. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **comments**: List of all the comments made by this user. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **actors**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+
+### Semantic descriptors
+ - **url**: STRING. Hyperlink to the user.
+ - **username**: STRING. User's username.
+ - **email**: STRING. User's email address.
+ - **groups**: ARRAY of STRING. All groups the user belongs to represented as hyperlinks to the related group.
+ - **reviews**: ARRAY of STRING. All reviews the user has created represented as hyperlinks to the related review.
+ - **comments**: ARRAY of STRING. All comments the user has created represented as hyperlinks to the related comment.
+ - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
+
+## Group [/groups/{id}]
+A single group containing all its information.
+
++ Parameters
+    + id (integer) ... the id of the user.
+
++ Model (application/hal+json)
+
+    + Body
+    
+            {
+                "url": "http://localhost:8000/users/1/",
+                "username": "admin",
+                "email": "admin@test.com",
+                "groups": [
+                    "http://localhost:8000/groups/1"
+                ],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
+                ]
+            }
+
+### Get a single user [GET] 
+Get the information of a certain user, such as the reviews and comments the user has created.
+
++ Response 200 (application/json)
+
+    {
+        "url": "http://localhost:8000/users/1/",
+        "username": "admin",
+        "email": "admin@test.com",
+        "groups": [
+            "http://localhost:8000/groups/1"
+        ],
+        "reviews": [
+            "http://localhost:8000/reviews/1",
+            "http://localhost:8000/reviews/2",
+            "http://localhost:8000/reviews/3"
+        ],
+        "comments": [
+            "http://localhost:8000/comments/1",
+            "http://localhost:8000/comments/2",
+            "http://localhost:8000/comments/3"
+        ],
+        "actors": [
+            "http://localhost:8000/actors/1",
+            "http://localhost:8000/actors/2"
+        ]
+    }
+    
+### Modify Group [PUT]
+Modify group information. Only admin user can modify group information. Only username and email address can be modified.
+
++ Request (application/json)
+
+        {
+            "url": "http://localhost:8000/users/1/",
+            "username": "admin",
+            "email": "admin_MODIFIED@test.com",
+            "groups": [
+            "http://localhost:8000/groups/1"
+            ],
+            "reviews": [
+                "http://localhost:8000/reviews/1",
+                "http://localhost:8000/reviews/2",
+                "http://localhost:8000/reviews/3"
+            ],
+            "comments": [
+                "http://localhost:8000/comments/1",
+                "http://localhost:8000/comments/2",
+                "http://localhost:8000/comments/3"
+            ],
+            "actors": [
+                "http://localhost:8000/actors/1",
+                "http://localhost:8000/actors/2"
+            ]
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location:  /users/1/
+
+    + Body
+
+            {
+                "url": "http://localhost:8000/users/1/",
+                "username": "admin",
+                "email": "admin_MODIFIED@test.com",
+                "groups": [],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
+                ]
+            }
+            
++ Response 404 (application/json)
+
++ Response 401 (application/json)
+
+## Groups [/groups]
+
+### Get all groups [GET]
+
+Get list of all created groups containing their data.
+
++ Response 200 (application/json)
+
+        {
+            "count": 1,
+            "next": null,
+            "previous": null,
+            "results": [
+                {
+                    "url": "http://localhost:8000/users/1/",
+                    "username": "admin",
+                    "email": "",
+                    "groups": [],
+                    "reviews": [
+                        "http://localhost:8000/reviews/1",
+                        "http://localhost:8000/reviews/2",
+                        "http://localhost:8000/reviews/3"
+                    ],
+                    "comments": [
+                        "http://localhost:8000/comments/1",
+                        "http://localhost:8000/comments/2",
+                        "http://localhost:8000/comments/3"
+                    ],
+                    "actors": [
+                        "http://localhost:8000/actors/1",
+                        "http://localhost:8000/actors/2"
+                    ]
+                }
+            ]
+        }
+
+### Create a new Group [POST]
+
+You may create your own group using this action. It takes a JSON
+object containing . . .
+
++ Request (application/json)
+
+        {
+            "username": "testuser",
+            "email": "test@test.com",
+            "groups": []
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location:  /users/2/
+
+    + Body
+
+            {
+                "url": "http://localhost:8000/users/2/",
+                "username": "testuser",
+                "email": "test@test.com",
+                "groups": [],
+                "reviews": [],
+                "comments": [],
+                "actors": []
+            }
+            
++ Response 500 (application/json)
+
++ Response 401 (application/json)
+
+# Group Movie
+## Profile
+
+### Description
+Group model containing movie profile information.
+
+### Related Profiles
+ - *User*
+ - *Review*
+ - *Comment*
+ - *Actor*
+
+### Link relations
+ - **groups**: List of all the groups this group belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **reviews**: List of all the reviews made by this user. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **comments**: List of all the comments made by this user. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **actors**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+
+### Semantic descriptors
+ - **url**: STRING. Hyperlink to the user.
+ - **username**: STRING. User's username.
+ - **email**: STRING. User's email address.
+ - **groups**: ARRAY of STRING. All groups the user belongs to represented as hyperlinks to the related group.
+ - **reviews**: ARRAY of STRING. All reviews the user has created represented as hyperlinks to the related review.
+ - **comments**: ARRAY of STRING. All comments the user has created represented as hyperlinks to the related comment.
+ - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
+
+## Movie [/movies/{id}]
+A single movie containing all its information.
+
++ Parameters
+    + id (integer) ... the id of the user.
+
++ Model (application/hal+json)
+
+    + Body
+    
+            {
+                "url": "http://localhost:8000/users/1/",
+                "username": "admin",
+                "email": "admin@test.com",
+                "groups": [
+                    "http://localhost:8000/groups/1"
+                ],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
+                ]
+            }
+
+### Get a single movie [GET] 
+Get the information of a certain movie, such as .
+
++ Response 200 (application/json)
+
+    {
+        "url": "http://localhost:8000/users/1/",
+        "username": "admin",
+        "email": "admin@test.com",
+        "groups": [
+            "http://localhost:8000/groups/1"
+        ],
+        "reviews": [
+            "http://localhost:8000/reviews/1",
+            "http://localhost:8000/reviews/2",
+            "http://localhost:8000/reviews/3"
+        ],
+        "comments": [
+            "http://localhost:8000/comments/1",
+            "http://localhost:8000/comments/2",
+            "http://localhost:8000/comments/3"
+        ],
+        "actors": [
+            "http://localhost:8000/actors/1",
+            "http://localhost:8000/actors/2"
+        ]
+    }
+    
+### Modify Movie [PUT]
+Modify movie information. Only admin user can modify movie information. Only __ can be modified.
+
++ Request (application/json)
+
+        {
+            "url": "http://localhost:8000/users/1/",
+            "username": "admin",
+            "email": "admin_MODIFIED@test.com",
+            "groups": [
+            "http://localhost:8000/groups/1"
+            ],
+            "reviews": [
+                "http://localhost:8000/reviews/1",
+                "http://localhost:8000/reviews/2",
+                "http://localhost:8000/reviews/3"
+            ],
+            "comments": [
+                "http://localhost:8000/comments/1",
+                "http://localhost:8000/comments/2",
+                "http://localhost:8000/comments/3"
+            ],
+            "actors": [
+                "http://localhost:8000/actors/1",
+                "http://localhost:8000/actors/2"
+            ]
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location:  /users/1/
+
+    + Body
+
+            {
+                "url": "http://localhost:8000/users/1/",
+                "username": "admin",
+                "email": "admin_MODIFIED@test.com",
+                "groups": [],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
+                ]
+            }
+            
++ Response 404 (application/json)
+
++ Response 401 (application/json)
+
+## Movies [/movies]
+
+### Get all Movies [GET]
+
+Get list of all created Movies containing their data.
+
++ Response 200 (application/json)
+
+        {
+            "count": 1,
+            "next": null,
+            "previous": null,
+            "results": [
+                {
+                    "url": "http://localhost:8000/users/1/",
+                    "username": "admin",
+                    "email": "",
+                    "groups": [],
+                    "reviews": [
+                        "http://localhost:8000/reviews/1",
+                        "http://localhost:8000/reviews/2",
+                        "http://localhost:8000/reviews/3"
+                    ],
+                    "comments": [
+                        "http://localhost:8000/comments/1",
+                        "http://localhost:8000/comments/2",
+                        "http://localhost:8000/comments/3"
+                    ],
+                    "actors": [
+                        "http://localhost:8000/actors/1",
+                        "http://localhost:8000/actors/2"
+                    ]
+                }
+            ]
+        }
+
+### Create a new Movie [POST]
+
+You may create your own movie using this action. It takes a JSON
+object containing a username, email-address and a optional collection of groups user belongs to.
+
++ Request (application/json)
+
+        {
+            "username": "testuser",
+            "email": "test@test.com",
+            "groups": []
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location:  /users/2/
+
+    + Body
+
+            {
+                "url": "http://localhost:8000/users/2/",
+                "username": "testuser",
+                "email": "test@test.com",
+                "groups": [],
+                "reviews": [],
+                "comments": [],
+                "actors": []
+            }
+            
++ Response 500 (application/json)
+
++ Response 401 (application/json)
+
+# Group Review
+## Profile
+
+### Description
+Group model containing review information.
+
+### Related Profiles
+ - *User*
+ - *Review*
+ - *Comment*
+ - *Actor*
+
+### Link relations
+ - **groups**: List of all the groups this Review belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **reviews**: List of all the reviews made by this user. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **comments**: List of all the comments made by this user. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **actors**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+
+### Semantic descriptors
+ - **url**: STRING. Hyperlink to the user.
+ - **username**: STRING. User's username.
+ - **email**: STRING. User's email address.
+ - **groups**: ARRAY of STRING. All groups the user belongs to represented as hyperlinks to the related group.
+ - **reviews**: ARRAY of STRING. All reviews the user has created represented as hyperlinks to the related review.
+ - **comments**: ARRAY of STRING. All comments the user has created represented as hyperlinks to the related comment.
+ - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
+
+## Review [/reviews/{id}]
+A single review containing all its information.
+
++ Parameters
+    + id (integer) ... the id of the review.
+
++ Model (application/hal+json)
+
+    + Body
+    
+            {
+                "url": "http://localhost:8000/reviews/1/",
+                "username": "admin",
+                "email": "admin@test.com",
+                "groups": [
+                    "http://localhost:8000/groups/1"
+                ],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
+                ]
+            }
+
+### Get a single review [GET] 
+Get the information of a certain movie, such as .
+
++ Response 200 (application/json)
+
+    {
+        "url": "http://localhost:8000/users/1/",
+        "username": "admin",
+        "email": "admin@test.com",
+        "groups": [
+            "http://localhost:8000/groups/1"
+        ],
+        "reviews": [
+            "http://localhost:8000/reviews/1",
+            "http://localhost:8000/reviews/2",
+            "http://localhost:8000/reviews/3"
+        ],
+        "comments": [
+            "http://localhost:8000/comments/1",
+            "http://localhost:8000/comments/2",
+            "http://localhost:8000/comments/3"
+        ],
+        "actors": [
+            "http://localhost:8000/actors/1",
+            "http://localhost:8000/actors/2"
+        ]
+    }
+    
+### Modify Review [PUT]
+Modify movie information. Only admin user can modify movie information. Only __ can be modified.
+
++ Request (application/json)
+
+        {
+            "url": "http://localhost:8000/users/1/",
+            "username": "admin",
+            "email": "admin_MODIFIED@test.com",
+            "groups": [
+            "http://localhost:8000/groups/1"
+            ],
+            "reviews": [
+                "http://localhost:8000/reviews/1",
+                "http://localhost:8000/reviews/2",
+                "http://localhost:8000/reviews/3"
+            ],
+            "comments": [
+                "http://localhost:8000/comments/1",
+                "http://localhost:8000/comments/2",
+                "http://localhost:8000/comments/3"
+            ],
+            "actors": [
+                "http://localhost:8000/actors/1",
+                "http://localhost:8000/actors/2"
+            ]
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location:  /users/1/
+
+    + Body
+
+            {
+                "url": "http://localhost:8000/users/1/",
+                "username": "admin",
+                "email": "admin_MODIFIED@test.com",
+                "groups": [],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
+                ]
+            }
+            
++ Response 404 (application/json)
+
++ Response 401 (application/json)
+
+## Reviews [/reviews]
+
+### Get all Reviews [GET]
+
+Get list of all created Review containing their data.
+
++ Response 200 (application/json)
+
+        {
+            "count": 1,
+            "next": null,
+            "previous": null,
+            "results": [
+                {
+                    "url": "http://localhost:8000/users/1/",
+                    "username": "admin",
+                    "email": "",
+                    "groups": [],
+                    "reviews": [
+                        "http://localhost:8000/reviews/1",
+                        "http://localhost:8000/reviews/2",
+                        "http://localhost:8000/reviews/3"
+                    ],
+                    "comments": [
+                        "http://localhost:8000/comments/1",
+                        "http://localhost:8000/comments/2",
+                        "http://localhost:8000/comments/3"
+                    ],
+                    "actors": [
+                        "http://localhost:8000/actors/1",
+                        "http://localhost:8000/actors/2"
+                    ]
+                }
+            ]
+        }
+
+### Create a new Review [POST]
+
+You may create your own Review using this action. It takes a JSON
+object containing a username, email-address and a optional collection of groups user belongs to.
+
++ Request (application/json)
+
+        {
+            "username": "testuser",
+            "email": "test@test.com",
+            "groups": []
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location:  /users/2/
+
+    + Body
+
+            {
+                "url": "http://localhost:8000/users/2/",
+                "username": "testuser",
+                "email": "test@test.com",
+                "groups": [],
+                "reviews": [],
+                "comments": [],
+                "actors": []
+            }
+            
++ Response 500 (application/json)
+
++ Response 401 (application/json)
+
+# Group Comment
+## Profile
+
+### Description
+Group model containing comment profile information.
+
+### Related Profiles
+ - *User*
+ - *Review*
+ - *Comment*
+ - *Actor*
+
+### Link relations
+ - **groups**: List of all the groups this comment belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **reviews**: List of all the reviews made by this comment. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **comments**: List of all the comments made by this user. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **actors**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+
+### Semantic descriptors
+ - **url**: STRING. Hyperlink to the user.
+ - **username**: STRING. User's username.
+ - **email**: STRING. User's email address.
+ - **groups**: ARRAY of STRING. All groups the user belongs to represented as hyperlinks to the related group.
+ - **reviews**: ARRAY of STRING. All reviews the user has created represented as hyperlinks to the related review.
+ - **comments**: ARRAY of STRING. All comments the user has created represented as hyperlinks to the related comment.
+ - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
+
+## Comment [/comments/{id}]
+A single comment containing all its information.
+
++ Parameters
+    + id (integer) ... the id of the user.
+
++ Model (application/hal+json)
+
+    + Body
+    
+            {
+                "url": "http://localhost:8000/users/1/",
+                "username": "admin",
+                "email": "admin@test.com",
+                "groups": [
+                    "http://localhost:8000/groups/1"
+                ],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
+                ]
+            }
+
+### Get a single comment [GET] 
+Get the information of a certain comment, such as . . .
+
++ Response 200 (application/json)
+
+    {
+        "url": "http://localhost:8000/users/1/",
+        "username": "admin",
+        "email": "admin@test.com",
+        "groups": [
+            "http://localhost:8000/groups/1"
+        ],
+        "reviews": [
+            "http://localhost:8000/reviews/1",
+            "http://localhost:8000/reviews/2",
+            "http://localhost:8000/reviews/3"
+        ],
+        "comments": [
+            "http://localhost:8000/comments/1",
+            "http://localhost:8000/comments/2",
+            "http://localhost:8000/comments/3"
+        ],
+        "actors": [
+            "http://localhost:8000/actors/1",
+            "http://localhost:8000/actors/2"
+        ]
+    }
+    
+### Modify Comment [PUT]
+Modify comment information. Only . . . can modify comment information. Only . . . can be modified.
+
++ Request (application/json)
+
+        {
+            "url": "http://localhost:8000/users/1/",
+            "username": "admin",
+            "email": "admin_MODIFIED@test.com",
+            "groups": [
+            "http://localhost:8000/groups/1"
+            ],
+            "reviews": [
+                "http://localhost:8000/reviews/1",
+                "http://localhost:8000/reviews/2",
+                "http://localhost:8000/reviews/3"
+            ],
+            "comments": [
+                "http://localhost:8000/comments/1",
+                "http://localhost:8000/comments/2",
+                "http://localhost:8000/comments/3"
+            ],
+            "actors": [
+                "http://localhost:8000/actors/1",
+                "http://localhost:8000/actors/2"
+            ]
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location:  /users/1/
+
+    + Body
+
+            {
+                "url": "http://localhost:8000/users/1/",
+                "username": "admin",
+                "email": "admin_MODIFIED@test.com",
+                "groups": [],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
+                ]
+            }
+            
++ Response 404 (application/json)
+
++ Response 401 (application/json)
+
+## Comments [/comments]
+
+### Get all Comments [GET]
+
+Get list of all created Comments containing their data.
+
++ Response 200 (application/json)
+
+        {
+            "count": 1,
+            "next": null,
+            "previous": null,
+            "results": [
+                {
+                    "url": "http://localhost:8000/users/1/",
+                    "username": "admin",
+                    "email": "",
+                    "groups": [],
+                    "reviews": [
+                        "http://localhost:8000/reviews/1",
+                        "http://localhost:8000/reviews/2",
+                        "http://localhost:8000/reviews/3"
+                    ],
+                    "comments": [
+                        "http://localhost:8000/comments/1",
+                        "http://localhost:8000/comments/2",
+                        "http://localhost:8000/comments/3"
+                    ],
+                    "actors": [
+                        "http://localhost:8000/actors/1",
+                        "http://localhost:8000/actors/2"
+                    ]
+                }
+            ]
+        }
+
+### Create a new Comment [POST]
+
+You may create your own comment using this action. It takes a JSON
+object containing . . .
+
++ Request (application/json)
+
+        {
+            "username": "testuser",
+            "email": "test@test.com",
+            "groups": []
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location:  /users/2/
+
+    + Body
+
+            {
+                "url": "http://localhost:8000/users/2/",
+                "username": "testuser",
+                "email": "test@test.com",
+                "groups": [],
+                "reviews": [],
+                "comments": [],
+                "actors": []
+            }
+            
++ Response 500 (application/json)
+
++ Response 401 (application/json)
+
+# Group Actor
+## Profile
+
+### Description
+Group model containing an actor profile information.
+
+### Related Profiles
+ - *User*
+ - *Review*
+ - *Comment*
+ - *Actor*
+
+### Link relations
+ - **groups**: List of all the groups this Actor belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **reviews**: List of all the reviews made by this Actor. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **comments**: List of all the comments made by this Actor. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **actors**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+
+### Semantic descriptors
+ - **url**: STRING. Hyperlink to the Actor.
+ - **username**: STRING. Actors username.
+ - **email**: STRING. User's email address.
+ - **groups**: ARRAY of STRING. All Actors the Actor Actors to represented as Actors to the related Actor.
+ - **reviews**: ARRAY of STRING. All Actors the Actor has Actored represented as Actors to the related review.
+ - **comments**: ARRAY of STRING. All comments the Actor has Actored represented as hyperlinks to the related comment.
+ - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
+
+## Actor [/actors/{id}]
+A single Actor containing all its information.
+
++ Parameters
+    + id (integer) ... the id of the user.
+
++ Model (application/hal+json)
+
+    + Body
+    
+            {
+                "url": "http://localhost:8000/users/1/",
+                "username": "admin",
+                "email": "admin@test.com",
+                "groups": [
+                    "http://localhost:8000/groups/1"
+                ],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
+                ]
+            }
+
+### Get a single actor [GET] 
+Get the information of a certain actor, such as .
+
++ Response 200 (application/json)
+
+    {
+        "url": "http://localhost:8000/users/1/",
+        "username": "admin",
+        "email": "admin@test.com",
+        "groups": [
+            "http://localhost:8000/groups/1"
+        ],
+        "reviews": [
+            "http://localhost:8000/reviews/1",
+            "http://localhost:8000/reviews/2",
+            "http://localhost:8000/reviews/3"
+        ],
+        "comments": [
+            "http://localhost:8000/comments/1",
+            "http://localhost:8000/comments/2",
+            "http://localhost:8000/comments/3"
+        ],
+        "actors": [
+            "http://localhost:8000/actors/1",
+            "http://localhost:8000/actors/2"
+        ]
+    }
+    
+### Modify Actor [PUT]
+Modify movie information. Only . . . can modify Actor information. Only __ can be modified.
+
++ Request (application/json)
+
+        {
+            "url": "http://localhost:8000/users/1/",
+            "username": "admin",
+            "email": "admin_MODIFIED@test.com",
+            "groups": [
+            "http://localhost:8000/groups/1"
+            ],
+            "reviews": [
+                "http://localhost:8000/reviews/1",
+                "http://localhost:8000/reviews/2",
+                "http://localhost:8000/reviews/3"
+            ],
+            "comments": [
+                "http://localhost:8000/comments/1",
+                "http://localhost:8000/comments/2",
+                "http://localhost:8000/comments/3"
+            ],
+            "actors": [
+                "http://localhost:8000/actors/1",
+                "http://localhost:8000/actors/2"
+            ]
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location:  /users/1/
+
+    + Body
+
+            {
+                "url": "http://localhost:8000/users/1/",
+                "username": "admin",
+                "email": "admin_MODIFIED@test.com",
+                "groups": [],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
+                ]
+            }
+            
++ Response 404 (application/json)
+
++ Response 401 (application/json)
+
+## Actors [/actors]
+
+### Get all Actors [GET]
+
+Get list of all created Actor profiles containing their data.
+
++ Response 200 (application/json)
+
+        {
+            "count": 1,
+            "next": null,
+            "previous": null,
+            "results": [
+                {
+                    "url": "http://localhost:8000/users/1/",
+                    "username": "admin",
+                    "email": "",
+                    "groups": [],
+                    "reviews": [
+                        "http://localhost:8000/reviews/1",
+                        "http://localhost:8000/reviews/2",
+                        "http://localhost:8000/reviews/3"
+                    ],
+                    "comments": [
+                        "http://localhost:8000/comments/1",
+                        "http://localhost:8000/comments/2",
+                        "http://localhost:8000/comments/3"
+                    ],
+                    "actors": [
+                        "http://localhost:8000/actors/1",
+                        "http://localhost:8000/actors/2"
+                    ]
+                }
+            ]
+        }
+
+### Create a new Actor [POST]
+
+You may create your own actor profile using this action. It takes a JSON
+object containing . . .
+
++ Request (application/json)
+
+        {
+            "username": "testuser",
+            "email": "test@test.com",
+            "groups": []
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location:  /users/2/
+
+    + Body
+
+            {
+                "url": "http://localhost:8000/users/2/",
+                "username": "testuser",
+                "email": "test@test.com",
+                "groups": [],
+                "reviews": [],
+                "comments": [],
+                "actors": []
+            }
+            
++ Response 500 (application/json)
+
++ Response 401 (application/json)
+
+
+# Group Category
+## Profile
+
+### Description
+Group model containing an category profile information.
+
+### Related Profiles
+ - *User*
+ - *Review*
+ - *Comment*
+ - *Actor*
+
+### Link relations
+ - **groups**: List of all the groups this Actor belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **reviews**: List of all the reviews made by this Actor. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **comments**: List of all the comments made by this Actor. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **actors**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+
+### Semantic descriptors
+ - **url**: STRING. Hyperlink to the Actor.
+ - **username**: STRING. Actors username.
+ - **email**: STRING. User's email address.
+ - **groups**: ARRAY of STRING. All Actors the Actor Actors to represented as Actors to the related Actor.
+ - **reviews**: ARRAY of STRING. All Actors the Actor has Actored represented as Actors to the related review.
+ - **comments**: ARRAY of STRING. All comments the Actor has Actored represented as hyperlinks to the related comment.
+ - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
+
+## Category [/actors/{id}]
+A single Actor containing all its information.
+
++ Parameters
+    + id (integer) ... the id of the user.
+
++ Model (application/hal+json)
+
+    + Body
+    
+            {
+                "url": "http://localhost:8000/users/1/",
+                "username": "admin",
+                "email": "admin@test.com",
+                "groups": [
+                    "http://localhost:8000/groups/1"
+                ],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
+                ]
+            }
+
+### Get a single actor [GET] 
+Get the information of a certain actor, such as .
+
++ Response 200 (application/json)
+
+    {
+        "url": "http://localhost:8000/users/1/",
+        "username": "admin",
+        "email": "admin@test.com",
+        "groups": [
+            "http://localhost:8000/groups/1"
+        ],
+        "reviews": [
+            "http://localhost:8000/reviews/1",
+            "http://localhost:8000/reviews/2",
+            "http://localhost:8000/reviews/3"
+        ],
+        "comments": [
+            "http://localhost:8000/comments/1",
+            "http://localhost:8000/comments/2",
+            "http://localhost:8000/comments/3"
+        ],
+        "actors": [
+            "http://localhost:8000/actors/1",
+            "http://localhost:8000/actors/2"
+        ]
+    }
+    
+### Modify Actor [PUT]
+Modify movie information. Only . . . can modify Actor information. Only __ can be modified.
+
++ Request (application/json)
+
+        {
+            "url": "http://localhost:8000/users/1/",
+            "username": "admin",
+            "email": "admin_MODIFIED@test.com",
+            "groups": [
+            "http://localhost:8000/groups/1"
+            ],
+            "reviews": [
+                "http://localhost:8000/reviews/1",
+                "http://localhost:8000/reviews/2",
+                "http://localhost:8000/reviews/3"
+            ],
+            "comments": [
+                "http://localhost:8000/comments/1",
+                "http://localhost:8000/comments/2",
+                "http://localhost:8000/comments/3"
+            ],
+            "actors": [
+                "http://localhost:8000/actors/1",
+                "http://localhost:8000/actors/2"
+            ]
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location:  /users/1/
+
+    + Body
+
+            {
+                "url": "http://localhost:8000/users/1/",
+                "username": "admin",
+                "email": "admin_MODIFIED@test.com",
+                "groups": [],
+                "reviews": [
+                    "http://localhost:8000/reviews/1",
+                    "http://localhost:8000/reviews/2",
+                    "http://localhost:8000/reviews/3"
+                ],
+                "comments": [
+                    "http://localhost:8000/comments/1",
+                    "http://localhost:8000/comments/2",
+                    "http://localhost:8000/comments/3"
+                ],
+                "actors": [
+                    "http://localhost:8000/actors/1",
+                    "http://localhost:8000/actors/2"
+                ]
+            }
+            
++ Response 404 (application/json)
+
++ Response 401 (application/json)
+
+## Actors [/users]
+
+### Get all Actors [GET]
+
+Get list of all created Actor profiles containing their data.
+
++ Response 200 (application/json)
+
+        {
+            "count": 1,
+            "next": null,
+            "previous": null,
+            "results": [
+                {
+                    "url": "http://localhost:8000/users/1/",
+                    "username": "admin",
+                    "email": "",
+                    "groups": [],
+                    "reviews": [
+                        "http://localhost:8000/reviews/1",
+                        "http://localhost:8000/reviews/2",
+                        "http://localhost:8000/reviews/3"
+                    ],
+                    "comments": [
+                        "http://localhost:8000/comments/1",
+                        "http://localhost:8000/comments/2",
+                        "http://localhost:8000/comments/3"
+                    ],
+                    "actors": [
+                        "http://localhost:8000/actors/1",
+                        "http://localhost:8000/actors/2"
+                    ]
+                }
+            ]
+        }
+
+### Create a new Actor [POST]
+
+You may create your own actor profile using this action. It takes a JSON
+object containing . . .
+
++ Request (application/json)
+
+        {
+            "username": "testuser",
+            "email": "test@test.com",
+            "groups": []
+        }
+
++ Response 201 (application/json)
+
+    + Headers
+
+            Location:  /users/2/
+
+    + Body
+
+            {
+                "url": "http://localhost:8000/users/2/",
+                "username": "testuser",
+                "email": "test@test.com",
+                "groups": [],
+                "reviews": [],
+                "comments": [],
+                "actors": []
+            }
+            
++ Response 500 (application/json)
+
++ Response 401 (application/json)
