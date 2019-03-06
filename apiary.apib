@@ -448,23 +448,24 @@ object containing . . .
 
 + Response 401 (application/json)
 
+
 # Group Movie
 ## Profile
 
 ### Description
-Group model containing movie profile information.
+Group model containing movie information.
 
 ### Related Profiles
- - *User*
+ - *Category*
+ - *Actor*
  - *Review*
  - *Comment*
- - *Actor*
 
 ### Link relations
- - **groups**: List of all the groups this group belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **reviews**: List of all the reviews made by this user. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **comments**: List of all the comments made by this user. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
- - **actors**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **categories**: List of all the groups this group belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **actors**: List of all the reviews made by this user. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
+ - **reviews**: List of all the comments made by this user. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **comments**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
 
 ### Semantic descriptors
  - **url**: STRING. Hyperlink to the user.
