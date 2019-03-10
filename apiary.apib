@@ -20,19 +20,14 @@ User model containing user profile information.
  - *Actor*
 
 ### Link relations
- - **groups**: List of all the groups this user belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **reviews**: List of all the reviews made by this user. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **comments**: List of all the comments made by this user. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
- - **actors**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **groups**: List of all the groups this user belongs to. Each item is an instance of the type Group defined in the Group Profile. Can be accessed by GET.
+ - **reviews**: List of all the reviews made by this user. Each item is an instance of the type Review defined in the Review Profile. Can be accessed by GET. POST only for authenticated user using csrftoken.
+ - **comments**: List of all the comments made by this user. Each item is an instance of the type Comment defined in the Comment Profile. Can be accessed by GET. POST only for authenticated user using csrftoken.
+ - **actors**: List of all the actors made by this user. Each item is an instance of the type Actor defined in the Actor Profile. Can be accessed by GET. POST only for authenticated user using csrftoken.
 
 ### Semantic descriptors
- - **url**: STRING. Hyperlink to the user.
  - **username**: STRING. User's username.
  - **email**: STRING. User's email address.
- - **groups**: ARRAY of STRING. All groups the user belongs to represented as hyperlinks to the related group.
- - **reviews**: ARRAY of STRING. All reviews the user has created represented as hyperlinks to the related review.
- - **comments**: ARRAY of STRING. All comments the user has created represented as hyperlinks to the related comment.
- - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
 
 ## User [/users/{id}]
 A single user containing all its information.
@@ -40,121 +35,80 @@ A single user containing all its information.
 + Parameters
     + id (integer) ... the id of the user.
 
-+ Model (application/hal+json)
++ Model (application/json)
 
     + Body
     
             {
-                "url": "http://localhost:8000/users/1/",
+                "_links": {
+                    "self": {
+                        "href": "/users/1"
+                    },
+                    "groups": {
+                        "href": "/users/1/groups"
+                    },
+                    "reviews": {
+                        "href": "/users/1/reviews"
+                    },
+                    "comments": {
+                        "href": "/users/1/comments"
+                    },
+                    "actors": {
+                        "href": "/users/1/actors"
+                    }
+                },
                 "username": "admin",
-                "email": "admin@test.com",
-                "groups": [
-                    "http://localhost:8000/groups/1"
-                ],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
+                "email": "admin@test.com"
             }
+            
+    + Headers
+    
+            X-CSRFTOKEN: [csrftoken]
 
 ### Get a single user [GET] 
 Get the information of a certain user, such as the reviews and comments the user has created.
 
-+ Response 200 (application/json)
++ Response 200
 
-    {
-        "url": "http://localhost:8000/users/1/",
-        "username": "admin",
-        "email": "admin@test.com",
-        "groups": [
-            "http://localhost:8000/groups/1"
-        ],
-        "reviews": [
-            "http://localhost:8000/reviews/1",
-            "http://localhost:8000/reviews/2",
-            "http://localhost:8000/reviews/3"
-        ],
-        "comments": [
-            "http://localhost:8000/comments/1",
-            "http://localhost:8000/comments/2",
-            "http://localhost:8000/comments/3"
-        ],
-        "actors": [
-            "http://localhost:8000/actors/1",
-            "http://localhost:8000/actors/2"
-        ]
-    }
+    [User][]
     
 ### Modify User [PUT]
 Modify user information. Only admin user can modify user information. Only username and email address can be modified.
+If the user is not authorized API returns a 401.
 
 + Request (application/json)
 
         {
-            "url": "http://localhost:8000/users/1/",
             "username": "admin",
-            "email": "admin_MODIFIED@test.com",
-            "groups": [
-            "http://localhost:8000/groups/1"
-            ],
-            "reviews": [
-                "http://localhost:8000/reviews/1",
-                "http://localhost:8000/reviews/2",
-                "http://localhost:8000/reviews/3"
-            ],
-            "comments": [
-                "http://localhost:8000/comments/1",
-                "http://localhost:8000/comments/2",
-                "http://localhost:8000/comments/3"
-            ],
-            "actors": [
-                "http://localhost:8000/actors/1",
-                "http://localhost:8000/actors/2"
-            ]
+            "email": "adminMODIFIED@test.com"
         }
 
-+ Response 201 (application/json)
++ Response 200
 
-    + Headers
-
-            Location:  /users/1/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/1/",
-                "username": "admin",
-                "email": "admin_MODIFIED@test.com",
-                "groups": [],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
-            }
+    [User][]
             
 + Response 404 (application/json)
 
 + Response 401 (application/json)
+
+        {
+          "error": "Unauthorized."
+        }
+        
+### Delete an User [DELETE]
+Delete an user. If the user doesn't exist the API returns a 404 and if the user is not authorized it returns a 401.
+
+ + Request (application/json)
+                
+ + Response 204 (application/json)
+
+ + Response 401 (application/json)
+
+        {
+            "error":"Unauthorized."
+        }
+        
+ + Response 404 (application/json)
 
 ## Users [/users]
 
@@ -165,31 +119,37 @@ Get list of all created users containing their data.
 + Response 200 (application/json)
 
         {
-            "count": 1,
-            "next": null,
-            "previous": null,
-            "results": [
-                {
-                    "url": "http://localhost:8000/users/1/",
-                    "username": "admin",
-                    "email": "",
-                    "groups": [],
-                    "reviews": [
-                        "http://localhost:8000/reviews/1",
-                        "http://localhost:8000/reviews/2",
-                        "http://localhost:8000/reviews/3"
-                    ],
-                    "comments": [
-                        "http://localhost:8000/comments/1",
-                        "http://localhost:8000/comments/2",
-                        "http://localhost:8000/comments/3"
-                    ],
-                    "actors": [
-                        "http://localhost:8000/actors/1",
-                        "http://localhost:8000/actors/2"
-                    ]
+            "_links": {
+                "self": {
+                    "href": "/users"
                 }
-            ]
+            },
+            "count": 1,
+            "_embedded": {
+                "user": [
+                    {
+                        "_links": {
+                            "self": {
+                                "href": "/users/1"
+                            },
+                            "groups": {
+                                "href": "/users/1/groups"
+                            },
+                            "reviews": {
+                                "href": "/users/1/reviews"
+                            },
+                            "comments": {
+                                "href": "/users/1/comments"
+                            },
+                            "actors": {
+                                "href": "/users/1/actors"
+                            }
+                        },
+                        "username": "admin",
+                        "email": "admin@test.com"
+                    }
+                ]
+            }
         }
 
 ### Create a new User [POST]
@@ -200,1352 +160,958 @@ object containing a username, email-address and a optional collection of groups 
 + Request (application/json)
 
         {
-            "username": "testuser",
-            "email": "test@test.com",
-            "groups": []
+            "username": "adminNEW",
+            "email": "adminNEW@test.com"
         }
 
-+ Response 201 (application/json)
++ Response 201
 
-    + Headers
-
-            Location:  /users/2/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/2/",
-                "username": "testuser",
-                "email": "test@test.com",
-                "groups": [],
-                "reviews": [],
-                "comments": [],
-                "actors": []
-            }
+    [User][]
             
 + Response 500 (application/json)
 
+        {
+          "error": "Item already exists."
+        }
+        
 + Response 401 (application/json)
 
+        {
+          "error": "Unauthorized."
+        }
 
 # Group Group
 ## Profile
 
 ### Description
-Group model containing group profile information.
+Group model containing group profile information. Not fully implemented.
 
 ### Related Profiles
  - *User*
- - *Review*
- - *Comment*
- - *Actor*
 
 ### Link relations
- - **groups**: List of all the groups this user belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **reviews**: List of all the reviews made by this group. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **comments**: List of all the comments made by this user. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
- - **actors**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **users**: List of all the users that belong to this group. Each item is an instance of the type User defined in the User Profile. Can be accessed by GET. POST only for authenticated admin-user using csrftoken.
 
 ### Semantic descriptors
- - **url**: STRING. Hyperlink to the user.
- - **username**: STRING. User's username.
- - **email**: STRING. User's email address.
- - **groups**: ARRAY of STRING. All groups the user belongs to represented as hyperlinks to the related group.
- - **reviews**: ARRAY of STRING. All reviews the user has created represented as hyperlinks to the related review.
- - **comments**: ARRAY of STRING. All comments the user has created represented as hyperlinks to the related comment.
- - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
+ - **name**: STRING. Name of the group.
+ - **isAdmin**: INTEGER. 0 or 1 to determine if the group is an admin-group.
 
 ## Group [/groups/{id}]
 A single group containing all its information.
 
 + Parameters
-    + id (integer) ... the id of the user.
+    + id (integer) ... the id of the group.
 
-+ Model (application/hal+json)
++ Model (application/json)
 
     + Body
     
             {
-                "url": "http://localhost:8000/users/1/",
-                "username": "admin",
-                "email": "admin@test.com",
-                "groups": [
-                    "http://localhost:8000/groups/1"
-                ],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
+                "_links": {
+                    "self": {
+                        "href": "/groups/1"
+                    },
+                    "users": {
+                        "href": "/groups/1/users"
+                    }
+                },
+                "name": "admin-group",
+                "isAdmin": 1
             }
+            
+    + Headers
 
-### Get a single user [GET] 
-Get the information of a certain user, such as the reviews and comments the user has created.
+            X-CSRFTOKEN: [csrftoken]
 
-+ Response 200 (application/json)
+### Get a single group [GET] 
+Get the information of a certain group, such as it's name, admin status and list of users that belong to it.
 
-    {
-        "url": "http://localhost:8000/users/1/",
-        "username": "admin",
-        "email": "admin@test.com",
-        "groups": [
-            "http://localhost:8000/groups/1"
-        ],
-        "reviews": [
-            "http://localhost:8000/reviews/1",
-            "http://localhost:8000/reviews/2",
-            "http://localhost:8000/reviews/3"
-        ],
-        "comments": [
-            "http://localhost:8000/comments/1",
-            "http://localhost:8000/comments/2",
-            "http://localhost:8000/comments/3"
-        ],
-        "actors": [
-            "http://localhost:8000/actors/1",
-            "http://localhost:8000/actors/2"
-        ]
-    }
++ Response 200
+
+    [Group][]
     
 ### Modify Group [PUT]
-Modify group information. Only admin user can modify group information. Only username and email address can be modified.
+Modify group information. Only admin user can modify group information. Only name and isAdmin can be modified.
+If the user is not authorized API returns a 401.
 
 + Request (application/json)
 
         {
-            "url": "http://localhost:8000/users/1/",
-            "username": "admin",
-            "email": "admin_MODIFIED@test.com",
-            "groups": [
-            "http://localhost:8000/groups/1"
-            ],
-            "reviews": [
-                "http://localhost:8000/reviews/1",
-                "http://localhost:8000/reviews/2",
-                "http://localhost:8000/reviews/3"
-            ],
-            "comments": [
-                "http://localhost:8000/comments/1",
-                "http://localhost:8000/comments/2",
-                "http://localhost:8000/comments/3"
-            ],
-            "actors": [
-                "http://localhost:8000/actors/1",
-                "http://localhost:8000/actors/2"
-            ]
+            "name": "admin-group",
+            "isAdmin": 1
         }
 
-+ Response 201 (application/json)
++ Response 200
 
-    + Headers
-
-            Location:  /users/1/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/1/",
-                "username": "admin",
-                "email": "admin_MODIFIED@test.com",
-                "groups": [],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
-            }
+    [Group][]
             
 + Response 404 (application/json)
 
 + Response 401 (application/json)
 
+        {
+          "error": "Unauthorized."
+        }
+
+### Delete a Group [DELETE]
+Delete a group. If the group doesn't exist the API returns a 404 and if the user is not authorized it returns a 401.
+
+ + Request (application/json)
+                
+ + Response 204 (application/json)
+
+ + Response 401 (application/json)
+
+        {
+            "error":"Unauthorized."
+        }
+        
+ + Response 404 (application/json)
+
 ## Groups [/groups]
 
-### Get all groups [GET]
+### Get all Groups [GET]
 
 Get list of all created groups containing their data.
 
 + Response 200 (application/json)
 
         {
-            "count": 1,
-            "next": null,
-            "previous": null,
-            "results": [
-                {
-                    "url": "http://localhost:8000/users/1/",
-                    "username": "admin",
-                    "email": "",
-                    "groups": [],
-                    "reviews": [
-                        "http://localhost:8000/reviews/1",
-                        "http://localhost:8000/reviews/2",
-                        "http://localhost:8000/reviews/3"
-                    ],
-                    "comments": [
-                        "http://localhost:8000/comments/1",
-                        "http://localhost:8000/comments/2",
-                        "http://localhost:8000/comments/3"
-                    ],
-                    "actors": [
-                        "http://localhost:8000/actors/1",
-                        "http://localhost:8000/actors/2"
-                    ]
+            "_links": {
+                "self": {
+                    "href": "/groups"
                 }
-            ]
+            },
+            "count": 1,
+            "_embedded": {
+                "group": [
+                    {
+                        "_links": {
+                            "self": {
+                                "href": "/groups/1"
+                            },
+                            "users": {
+                                "href": "/groups/1/users"
+                            }
+                        },
+                        "name": "admin-group",
+                        "isAdmin": 1
+                    }
+                ]
+            }
         }
 
 ### Create a new Group [POST]
 
 You may create your own group using this action. It takes a JSON
-object containing . . .
+object containing a name, admin-status and a optional collection of users that belong to this group.
 
 + Request (application/json)
 
         {
-            "username": "testuser",
-            "email": "test@test.com",
-            "groups": []
+            "name": "admin-group",
+            "isAdmin": 1
         }
 
-+ Response 201 (application/json)
++ Response 201
 
-    + Headers
-
-            Location:  /users/2/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/2/",
-                "username": "testuser",
-                "email": "test@test.com",
-                "groups": [],
-                "reviews": [],
-                "comments": [],
-                "actors": []
-            }
+    [Group][]
             
 + Response 500 (application/json)
 
+        {
+          "error": "Item already exists."
+        }
+        
 + Response 401 (application/json)
 
+        {
+          "error": "Unauthorized."
+        }
 
 # Group Movie
 ## Profile
 
 ### Description
-Group model containing movie information.
+Movie model containing movie profile information.
 
 ### Related Profiles
  - *Category*
  - *Actor*
- - *Review*
- - *Comment*
 
 ### Link relations
- - **categories**: List of all the groups this group belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **actors**: List of all the reviews made by this user. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **reviews**: List of all the comments made by this user. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
- - **comments**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **categories**: List of all the categories this movie belongs to. Each item is an instance of the type Category defined in the Category Profile. Can be accessed by GET. POST only for authenticated user using csrftoken.
+ - **actors**: List of all the actors in this movie. Each item is an instance of the type Actor defined in the Actor Profile. Can be accessed by GET. POST only for authenticated user using csrftoken.
 
 ### Semantic descriptors
- - **url**: STRING. Hyperlink to the user.
- - **username**: STRING. User's username.
- - **email**: STRING. User's email address.
- - **groups**: ARRAY of STRING. All groups the user belongs to represented as hyperlinks to the related group.
- - **reviews**: ARRAY of STRING. All reviews the user has created represented as hyperlinks to the related review.
- - **comments**: ARRAY of STRING. All comments the user has created represented as hyperlinks to the related comment.
- - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
+ - **title**: STRING. Movie's title.
+ - **length**: STRING. Length of movie ("00:00:00").
+ - **rating**: INTEGER. Movie's rating ranging from 1 to 5.
 
 ## Movie [/movies/{id}]
 A single movie containing all its information.
 
 + Parameters
-    + id (integer) ... the id of the user.
+    + id (integer) ... the id of the movie.
 
-+ Model (application/hal+json)
++ Model (application/json)
 
     + Body
     
             {
-                "url": "http://localhost:8000/users/1/",
-                "username": "admin",
-                "email": "admin@test.com",
-                "groups": [
-                    "http://localhost:8000/groups/1"
-                ],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
+                "_links": {
+                    "self": {
+                        "href": "/movies/1"
+                    },
+                    "categories": {
+                        "href": "/movies/1/categories"
+                    },
+                    "actors": {
+                        "href": "/movies/1/actors"
+                    }
+                },
+                "title": "Movie 1",
+                "length": "01:34:56",
+                "rating": 3
             }
+            
+    + Headers
+
+            X-CSRFTOKEN: [csrftoken]
 
 ### Get a single movie [GET] 
-Get the information of a certain movie, such as .
+Get the information of a certain movie, such as the title of the movie and it's length and rating.
 
-+ Response 200 (application/json)
++ Response 200
 
-    {
-        "url": "http://localhost:8000/users/1/",
-        "username": "admin",
-        "email": "admin@test.com",
-        "groups": [
-            "http://localhost:8000/groups/1"
-        ],
-        "reviews": [
-            "http://localhost:8000/reviews/1",
-            "http://localhost:8000/reviews/2",
-            "http://localhost:8000/reviews/3"
-        ],
-        "comments": [
-            "http://localhost:8000/comments/1",
-            "http://localhost:8000/comments/2",
-            "http://localhost:8000/comments/3"
-        ],
-        "actors": [
-            "http://localhost:8000/actors/1",
-            "http://localhost:8000/actors/2"
-        ]
-    }
+    [Movie][]
     
 ### Modify Movie [PUT]
-Modify movie information. Only admin user can modify movie information. Only __ can be modified.
+Modify movie information. Only admin or original creator of the movie can modify it's information. Only title, length and rating can be modified.
+If the user is not authorized API returns a 401.
 
 + Request (application/json)
 
         {
-            "url": "http://localhost:8000/users/1/",
-            "username": "admin",
-            "email": "admin_MODIFIED@test.com",
-            "groups": [
-            "http://localhost:8000/groups/1"
-            ],
-            "reviews": [
-                "http://localhost:8000/reviews/1",
-                "http://localhost:8000/reviews/2",
-                "http://localhost:8000/reviews/3"
-            ],
-            "comments": [
-                "http://localhost:8000/comments/1",
-                "http://localhost:8000/comments/2",
-                "http://localhost:8000/comments/3"
-            ],
-            "actors": [
-                "http://localhost:8000/actors/1",
-                "http://localhost:8000/actors/2"
-            ]
+            "title": "Movie 1",
+            "length": "01:34:56",
+            "rating": 3
         }
 
-+ Response 201 (application/json)
++ Response 200
 
-    + Headers
-
-            Location:  /users/1/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/1/",
-                "username": "admin",
-                "email": "admin_MODIFIED@test.com",
-                "groups": [],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
-            }
+    [Movie][]
             
 + Response 404 (application/json)
 
 + Response 401 (application/json)
+
+        {
+          "error": "Unauthorized."
+        }
+        
+### Delete a Movie [DELETE]
+Delete a movie. If the movie doesn't exist the API returns a 404 and if the user is not authorized it returns a 401.
+
+ + Request (application/json)
+                
+ + Response 204 (application/json)
+
+ + Response 401 (application/json)
+
+        {
+            "error":"Unauthorized."
+        }
+        
+ + Response 404 (application/json)
 
 ## Movies [/movies]
 
 ### Get all Movies [GET]
 
-Get list of all created Movies containing their data.
+Get list of all created movies containing their data.
 
 + Response 200 (application/json)
 
         {
-            "count": 1,
-            "next": null,
-            "previous": null,
-            "results": [
-                {
-                    "url": "http://localhost:8000/users/1/",
-                    "username": "admin",
-                    "email": "",
-                    "groups": [],
-                    "reviews": [
-                        "http://localhost:8000/reviews/1",
-                        "http://localhost:8000/reviews/2",
-                        "http://localhost:8000/reviews/3"
-                    ],
-                    "comments": [
-                        "http://localhost:8000/comments/1",
-                        "http://localhost:8000/comments/2",
-                        "http://localhost:8000/comments/3"
-                    ],
-                    "actors": [
-                        "http://localhost:8000/actors/1",
-                        "http://localhost:8000/actors/2"
-                    ]
+            "_links": {
+                "self": {
+                    "href": "/movies"
                 }
-            ]
+            },
+            "count": 1,
+            "_embedded": {
+                "movie": [
+                    {
+                        "_links": {
+                            "self": {
+                                "href": "/movies/1"
+                            },
+                            "categories": {
+                                "href": "/movies/1/categories"
+                            },
+                            "actors": {
+                                "href": "/movies/1/actors"
+                            }
+                        },
+                        "title": "Movie 1",
+                        "length": "01:34:56",
+                        "rating": 3
+                    }
+                ]
+            }
         }
 
 ### Create a new Movie [POST]
 
 You may create your own movie using this action. It takes a JSON
-object containing a username, email-address and a optional collection of groups user belongs to.
+object containing a title, length, rating and a optional collection of categories this movie belongs to and a optional collection of actors that appear in this movie.
 
 + Request (application/json)
 
         {
-            "username": "testuser",
-            "email": "test@test.com",
-            "groups": []
+            "title": "Movie 1",
+            "length": "01:34:56",
+            "rating": 3
         }
 
-+ Response 201 (application/json)
++ Response 201
 
-    + Headers
-
-            Location:  /users/2/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/2/",
-                "username": "testuser",
-                "email": "test@test.com",
-                "groups": [],
-                "reviews": [],
-                "comments": [],
-                "actors": []
-            }
+    [Movie][]
             
 + Response 500 (application/json)
 
+        {
+          "error": "Item already exists."
+        }
+        
 + Response 401 (application/json)
+
+        {
+          "error": "Unauthorized."
+        }
+        
 
 # Group Review
 ## Profile
 
 ### Description
-Group model containing review information.
+Review model containing review profile information.
 
 ### Related Profiles
  - *User*
- - *Review*
- - *Comment*
- - *Actor*
+ - *Movie*
 
 ### Link relations
- - **groups**: List of all the groups this Review belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **reviews**: List of all the reviews made by this user. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **comments**: List of all the comments made by this user. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
- - **actors**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **user**: Link to the user who created this review. Item is an instance of the type User defined in the User Profile. Can be accessed by GET.
+ - **movie**: Link to the movie this review belongs to. Item is an instance of the type Movie defined in the Movie Profile. Can be accessed by GET.
 
 ### Semantic descriptors
- - **url**: STRING. Hyperlink to the user.
- - **username**: STRING. User's username.
- - **email**: STRING. User's email address.
- - **groups**: ARRAY of STRING. All groups the user belongs to represented as hyperlinks to the related group.
- - **reviews**: ARRAY of STRING. All reviews the user has created represented as hyperlinks to the related review.
- - **comments**: ARRAY of STRING. All comments the user has created represented as hyperlinks to the related comment.
- - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
+ - **text**: STRING. Content of the review.
+ - **rating**: INTEGER. Rating associated with the review. Ranges from 1 to 5.
 
-## Review [/reviews/{id}]
-A single review containing all its information.
+## Review [/movies/{movie_id}/reviews/{id}]
+A single review for specific movie containing all its information.
 
 + Parameters
+    + movie_id (integer) ... the id of the movie.
     + id (integer) ... the id of the review.
 
-+ Model (application/hal+json)
++ Model (application/json)
 
     + Body
     
             {
-                "url": "http://localhost:8000/reviews/1/",
-                "username": "admin",
-                "email": "admin@test.com",
-                "groups": [
-                    "http://localhost:8000/groups/1"
-                ],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
+                "_links": {
+                    "self": {
+                        "href": "/movies/1/reviews/1"
+                    },
+                    "user": {
+                        "href": "/users/1"
+                    },
+                    "movie": {
+                        "href": "/movies/1"
+                    }
+                },
+                "text": "This is a review.",
+                "rating": 4
             }
+            
+    + Headers
+
+            X-CSRFTOKEN: [csrftoken]
 
 ### Get a single review [GET] 
-Get the information of a certain movie, such as .
+Get the information of a certain review, such as the content of the review and the rating associated with it.
 
-+ Response 200 (application/json)
++ Response 200
 
-    {
-        "url": "http://localhost:8000/users/1/",
-        "username": "admin",
-        "email": "admin@test.com",
-        "groups": [
-            "http://localhost:8000/groups/1"
-        ],
-        "reviews": [
-            "http://localhost:8000/reviews/1",
-            "http://localhost:8000/reviews/2",
-            "http://localhost:8000/reviews/3"
-        ],
-        "comments": [
-            "http://localhost:8000/comments/1",
-            "http://localhost:8000/comments/2",
-            "http://localhost:8000/comments/3"
-        ],
-        "actors": [
-            "http://localhost:8000/actors/1",
-            "http://localhost:8000/actors/2"
-        ]
-    }
+    [Review][]
     
 ### Modify Review [PUT]
-Modify movie information. Only admin user can modify movie information. Only __ can be modified.
+Modify review information. Only admin or original creator of the comment can modify it's information. Only text and rating can be modified.
+If the user is not authorized API returns a 401.
 
 + Request (application/json)
 
         {
-            "url": "http://localhost:8000/users/1/",
-            "username": "admin",
-            "email": "admin_MODIFIED@test.com",
-            "groups": [
-            "http://localhost:8000/groups/1"
-            ],
-            "reviews": [
-                "http://localhost:8000/reviews/1",
-                "http://localhost:8000/reviews/2",
-                "http://localhost:8000/reviews/3"
-            ],
-            "comments": [
-                "http://localhost:8000/comments/1",
-                "http://localhost:8000/comments/2",
-                "http://localhost:8000/comments/3"
-            ],
-            "actors": [
-                "http://localhost:8000/actors/1",
-                "http://localhost:8000/actors/2"
-            ]
+            "text": "This is a modified review.",
+            "rating": 3
         }
 
-+ Response 201 (application/json)
++ Response 200
 
-    + Headers
-
-            Location:  /users/1/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/1/",
-                "username": "admin",
-                "email": "admin_MODIFIED@test.com",
-                "groups": [],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
-            }
+    [Review][]
             
 + Response 404 (application/json)
 
 + Response 401 (application/json)
+    
+        {
+          "error": "Unauthorized."
+        }
+        
+### Delete a Review [DELETE]
+Delete a review. If the review doesn't exist the API returns a 404 and if the user is not authorized it returns a 401.
 
-## Reviews [/reviews]
+ + Request (application/json)
+                
+ + Response 204 (application/json)
 
-### Get all Reviews [GET]
+ + Response 401 (application/json)
 
-Get list of all created Review containing their data.
+        {
+            "error":"Unauthorized."
+        }
+        
+ + Response 404 (application/json)
+
+## Reviews [/movies/{movie_id}/reviews]
+
++ Parameters
+    + movie_id (integer) ... the id of the movie.
+
+### Get all reviews [GET]
+
+Get list of all created reviews containing their data for a specific movie.
 
 + Response 200 (application/json)
 
         {
-            "count": 1,
-            "next": null,
-            "previous": null,
-            "results": [
-                {
-                    "url": "http://localhost:8000/users/1/",
-                    "username": "admin",
-                    "email": "",
-                    "groups": [],
-                    "reviews": [
-                        "http://localhost:8000/reviews/1",
-                        "http://localhost:8000/reviews/2",
-                        "http://localhost:8000/reviews/3"
-                    ],
-                    "comments": [
-                        "http://localhost:8000/comments/1",
-                        "http://localhost:8000/comments/2",
-                        "http://localhost:8000/comments/3"
-                    ],
-                    "actors": [
-                        "http://localhost:8000/actors/1",
-                        "http://localhost:8000/actors/2"
-                    ]
+            "_links": {
+                "movie": {
+                    "href": "/movies/1"
+                },
+                "self": {
+                    "href": "/movies/1/reviews"
                 }
-            ]
+            },
+            "count": 1,
+            "_embedded": {
+                "review": [
+                    {
+                        "_links": {
+                            "self": {
+                              "href": "/movies/1/reviews/1"
+                            },
+                            "user": {
+                              "href": "/users/1"
+                            },
+                            "movie": {
+                              "href": "/movies/1"
+                            }
+                        },
+                        "text": "This is a review.",
+                        "rating": 4
+                    }
+                ]
+            }
         }
 
 ### Create a new Review [POST]
 
-You may create your own Review using this action. It takes a JSON
-object containing a username, email-address and a optional collection of groups user belongs to.
+You may create your own review using this action. It takes a JSON
+object containing text-content of the review, rating value from 1 to 5, user who created the review and the parent movie the review belongs to.
 
 + Request (application/json)
 
         {
-            "username": "testuser",
-            "email": "test@test.com",
-            "groups": []
+            "text": "This is a review.",
+            "rating": 4
         }
 
-+ Response 201 (application/json)
++ Response 201
 
-    + Headers
-
-            Location:  /users/2/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/2/",
-                "username": "testuser",
-                "email": "test@test.com",
-                "groups": [],
-                "reviews": [],
-                "comments": [],
-                "actors": []
-            }
+    [Review][]
             
 + Response 500 (application/json)
 
+        {
+          "error": "Item already exists."
+        }
+        
 + Response 401 (application/json)
+
+        {
+          "error": "Unauthorized."
+        }
 
 # Group Comment
 ## Profile
 
 ### Description
-Group model containing comment profile information.
+Comment model containing comment profile information.
 
 ### Related Profiles
  - *User*
- - *Review*
- - *Comment*
- - *Actor*
+ - *Movie*
 
 ### Link relations
- - **groups**: List of all the groups this comment belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **reviews**: List of all the reviews made by this comment. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **comments**: List of all the comments made by this user. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
- - **actors**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **user**: Link to the user who created this comment. Item is an instance of the type User defined in the User Profile. Can be accessed by GET.
+ - **movie**: Link to the movie this comment belongs to. Item is an instance of the type Movie defined in the Movie Profile. Can be accessed by GET.
 
 ### Semantic descriptors
- - **url**: STRING. Hyperlink to the user.
- - **username**: STRING. User's username.
- - **email**: STRING. User's email address.
- - **groups**: ARRAY of STRING. All groups the user belongs to represented as hyperlinks to the related group.
- - **reviews**: ARRAY of STRING. All reviews the user has created represented as hyperlinks to the related review.
- - **comments**: ARRAY of STRING. All comments the user has created represented as hyperlinks to the related comment.
- - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
+ - **text**: STRING. Content of the comment.
 
-## Comment [/comments/{id}]
-A single comment containing all its information.
+## Comment [/movies/{movie_id}/comments/{id}]
+A single comment for specific movie containing all its information.
 
 + Parameters
-    + id (integer) ... the id of the user.
+    + movie_id (integer) ... the id of the movie.
+    + id (integer) ... the id of the comment.
 
-+ Model (application/hal+json)
++ Model (application/json)
 
     + Body
     
             {
-                "url": "http://localhost:8000/users/1/",
-                "username": "admin",
-                "email": "admin@test.com",
-                "groups": [
-                    "http://localhost:8000/groups/1"
-                ],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
+                "_links": {
+                    "self": {
+                      "href": "/movies/1/comments/1"
+                    },
+                    "user": {
+                      "href": "/users/1"
+                    },
+                    "movie": {
+                      "href": "/movies/1"
+                    }
+                },
+                "text": "This is a comment."
             }
+            
+    + Headers
+
+            X-CSRFTOKEN: [csrftoken]
 
 ### Get a single comment [GET] 
-Get the information of a certain comment, such as . . .
+Get the information of a certain comment, such as the content of the comment and the rating associated with it.
 
-+ Response 200 (application/json)
++ Response 200
 
-    {
-        "url": "http://localhost:8000/users/1/",
-        "username": "admin",
-        "email": "admin@test.com",
-        "groups": [
-            "http://localhost:8000/groups/1"
-        ],
-        "reviews": [
-            "http://localhost:8000/reviews/1",
-            "http://localhost:8000/reviews/2",
-            "http://localhost:8000/reviews/3"
-        ],
-        "comments": [
-            "http://localhost:8000/comments/1",
-            "http://localhost:8000/comments/2",
-            "http://localhost:8000/comments/3"
-        ],
-        "actors": [
-            "http://localhost:8000/actors/1",
-            "http://localhost:8000/actors/2"
-        ]
-    }
+    [Comment][]
     
 ### Modify Comment [PUT]
-Modify comment information. Only . . . can modify comment information. Only . . . can be modified.
+Modify comment information. Only admin or original creator of the comment can modify it's information. Only text can be modified.
+If the user is not authorized API returns a 401.
 
 + Request (application/json)
 
         {
-            "url": "http://localhost:8000/users/1/",
-            "username": "admin",
-            "email": "admin_MODIFIED@test.com",
-            "groups": [
-            "http://localhost:8000/groups/1"
-            ],
-            "reviews": [
-                "http://localhost:8000/reviews/1",
-                "http://localhost:8000/reviews/2",
-                "http://localhost:8000/reviews/3"
-            ],
-            "comments": [
-                "http://localhost:8000/comments/1",
-                "http://localhost:8000/comments/2",
-                "http://localhost:8000/comments/3"
-            ],
-            "actors": [
-                "http://localhost:8000/actors/1",
-                "http://localhost:8000/actors/2"
-            ]
+            "text": "This is a modified comment.",
         }
 
-+ Response 201 (application/json)
++ Response 200
 
-    + Headers
-
-            Location:  /users/1/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/1/",
-                "username": "admin",
-                "email": "admin_MODIFIED@test.com",
-                "groups": [],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
-            }
+    [Comment][]
             
 + Response 404 (application/json)
 
 + Response 401 (application/json)
+    
+        {
+          "error": "Unauthorized."
+        }
+        
+### Delete a Comment [DELETE]
+Delete a comment. If the comment doesn't exist the API returns a 404 and if the user is not authorized it returns a 401.
 
-## Comments [/comments]
+ + Request (application/json)
+                
+ + Response 204 (application/json)
 
-### Get all Comments [GET]
+ + Response 401 (application/json)
 
-Get list of all created Comments containing their data.
+        {
+            "error":"Unauthorized."
+        }
+        
+ + Response 404 (application/json)
+
+## Comments [/movies/{movie_id}/comments]
+
++ Parameters
+    + movie_id (integer) ... the id of the movie.
+
+### Get all comments [GET]
+
+Get list of all created comments containing their data for a specific movie.
 
 + Response 200 (application/json)
 
         {
-            "count": 1,
-            "next": null,
-            "previous": null,
-            "results": [
-                {
-                    "url": "http://localhost:8000/users/1/",
-                    "username": "admin",
-                    "email": "",
-                    "groups": [],
-                    "reviews": [
-                        "http://localhost:8000/reviews/1",
-                        "http://localhost:8000/reviews/2",
-                        "http://localhost:8000/reviews/3"
-                    ],
-                    "comments": [
-                        "http://localhost:8000/comments/1",
-                        "http://localhost:8000/comments/2",
-                        "http://localhost:8000/comments/3"
-                    ],
-                    "actors": [
-                        "http://localhost:8000/actors/1",
-                        "http://localhost:8000/actors/2"
-                    ]
+            "_links": {
+                "movie": {
+                    "href": "/movies/1"
+                },
+                "self": {
+                    "href": "/movies/1/comments"
                 }
-            ]
+            },
+            "count": 1,
+            "_embedded": {
+                "review": [
+                    {
+                        "_links": {
+                            "self": {
+                              "href": "/movies/1/comments/1"
+                            },
+                            "user": {
+                              "href": "/users/1"
+                            },
+                            "movie": {
+                              "href": "/movies/1"
+                            }
+                        },
+                        "text": "This is a comment."
+                    }
+                ]
+            }
         }
 
 ### Create a new Comment [POST]
 
 You may create your own comment using this action. It takes a JSON
-object containing . . .
+object containing text-content of the comment, user who created the comment and the parent movie the comment belongs to.
 
 + Request (application/json)
 
         {
-            "username": "testuser",
-            "email": "test@test.com",
-            "groups": []
+            "text": "This is a comment."
         }
 
-+ Response 201 (application/json)
++ Response 201
 
-    + Headers
-
-            Location:  /users/2/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/2/",
-                "username": "testuser",
-                "email": "test@test.com",
-                "groups": [],
-                "reviews": [],
-                "comments": [],
-                "actors": []
-            }
+    [Comment][]
             
 + Response 500 (application/json)
 
+        {
+          "error": "Item already exists."
+        }
+        
 + Response 401 (application/json)
+
+        {
+          "error": "Unauthorized."
+        }
 
 # Group Actor
 ## Profile
 
 ### Description
-Group model containing an actor profile information.
+Actor model containing actor profile information.
 
 ### Related Profiles
  - *User*
- - *Review*
- - *Comment*
- - *Actor*
+ - *Movie*
 
 ### Link relations
- - **groups**: List of all the groups this Actor belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **reviews**: List of all the reviews made by this Actor. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **comments**: List of all the comments made by this Actor. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
- - **actors**: List of all the season of the show. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **user**: Link to the user who created this actor. Item is an instance of the type User defined in the User Profile. Can be accessed by GET.
+ - **movies**: List of the movies this actor belongs to. Each item is an instance of the type Movie defined in the Movie Profile. Can be accessed by GET. POST only for authenticated user using csrftoken.
 
 ### Semantic descriptors
- - **url**: STRING. Hyperlink to the Actor.
- - **username**: STRING. Actors username.
- - **email**: STRING. User's email address.
- - **groups**: ARRAY of STRING. All Actors the Actor Actors to represented as Actors to the related Actor.
- - **reviews**: ARRAY of STRING. All Actors the Actor has Actored represented as Actors to the related review.
- - **comments**: ARRAY of STRING. All comments the Actor has Actored represented as hyperlinks to the related comment.
- - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
+ - **firstname**: STRING. First name of the actor.
+ - **lastname**: STRING. Last name of the actor.
 
 ## Actor [/actors/{id}]
-A single Actor containing all its information.
+A single actor containing all its information.
 
 + Parameters
-    + id (integer) ... the id of the user.
+    + id (integer) ... the id of the actor.
 
-+ Model (application/hal+json)
++ Model (application/json)
 
     + Body
     
             {
-                "url": "http://localhost:8000/users/1/",
-                "username": "admin",
-                "email": "admin@test.com",
-                "groups": [
-                    "http://localhost:8000/groups/1"
-                ],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
+                "_links": {
+                    "self": {
+                      "href": "/actors/1"
+                    },
+                    "user": {
+                      "href": "/users/1"
+                    },
+                    "movies": {
+                      "href": "/actors/1/movies"
+                    }
+                },
+                "firstname": "John",
+                "lasttname": "Doe"
             }
+            
+    + Headers
+
+            X-CSRFTOKEN: [csrftoken]
 
 ### Get a single actor [GET] 
-Get the information of a certain actor, such as .
+Get the information of a certain actor, such as the first and last name of the actor and the movies he appears in.
 
-+ Response 200 (application/json)
++ Response 200
 
-    {
-        "url": "http://localhost:8000/users/1/",
-        "username": "admin",
-        "email": "admin@test.com",
-        "groups": [
-            "http://localhost:8000/groups/1"
-        ],
-        "reviews": [
-            "http://localhost:8000/reviews/1",
-            "http://localhost:8000/reviews/2",
-            "http://localhost:8000/reviews/3"
-        ],
-        "comments": [
-            "http://localhost:8000/comments/1",
-            "http://localhost:8000/comments/2",
-            "http://localhost:8000/comments/3"
-        ],
-        "actors": [
-            "http://localhost:8000/actors/1",
-            "http://localhost:8000/actors/2"
-        ]
-    }
+    [Actor][]
     
 ### Modify Actor [PUT]
-Modify movie information. Only . . . can modify Actor information. Only __ can be modified.
+Modify actor information. Only admin or original creator of the comment can modify it's information. Only names can be modified.
+If the user is not authorized API returns a 401.
 
 + Request (application/json)
 
         {
-            "url": "http://localhost:8000/users/1/",
-            "username": "admin",
-            "email": "admin_MODIFIED@test.com",
-            "groups": [
-            "http://localhost:8000/groups/1"
-            ],
-            "reviews": [
-                "http://localhost:8000/reviews/1",
-                "http://localhost:8000/reviews/2",
-                "http://localhost:8000/reviews/3"
-            ],
-            "comments": [
-                "http://localhost:8000/comments/1",
-                "http://localhost:8000/comments/2",
-                "http://localhost:8000/comments/3"
-            ],
-            "actors": [
-                "http://localhost:8000/actors/1",
-                "http://localhost:8000/actors/2"
-            ]
+            "firstname": "John",
+            "lasttname": "Doe"
         }
 
-+ Response 201 (application/json)
++ Response 200
 
-    + Headers
-
-            Location:  /users/1/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/1/",
-                "username": "admin",
-                "email": "admin_MODIFIED@test.com",
-                "groups": [],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
-            }
+    [Actor][]
             
 + Response 404 (application/json)
 
 + Response 401 (application/json)
+    
+        {
+          "error": "Unauthorized."
+        }
+        
+### Delete an Actor [DELETE]
+Delete an Actor. If the actor doesn't exist the API returns a 404 and if the user is not authorized it returns a 401.
+
+ + Request (application/json)
+                
+ + Response 204 (application/json)
+
+ + Response 401 (application/json)
+
+        {
+            "error":"Unauthorized."
+        }
+        
+ + Response 404 (application/json)
 
 ## Actors [/actors]
 
-### Get all Actors [GET]
+### Get all actors [GET]
 
-Get list of all created Actor profiles containing their data.
+Get list of all created actors containing their data.
 
 + Response 200 (application/json)
 
         {
-            "count": 1,
-            "next": null,
-            "previous": null,
-            "results": [
-                {
-                    "url": "http://localhost:8000/users/1/",
-                    "username": "admin",
-                    "email": "",
-                    "groups": [],
-                    "reviews": [
-                        "http://localhost:8000/reviews/1",
-                        "http://localhost:8000/reviews/2",
-                        "http://localhost:8000/reviews/3"
-                    ],
-                    "comments": [
-                        "http://localhost:8000/comments/1",
-                        "http://localhost:8000/comments/2",
-                        "http://localhost:8000/comments/3"
-                    ],
-                    "actors": [
-                        "http://localhost:8000/actors/1",
-                        "http://localhost:8000/actors/2"
-                    ]
+            "_links": {
+                "self": {
+                  "href": "/actors"
                 }
-            ]
+            },
+            "count": 1,
+            "_embedded": {
+                "actor": [
+                    {
+                        "_links": {
+                            "self": {
+                              "href": "/actors/1"
+                            },
+                            "user": {
+                              "href": "/users/1"
+                            },
+                            "movies": {
+                              "href": "/actors/1/movies"
+                            }
+                        },
+                        "firstname": "John",
+                        "lasttname": "Doe"
+                    }
+                ]
+            }
         }
 
 ### Create a new Actor [POST]
 
-You may create your own actor profile using this action. It takes a JSON
-object containing . . .
+You may create your own actor using this action. It takes a JSON
+object containing the names of the actor and the user who created the actor and an optional list of movies the actor belongs to.
 
 + Request (application/json)
 
         {
-            "username": "testuser",
-            "email": "test@test.com",
-            "groups": []
+            "firstname": "John",
+            "lasttname": "Doe"
         }
 
-+ Response 201 (application/json)
++ Response 201
 
-    + Headers
-
-            Location:  /users/2/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/2/",
-                "username": "testuser",
-                "email": "test@test.com",
-                "groups": [],
-                "reviews": [],
-                "comments": [],
-                "actors": []
-            }
+    [Actor][]
             
 + Response 500 (application/json)
 
+        {
+          "error": "Item already exists."
+        }
+        
 + Response 401 (application/json)
 
+        {
+          "error": "Unauthorized."
+        }
 
 # Group Category
 ## Profile
 
 ### Description
-Group model containing category information.
+Category model containing category profile information.
 
 ### Related Profiles
- - *User*
- - *Review*
- - *Comment*
- - *Actor*
+ - *Movie*
 
 ### Link relations
- - **groups**: List of all the Category this Category belongs to. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **reviews**: List of all the Category made by this Category. Each item is an hyperlink to the resource and all the methods available to it are described in its profile.
- - **comments**: List of all the comments made by this Category. Each item is an hyperlink to the resourceand all the methods available to it are described in its profile..
- - **actors**: List of all the Category of the Category. Each Category is an hyperlink to the resourceand all the methods available to it are described in its profile..
+ - **movies**: List of the movies this category appears in. List contains items of the type Movie defined in the Movie Profile. Can be accessed by GET. POST only for authenticated user using csrftoken.
 
 ### Semantic descriptors
- - **url**: STRING. Hyperlink to the Actor.
- - **username**: STRING. Actors username.
- - **email**: STRING. User's email address.
- - **groups**: ARRAY of STRING. All Actors the Actor Actors to represented as Actors to the related Actor.
- - **reviews**: ARRAY of STRING. All Actors the Actor has Actored represented as Actors to the related review.
- - **comments**: ARRAY of STRING. All comments the Actor has Actored represented as hyperlinks to the related comment.
- - **actors**: ARRAY of STRING. All actors the user has created represented as hyperlinks to the related actor.
+ - **name**: STRING. Name of the category.
 
 ## Category [/categories/{id}]
 A single category containing all its information.
 
 + Parameters
-    + id (integer) ... the id of the user.
+    + id (integer) ... the id of the category.
 
-+ Model (application/hal+json)
++ Model (application/json)
 
     + Body
     
             {
-                "url": "http://localhost:8000/users/1/",
-                "username": "admin",
-                "email": "admin@test.com",
-                "groups": [
-                    "http://localhost:8000/groups/1"
-                ],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
+                "_links": {
+                    "self": {
+                      "href": "/categories/1"
+                    },
+                    "movies": {
+                      "href": "/categories/1/movies"
+                    }
+                },
+                "name": "Horror"
             }
+            
+    + Headers
+
+            X-CSRFTOKEN: [csrftoken]
 
 ### Get a single category [GET] 
-Get the information of a certain category, such as .
+Get the information of a certain category, such as the name of the category and the movies belonging to this category.
 
-+ Response 200 (application/json)
++ Response 200
 
-    {
-        "url": "http://localhost:8000/users/1/",
-        "username": "admin",
-        "email": "admin@test.com",
-        "groups": [
-            "http://localhost:8000/groups/1"
-        ],
-        "reviews": [
-            "http://localhost:8000/reviews/1",
-            "http://localhost:8000/reviews/2",
-            "http://localhost:8000/reviews/3"
-        ],
-        "comments": [
-            "http://localhost:8000/comments/1",
-            "http://localhost:8000/comments/2",
-            "http://localhost:8000/comments/3"
-        ],
-        "actors": [
-            "http://localhost:8000/actors/1",
-            "http://localhost:8000/actors/2"
-        ]
-    }
+    [Category][]
     
 ### Modify Category [PUT]
-Modify Category information. Only . . . can modify Category information. Only __ can be modified.
+Modify category information. Only admin can modify it's information. Only name and the movies that belong to the category can be modified.
+If the user is not authorized API returns a 401.
 
 + Request (application/json)
 
         {
-            "url": "http://localhost:8000/users/1/",
-            "username": "admin",
-            "email": "admin_MODIFIED@test.com",
-            "groups": [
-            "http://localhost:8000/groups/1"
-            ],
-            "reviews": [
-                "http://localhost:8000/reviews/1",
-                "http://localhost:8000/reviews/2",
-                "http://localhost:8000/reviews/3"
-            ],
-            "comments": [
-                "http://localhost:8000/comments/1",
-                "http://localhost:8000/comments/2",
-                "http://localhost:8000/comments/3"
-            ],
-            "actors": [
-                "http://localhost:8000/actors/1",
-                "http://localhost:8000/actors/2"
-            ]
+            "name": "Action",
         }
 
-+ Response 201 (application/json)
++ Response 200
 
-    + Headers
-
-            Location:  /users/1/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/1/",
-                "username": "admin",
-                "email": "admin_MODIFIED@test.com",
-                "groups": [],
-                "reviews": [
-                    "http://localhost:8000/reviews/1",
-                    "http://localhost:8000/reviews/2",
-                    "http://localhost:8000/reviews/3"
-                ],
-                "comments": [
-                    "http://localhost:8000/comments/1",
-                    "http://localhost:8000/comments/2",
-                    "http://localhost:8000/comments/3"
-                ],
-                "actors": [
-                    "http://localhost:8000/actors/1",
-                    "http://localhost:8000/actors/2"
-                ]
-            }
+    [Category][]
             
 + Response 404 (application/json)
 
 + Response 401 (application/json)
+    
+        {
+          "error": "Unauthorized."
+        }
+        
+### Delete a Category [DELETE]
+Delete a category. If the category doesn't exist the API returns a 404 and if the user is not authorized it returns a 401.
+
+ + Request (application/json)
+                
+ + Response 204 (application/json)
+
+ + Response 401 (application/json)
+
+        {
+            "error":"Unauthorized."
+        }
+        
+ + Response 404 (application/json)
 
 ## Categories [/categories]
 
-### Get all Categories [GET]
+### Get all categories [GET]
 
-Get list of all created Actor profiles containing their data.
+Get list of all created categories containing their data.
 
 + Response 200 (application/json)
 
         {
-            "count": 1,
-            "next": null,
-            "previous": null,
-            "results": [
-                {
-                    "url": "http://localhost:8000/users/1/",
-                    "username": "admin",
-                    "email": "",
-                    "groups": [],
-                    "reviews": [
-                        "http://localhost:8000/reviews/1",
-                        "http://localhost:8000/reviews/2",
-                        "http://localhost:8000/reviews/3"
-                    ],
-                    "comments": [
-                        "http://localhost:8000/comments/1",
-                        "http://localhost:8000/comments/2",
-                        "http://localhost:8000/comments/3"
-                    ],
-                    "actors": [
-                        "http://localhost:8000/actors/1",
-                        "http://localhost:8000/actors/2"
-                    ]
+            "_links": {
+                "self": {
+                  "href": "/categories"
                 }
-            ]
+            },
+            "count": 1,
+            "_embedded": {
+                "category": [
+                    {
+                        "_links": {
+                            "self": {
+                              "href": "/categories/1"
+                            },
+                            "movies": {
+                              "href": "/categories/1/movies"
+                            }
+                        },
+                        "name": "Horror"
+                    }
+                ]
+            }
         }
 
 ### Create a new Category [POST]
 
-You may create your own Category using this action. It takes a JSON
-object containing . . .
+You may create your own category using this action. It takes a JSON
+object containing name of the category and an optional list of movies the category belongs to.
 
 + Request (application/json)
 
         {
-            "username": "testuser",
-            "email": "test@test.com",
-            "groups": []
+            "name": "Horror"
         }
 
-+ Response 201 (application/json)
++ Response 201
 
-    + Headers
-
-            Location:  /users/2/
-
-    + Body
-
-            {
-                "url": "http://localhost:8000/users/2/",
-                "username": "testuser",
-                "email": "test@test.com",
-                "groups": [],
-                "reviews": [],
-                "comments": [],
-                "actors": []
-            }
+    [Category][]
             
 + Response 500 (application/json)
 
+        {
+          "error": "Item already exists."
+        }
+        
 + Response 401 (application/json)
+
+        {
+          "error": "Unauthorized."
+        }
