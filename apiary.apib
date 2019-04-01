@@ -35,7 +35,7 @@ A single user containing all its information.
 + Parameters
     + id (integer) ... the id of the user.
 
-+ Model (application/json)
++ Model (application/hal+json)
 
     + Body
     
@@ -116,7 +116,7 @@ Delete an user. If the user doesn't exist the API returns a 404 and if the user 
 
 Get list of all created users containing their data.
 
-+ Response 200 (application/json)
++ Response 200 (application/hal+json)
 
         {
             "_links": {
@@ -202,7 +202,7 @@ A single group containing all its information.
 + Parameters
     + id (integer) ... the id of the group.
 
-+ Model (application/json)
++ Model (application/hal+json)
 
     + Body
     
@@ -274,7 +274,7 @@ Delete a group. If the group doesn't exist the API returns a 404 and if the user
 
 Get list of all created groups containing their data.
 
-+ Response 200 (application/json)
++ Response 200 (application/hal+json)
 
         {
             "_links": {
@@ -354,7 +354,7 @@ A single movie containing all its information.
 + Parameters
     + id (integer) ... the id of the movie.
 
-+ Model (application/json)
++ Model (application/hal+json)
 
     + Body
     
@@ -431,7 +431,7 @@ Delete a movie. If the movie doesn't exist the API returns a 404 and if the user
 
 Get list of all created movies containing their data.
 
-+ Response 200 (application/json)
++ Response 200 (application/hal+json)
 
         {
             "_links": {
@@ -517,7 +517,7 @@ A single review for specific movie containing all its information.
     + movie_id (integer) ... the id of the movie.
     + id (integer) ... the id of the review.
 
-+ Model (application/json)
++ Model (application/hal+json)
 
     + Body
     
@@ -595,7 +595,7 @@ Delete a review. If the review doesn't exist the API returns a 404 and if the us
 
 Get list of all created reviews containing their data for a specific movie.
 
-+ Response 200 (application/json)
++ Response 200 (application/hal+json)
 
         {
             "_links": {
@@ -680,7 +680,7 @@ A single comment for specific movie containing all its information.
     + movie_id (integer) ... the id of the movie.
     + id (integer) ... the id of the comment.
 
-+ Model (application/json)
++ Model (application/hal+json)
 
     + Body
     
@@ -756,7 +756,7 @@ Delete a comment. If the comment doesn't exist the API returns a 404 and if the 
 
 Get list of all created comments containing their data for a specific movie.
 
-+ Response 200 (application/json)
++ Response 200 (application/hal+json)
 
         {
             "_links": {
@@ -839,7 +839,7 @@ A single actor containing all its information.
 + Parameters
     + id (integer) ... the id of the actor.
 
-+ Model (application/json)
++ Model (application/hal+json)
 
     + Body
     
@@ -914,7 +914,7 @@ Delete an Actor. If the actor doesn't exist the API returns a 404 and if the use
 
 Get list of all created actors containing their data.
 
-+ Response 200 (application/json)
++ Response 200 (application/hal+json)
 
         {
             "_links": {
@@ -993,7 +993,7 @@ A single category containing all its information.
 + Parameters
     + id (integer) ... the id of the category.
 
-+ Model (application/json)
++ Model (application/hal+json)
 
     + Body
     
@@ -1063,7 +1063,7 @@ Delete a category. If the category doesn't exist the API returns a 404 and if th
 
 Get list of all created categories containing their data.
 
-+ Response 200 (application/json)
++ Response 200 (application/hal+json)
 
         {
             "_links": {
