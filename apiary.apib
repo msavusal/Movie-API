@@ -164,9 +164,11 @@ object containing a username, email-address and a optional collection of groups 
             "email": "adminNEW@test.com"
         }
 
-+ Response 201
++ Response 201 (application/json)
 
-    [User][]
+        {
+          "success": "The request has been fulfilled and has resulted in one or more new resources being created."
+        }
             
 + Response 500 (application/json)
 
@@ -241,9 +243,11 @@ If the user is not authorized API returns a 401.
             "isAdmin": 1
         }
 
-+ Response 200
++ Response 200 (application/json)
 
-    [Group][]
+        {
+          "success": "The request has succeeded."
+        }
             
 + Response 404 (application/json)
 
@@ -313,9 +317,11 @@ object containing a name, admin-status and a optional collection of users that b
             "isAdmin": 1
         }
 
-+ Response 201
++ Response 201 (application/json)
 
-    [Group][]
+        {
+          "success": "The request has been fulfilled and has resulted in one or more new resources being created."
+        }
             
 + Response 500 (application/json)
 
@@ -398,9 +404,11 @@ If the user is not authorized API returns a 401.
             "rating": 3
         }
 
-+ Response 200
++ Response 200 (application/json)
 
-    [Movie][]
+        {
+          "success": "The request has succeeded."
+        }
             
 + Response 404 (application/json)
 
@@ -475,9 +483,11 @@ object containing a title, length, rating and a optional collection of categorie
             "rating": 3
         }
 
-+ Response 201
++ Response 201 (application/json)
 
-    [Movie][]
+        {
+          "success": "The request has been fulfilled and has resulted in one or more new resources being created."
+        }
             
 + Response 500 (application/json)
 
@@ -503,7 +513,7 @@ Review model containing review profile information.
  - *Movie*
 
 ### Link relations
- - **user**: Link to the user who created this review. Item is an instance of the type User defined in the User Profile. Can be accessed by GET.
+ - **author**: Link to the user who created this review. Item is an instance of the type User defined in the User Profile. Can be accessed by GET.
  - **movie**: Link to the movie this review belongs to. Item is an instance of the type Movie defined in the Movie Profile. Can be accessed by GET.
 
 ### Semantic descriptors
@@ -526,7 +536,7 @@ A single review for specific movie containing all its information.
                     "self": {
                         "href": "/movies/1/reviews/1"
                     },
-                    "user": {
+                    "author": {
                         "href": "/users/1"
                     },
                     "movie": {
@@ -559,9 +569,11 @@ If the user is not authorized API returns a 401.
             "rating": 3
         }
 
-+ Response 200
++ Response 201 (application/json)
 
-    [Review][]
+        {
+          "success": "The request has succeeded."
+        }
             
 + Response 404 (application/json)
 
@@ -614,7 +626,7 @@ Get list of all created reviews containing their data for a specific movie.
                             "self": {
                               "href": "/movies/1/reviews/1"
                             },
-                            "user": {
+                            "author": {
                               "href": "/users/1"
                             },
                             "movie": {
@@ -640,9 +652,11 @@ object containing text-content of the review, rating value from 1 to 5, user who
             "rating": 4
         }
 
-+ Response 201
++ Response 201 (application/json)
 
-    [Review][]
+        {
+          "success": "The request has been fulfilled and has resulted in one or more new resources being created."
+        }
             
 + Response 500 (application/json)
 
@@ -667,7 +681,7 @@ Comment model containing comment profile information.
  - *Movie*
 
 ### Link relations
- - **user**: Link to the user who created this comment. Item is an instance of the type User defined in the User Profile. Can be accessed by GET.
+ - **author**: Link to the user who created this comment. Item is an instance of the type User defined in the User Profile. Can be accessed by GET.
  - **movie**: Link to the movie this comment belongs to. Item is an instance of the type Movie defined in the Movie Profile. Can be accessed by GET.
 
 ### Semantic descriptors
@@ -689,7 +703,7 @@ A single comment for specific movie containing all its information.
                     "self": {
                       "href": "/movies/1/comments/1"
                     },
-                    "user": {
+                    "author": {
                       "href": "/users/1"
                     },
                     "movie": {
@@ -720,9 +734,11 @@ If the user is not authorized API returns a 401.
             "text": "This is a modified comment.",
         }
 
-+ Response 200
++ Response 200 (application/json)
 
-    [Comment][]
+        {
+          "success": "The request has succeeded."
+        }
             
 + Response 404 (application/json)
 
@@ -775,7 +791,7 @@ Get list of all created comments containing their data for a specific movie.
                             "self": {
                               "href": "/movies/1/comments/1"
                             },
-                            "user": {
+                            "author": {
                               "href": "/users/1"
                             },
                             "movie": {
@@ -799,9 +815,11 @@ object containing text-content of the comment, user who created the comment and 
             "text": "This is a comment."
         }
 
-+ Response 201
++ Response 201 (application/json)
 
-    [Comment][]
+        {
+          "success": "The request has been fulfilled and has resulted in one or more new resources being created."
+        }
             
 + Response 500 (application/json)
 
@@ -826,7 +844,7 @@ Actor model containing actor profile information.
  - *Movie*
 
 ### Link relations
- - **user**: Link to the user who created this actor. Item is an instance of the type User defined in the User Profile. Can be accessed by GET.
+ - **author**: Link to the user who created this actor. Item is an instance of the type User defined in the User Profile. Can be accessed by GET.
  - **movies**: List of the movies this actor belongs to. Each item is an instance of the type Movie defined in the Movie Profile. Can be accessed by GET. POST only for authenticated user using csrftoken.
 
 ### Semantic descriptors
@@ -848,7 +866,7 @@ A single actor containing all its information.
                     "self": {
                       "href": "/actors/1"
                     },
-                    "user": {
+                    "author": {
                       "href": "/users/1"
                     },
                     "movies": {
@@ -881,9 +899,11 @@ If the user is not authorized API returns a 401.
             "lasttname": "Doe"
         }
 
-+ Response 200
++ Response 200 (application/json)
 
-    [Actor][]
+        {
+          "success": "The request has been succeeded."
+        }
             
 + Response 404 (application/json)
 
@@ -930,7 +950,7 @@ Get list of all created actors containing their data.
                             "self": {
                               "href": "/actors/1"
                             },
-                            "user": {
+                            "author": {
                               "href": "/users/1"
                             },
                             "movies": {
@@ -956,9 +976,11 @@ object containing the names of the actor and the user who created the actor and 
             "lasttname": "Doe"
         }
 
-+ Response 201
++ Response 201 (application/json)
 
-    [Actor][]
+        {
+          "success": "The request has been fulfilled and has resulted in one or more new resources being created."
+        }
             
 + Response 500 (application/json)
 
@@ -1030,9 +1052,11 @@ If the user is not authorized API returns a 401.
             "name": "Action",
         }
 
-+ Response 200
++ Response 200 (application/json)
 
-    [Category][]
+        {
+          "success": "The request has succeeded."
+        }
             
 + Response 404 (application/json)
 
@@ -1100,9 +1124,11 @@ object containing name of the category and an optional list of movies the catego
             "name": "Horror"
         }
 
-+ Response 201
++ Response 201 (application/json)
 
-    [Category][]
+        {
+          "success": "The request has been fulfilled and has resulted in one or more new resources being created."
+        }
             
 + Response 500 (application/json)
 
