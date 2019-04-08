@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  {% block title %}<title>Open Movie Database</title>{% endblock %}
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+  <!-- Add additional CSS in static file -->
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-sm-3 customSidebar">
+      {% block sidebar %}
+        <ul class="sidebar-nav">
+          <li class="home"><a href="{% url 'index' %}">OPEN MOVIE DATABASE</a></li>
+          <hr />
+          <li><a href="">Search Movies</a></li>
+          <li><a href="">Add / Edit Movies</a></li>
+          <li><a href="">Add Reviews</a></li>
+        </ul>
+     {% endblock %}
+      </div>
+      <div class="col-sm-9 ">
+        {% block content %}
+        <div class="mainContainer">
+          <h1>SOMETHING COOL</h1>
+        </div>
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -30,8 +30,6 @@ TODO:
 urlpatterns = [
     path('admin/', admin.site.urls),
 
-    path('', views.api_root),
-
     path('reviews/',
         views.ReviewList.as_view(),
         name='review-list'),
@@ -104,7 +102,9 @@ urlpatterns = [
     path('groups/<int:pk>/',
         views.GroupDetail.as_view(),
         name='group-detail'),
-        
+
+    path('', views.index, name='index'),
+
     path('api-auth/', include('rest_framework.urls')),
 ]
 
