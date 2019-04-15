@@ -27,8 +27,8 @@ The action points of the meeting were the following:
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
 
 ## Meeting 2.
-* **DATE:**
-* **ASSISTANTS:**
+* **DATE: 2019-02-28, 14:30**
+* **ASSISTANTS: Mika Oja**
 * **GRADE:** *To be filled by course staff*
 
 ### Minutes
@@ -79,8 +79,8 @@ Kolmonen dokumentaatiota, ei kiire implementoida
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
 
 ## Meeting 3.
-* **DATE:**
-* **ASSISTANTS:**
+* **DATE: 2019-03-28, 15:30**
+* **ASSISTANTS: Mika Oja**
 * **GRADE:** *To be filled by course staff*
 
 ### Minutes
