@@ -1,7 +1,7 @@
 # Meetings notes
 
 ## Meeting 1.
-* **DATE: 13.02.2019**
+* **DATE: 2019-02-13, 14:00**
 * **ASSISTANTS: Mika Oja**
 * **GRADE:** *To be filled by course staff*
 
