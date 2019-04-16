@@ -64,7 +64,6 @@ Discussion about the hierarchy of the urls and categories. Would be good to see 
 Use standards as much as possible when doing the project. Recommendation: Remove patch. Discussion about the format of the client. Deadline 3 is fine. 
 
 ### Action points
-Action points:
 * Plan client
 * Trim resources
 * Plan hypermedia
