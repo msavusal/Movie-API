@@ -57,41 +57,17 @@ Overall deadline 2 good.
 * **GRADE:** *To be filled by course staff*
 
 ### Minutes
-Patchia ei tartte jos ei ole pakko, patch on vähän huono metodi, voi tehdä, mutta ei paras
-Enemmän työtä ja tietoa 
+General discussion about the current state of the project.
+Discussion about the use of PATCH request in the project, not necessary and can cause problems in the long run. Requires more knowledge and work to get to work. If motivated then can come up with usage for PATCH request. For example to be used for category moviedetail with many-to-many relationship to a few other resources. There are already many resources however. 
+Discussion about the hierarchy of the urls and categories. Would be good to see what movies are in a category, could be done with for example links to movies. Comments should have authors.
 
-Patchille käyttöidea: movie detail, many to many suhde pariin asiaan, patch append ja poista, put komennolla ei mene nätisti, patchillä nätimpi. Linkit resursseja toinen tapa, massiivinen kartta jo valmiiksi toisaalta
-
-MoviesIds, put, delete, suhde joko on olemassa tai ei. Hierarkia selvä ylös alas, horisontaaliset vaikeampia, mikä on mekaniikka, mikä category omistaa mitä, connection resurssit yksi vaihtoehto. Patch append lisää kategoria pop
-
-Mihin riittää resurssit
-
-Olisi hyvä kun on category niin pääsisi kategoriasta näkemään mitkä leffat on kategoriassa. Voi olla resurssi joka sisältää listan linkeistä leffoihin.
-
-Kommentille voi nimetä uudeksi author, käytä standardeja kun mahdollista.
-
-Suositus: Patchit kannattaa poistaa paitsi yhdet joilla kategorioita hallitaan.
-
-Mainitaan wikitekstissä että mietitään patch uudestaan
-
-Formaatti Hal + json
-
-Kertoo clientille että kontekstissa ei ole mitään
-
-Get actors, voisi sisältää suoraan listaan, count embedded
-
-Hal:in isoin rajoite: ei tuo interaktiivisempia materiaaleja
-
-Client harjoitus materiaalista selviää mikä on hyvä
-
-Ei muuta, karsitaan turhia resursseja implementaatiota varten, 
-
-Mieti hypermediaa
-
+Use standards as much as possible when doing the project. Recommendation: Remove patch. Discussion about the format of the client. Deadline 3 is fine. 
 
 ### Action points
-*List here the actions points discussed with assistants*
-
+Action points:
+* Plan client
+* Trim resources
+* Plan hypermedia
 
 ### Comments from staff
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
