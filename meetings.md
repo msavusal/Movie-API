@@ -43,10 +43,10 @@ Discussion about the client, not big difference if using hypermedia client, auto
 Overall deadline 2 good. 
 
 ### Action points
-Reread excercise 2
-Expand URL tree
-Finetune serialiser
-Plan hypermedia and client
+* Reread excercise 2
+* Expand URL tree
+* Finetune serialiser
+* Plan hypermedia and client
 
 ### Comments from staff
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
