@@ -24,41 +24,42 @@ class Product(db.Model):
     
 @app.route("/products/add", methods=["POST"])
 def add_product(product_name):
+    if request.method == "POST":
     # This branch happens when user submits the form
-    try:
-        product = Product.query.filter_by(name=product_name).first()
-        if product:
-            handle = str(request.json["handle"])
-            weight = float(request.json["weight"])
-            price = float(request.json["price"])
-            prod = Product(
-                id=id,
-                handle=handle,
-                weight=weight,
-                price=price,
-            )
-            db.session.add(prod)
-            db.session.commit()
-        else:
-            abort(404)
-    except NameError:
-        return "Handle already exists", 409
-    except KeyError:
-        return "Incomplete request - missing fields", 400
-    except TypeError:
-        return "Request content type must be JSON", 415
-    except ValueError:
-        return "Weight and price must be numbers", 400
-    except IntegrityError:
-        return "POST method required", 405
+        try:
+            product = Product.query.filter_by(name=product_name).first()
+            if product:
+                handle = str(request.json["handle"])
+                weight = float(request.json["weight"])
+                price = float(request.json["price"])
+                prod = Product(
+                    id=id,
+                    handle=handle,
+                    weight=weight,
+                    price=price,
+                )
+                db.session.add(prod)
+                db.session.commit()
+            else:
+                abort(404)
+        except NameError:
+            return "Handle already exists", 409
+        except KeyError:
+            return "Incomplete request - missing fields", 400
+        except TypeError:
+            return "Request content type must be JSON", 415
+        except ValueError:
+            return "Weight and price must be numbers", 400
+        except IntegrityError:
+            return "POST method required", 405
     return 201
     
     
-@app.route("/storage/<product>/add")
+@app.route("/storage/<product>/add", methods=["POST"])
 def add_to_storage(storage_name):
     # This branch happens when user submits the form
     try:
-        storage = Storage.query.filter_by(name=storage_name).first()
+        storage = StorageItem.query.filter_by(name=storage_name).first()
         if storage:
             id=id
             qty=int(request.json["qty"])
@@ -86,7 +87,27 @@ def add_to_storage(storage_name):
     return 201
         
 @app.route("/storage/", methods=["GET"])
-    def get_inventory(req):
+def get_inventory(req):
+    # This branch happens when user submits the form
+    try:
+        storage = StorageItem.query.filter_by(name=storage_name).first()
+        if storage:
+            id=id
+            qty=int(request.json["qty"])
+            product_id=product_id
+            location=str(request.json["location"])
+            stor = Storage(
+                id=id
+                qty=qty
+                product_id=product_id
+                location=location
+            )
+            db.session.add(stor)
+            db.session.commit()
+
+    except IntegrityError:
+        return "GET method required", 405
+    return 200
         
 
 
