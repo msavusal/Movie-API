@@ -36,7 +36,7 @@ def add_product(product_name):
                     id=id,
                     handle=handle,
                     weight=weight,
-                    price=price,
+                    price=price
                 )
                 db.session.add(prod)
                 db.session.commit()
