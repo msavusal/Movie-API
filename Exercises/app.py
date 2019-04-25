@@ -57,56 +57,62 @@ def add_product(product_name):
     
 @app.route("/storage/<product>/add", methods=["POST"])
 def add_to_storage(storage_name):
+    if request.method == "POST":
     # This branch happens when user submits the form
-    try:
-        storage = StorageItem.query.filter_by(name=storage_name).first()
-        if storage:
-            id=id
-            qty=int(request.json["qty"])
-            product_id=product_id
-            location=str(request.json["location"])
-            stor = Storage(
+        try:
+            storage = StorageItem.query.filter_by(name=storage_name).first()
+            if storage:
                 id=id
-                qty=qty
+                qty=int(request.json["qty"])
                 product_id=product_id
-                location=location
-            )
-            db.session.add(stor)
-            db.session.commit()
-            
-    except NameError:
-        return "Handle already exists", 409
-    except KeyError:
-        return "Incomplete request - missing fields", 400
-    except TypeError:
-        return "Product not found", 404
-    except ValueError:
-        return "Qty must be an integer", 400
-    except IntegrityError:
-        return "POST method required", 405
+                location=str(request.json["location"])
+                stor = Storage(
+                    id=id,
+                    qty=qty,
+                    product_id=product_id,
+                    location=location
+                )
+                db.session.add(stor)
+                db.session.commit()
+            else:
+                abort(404)    
+        except NameError:
+            return "Handle already exists", 409
+        except KeyError:
+            return "Incomplete request - missing fields", 400
+        except TypeError:
+            return "Product not found", 404
+        except ValueError:
+            return "Qty must be an integer", 400
+        except IntegrityError:
+            return "POST method required", 405
+        except IntegrityError:
+            return "Request content type must be JSON", 415
     return 201
         
 @app.route("/storage/", methods=["GET"])
 def get_inventory(req):
+    if request.method == "GET":
     # This branch happens when user submits the form
-    try:
-        storage = StorageItem.query.filter_by(name=storage_name).first()
-        if storage:
-            id=id
-            qty=int(request.json["qty"])
-            product_id=product_id
-            location=str(request.json["location"])
-            stor = Storage(
+        try:
+            storage = StorageItem.query.filter_by(name=storage_name).first()
+            if storage:
                 id=id
-                qty=qty
+                qty=int(request.json["qty"])
                 product_id=product_id
-                location=location
-            )
-            db.session.add(stor)
-            db.session.commit()
-
-    except IntegrityError:
-        return "GET method required", 405
+                location=str(request.json["location"])
+                stor = Storage(
+                    id=id,
+                    qty=qty,
+                    product_id=product_id,
+                    location=location
+                )
+                db.session.add(stor)
+                db.session.commit()
+            else:
+                abort(404)
+        except IntegrityError:
+            return "GET method required", 405
     return 200
         
 
