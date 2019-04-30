@@ -61,16 +61,17 @@ class MovieTestCase(APITestCase):
     # Test POST method
     def test_3_post(self):
         print("Testing POST method for model Movie")
+        self.client.login(username='test_admin', password='password')
 
         data = {
             "title":"TestMovie",
             "length":"01:45:44",
             "rating":"5",
-            "related_categories": [],
-            "related_actors": []
+            "categories": [],
+            "actors": []
         }
 
-        response = self.client.post(self.url, data, format='json')
+        response = self.client.post(self.url, data, content_type='application/hal+json')
 
         try:
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -80,14 +81,20 @@ class MovieTestCase(APITestCase):
         except:
             print("FAILED")
 
+        self.client.logout()
+
     # Test DELETE method
     def test_4_delete(self):
         print("Testing DELETE method for model Movie")
+        self.client.login(username='test_admin', password='password')
 
         testObject = Movie.objects.create(id=1, title="TestMovie", length="01:45:44", rating="5")
 
         # Create response
         response = self.client.delete(reverse('movie-detail', kwargs={'pk': testObject.pk}))
+
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(Review.objects.count(), 0)
 
         try:
             self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
@@ -96,9 +103,12 @@ class MovieTestCase(APITestCase):
         except:
             print("FAILED")
 
+        self.client.logout()
+
     # Test UPDATE method
-    def test_5_delete(self):
+    def test_5_update(self):
         print("Testing UPDATE method for model Movie")
+        self.client.login(username='test_admin', password='password')
 
         testObject = Movie.objects.create(id=1, title="TestMovie", length="01:45:44", rating="5")
 
@@ -107,7 +117,7 @@ class MovieTestCase(APITestCase):
         }
 
         # Create response
-        response = self.client.patch(reverse('movie-detail', kwargs={'pk': testObject.pk}), data=data)
+        response = self.client.patch(reverse('movie-detail', kwargs={'pk': testObject.pk}), data=data, content_type='application/hal+json')
 
         try:
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -115,6 +125,8 @@ class MovieTestCase(APITestCase):
             print("SUCCESS")
         except:
             print("FAILED")
+
+        self.client.logout()
 
 
 """
@@ -130,7 +142,7 @@ class ReviewTestCase(APITestCase):
     # Test object creation
     def test_1_object_creation(self):
         print("Testing object creation for object Review")
-        Review.objects.create(text="Excellent movie.", rating=5, related_movie_id=1, related_user_id=1)
+        Review.objects.create(text="Excellent movie.", rating=5, movie_id=1, author_id=1)
         testReview = Review.objects.get(text="Excellent movie.")
 
         try:
@@ -143,10 +155,10 @@ class ReviewTestCase(APITestCase):
     def test_1_2_object_unique(self):
         print("Testing unique constraint for object Review")
 
-        Review.objects.create(id=1, text="Excellent movie.", rating=5, related_movie_id=1, related_user_id=1)
+        Review.objects.create(id=1, text="Excellent movie.", rating=5, movie_id=1, author_id=1)
 
         try:
-            Review.objects.create(id=1, text="Excellent movie.", rating=5, related_movie_id=1, related_user_id=1)
+            Review.objects.create(id=1, text="Excellent movie.", rating=5, movie_id=1, author_id=1)
             self.fail("FAILED")
             print("FAILED")
         except exception.IntegrityError:
@@ -169,17 +181,18 @@ class ReviewTestCase(APITestCase):
     # Test POST method
     def test_3_post(self):
         print("Testing POST method for model Review")
+        self.client.login(username='test_admin', password='password')
 
         testmovie = Movie.objects.create(title="TestMovie", length="01:45:44", rating="5")
 
         data = {
             "text":"Excellent movie.",
             "rating":5,
-            "related_movie": "http://localhost/movies/" + str(testmovie.id),
+            "movie": "http://localhost/movies/" + str(testmovie.id),
         }
 
         # Create request
-        request = self.factory.post(self.url, data, format="json")
+        request = self.factory.post(self.url, data, content_type='application/hal+json')
 
         # Add user to request session
         request.user = self.user
@@ -195,11 +208,75 @@ class ReviewTestCase(APITestCase):
         except:
             print("FAILED")
 
+        self.client.logout()
+
+    # Test POST method with bad request
+    def test_3_post_400(self):
+        print("Testing POST method for model Review with bad request (expect 400)")
+        self.client.login(username='test_admin', password='password')
+
+        testmovie = Movie.objects.create(title="TestMovie", length="01:45:44", rating="5")
+
+        data = {
+            "corrupted",
+        }
+
+        # Create request
+        request = self.factory.post(self.url, data, content_type='application/hal+json')
+
+        # Add user to request session
+        request.user = self.user
+
+        # Get data from view with the user tied to the session
+        response = views.ReviewList.as_view()(request)
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+        self.client.logout()
+
+    # Test POST method with conflict
+    def test_3_post_409(self):
+        print("Testing POST method for model Review with conflict (expect 409)")
+        self.client.login(username='test_admin', password='password')
+
+        testmovie = Movie.objects.create(title="TestMovie", length="01:45:44", rating="5")
+
+        data = {
+            "id": 1,
+            "text":"Excellent movie.",
+            "rating":5,
+            "movie": "http://localhost/movies/" + str(testmovie.id),
+        }
+
+        # Create request
+        request = self.factory.post(self.url, data, content_type='application/hal+json')
+
+        # Create request again
+        request = self.factory.post(self.url, data, content_type='application/hal+json')
+
+        # Add user to request session
+        request.user = self.user
+
+        # Get data from view with the user tied to the session
+        response = views.ReviewList.as_view()(request)
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_409_CONFLICT)
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+        self.client.logout()
+
     # Test DELETE method
     def test_4_delete(self):
         print("Testing DELETE method for model Review")
 
-        testObject = Review.objects.create(text="Excellent movie.", rating=5, related_movie_id=1, related_user_id=1)
+        testObject = Review.objects.create(text="Excellent movie.", rating=5, movie_id=1, author_id=1)
 
         self.client.login(username='test_admin', password='password')
 
@@ -215,23 +292,54 @@ class ReviewTestCase(APITestCase):
 
         self.client.logout()
 
+    # Test DELETE method without permission
+    def test_4_delete_403(self):
+        print("Testing DELETE method for model Review without permission (expect 403)")
+        self.client.logout()
+
+        testObject = Review.objects.create(text="Excellent movie.", rating=5, movie_id=1, author_id=1)
+
+        # Create response
+        response = self.client.delete(reverse('review-detail', kwargs={'pk': testObject.pk}))
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+    # Test DELETE method on review that does not exist
+    def test_4_delete_404(self):
+        print("Testing DELETE method for model Review that does not exist (expect 404)")
+        self.client.login(username='test_admin', password='password')
+
+        # Create response
+        response = self.client.delete(reverse('review-detail', kwargs={'pk': 999}))
+
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        try:
+            self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+            print("SUCCESS")
+        except:
+            print("FAILED")
+
+        self.client.logout()
+
     # Test UPDATE method
-    def test_5_delete(self):
+    def test_5_update(self):
         print("Testing UPDATE method for model Review")
 
-        testObject = Review.objects.create(text="Excellent movie.", rating=5, related_movie_id=1, related_user_id=1)
+        testObject = Review.objects.create(text="Excellent movie.", rating=5, movie_id=1, author_id=1)
 
         self.client.login(username='test_admin', password='password')
 
         data = {
-            "text": "Excellent movie. CHANGED"
+            "text": "Excellent movie. CHANGED",
         }
 
         # Create response
-        response = self.client.patch(reverse('review-detail', kwargs={'pk': testObject.pk}), data=data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(Review.objects.get().text, 'Excellent movie. CHANGED')
-
+        response = self.client.patch(reverse('review-detail', kwargs={'pk': testObject.pk}), data=data, content_type='application/hal+json')
         try:
             self.assertEqual(response.status_code, status.HTTP_200_OK)
             self.assertEqual(Review.objects.get().text, 'Excellent movie. CHANGED')
@@ -255,7 +363,7 @@ class CommentTestCase(APITestCase):
     # Test object creation
     def test_1_object_creation(self):
         print("Testing object creation for object Comment")
-        Comment.objects.create(text="It was okay.", timestamp="00:00:00", related_movie_id=1, related_user_id=1)
+        Comment.objects.create(text="It was okay.", timestamp="00:00:00", movie_id=1, author_id=1)
         testComment = Comment.objects.get(text="It was okay.")
         try:
             self.assertEqual(testComment.text, 'It was okay.')
@@ -267,10 +375,10 @@ class CommentTestCase(APITestCase):
     def test_1_2_object_unique(self):
         print("Testing unique constraint for object Comment")
 
-        Comment.objects.create(id=1, text="It was okay.", timestamp="00:00:00", related_movie_id=1, related_user_id=1)
+        Comment.objects.create(id=1, text="It was okay.", timestamp="00:00:00", movie_id=1, author_id=1)
 
         try:
-            Comment.objects.create(id=1, text="It was okay.", timestamp="00:00:00", related_movie_id=1, related_user_id=1)
+            Comment.objects.create(id=1, text="It was okay.", timestamp="00:00:00", movie_id=1, author_id=1)
             self.fail("FAILED")
             print("FAILED")
         except exception.IntegrityError:
@@ -293,17 +401,18 @@ class CommentTestCase(APITestCase):
     # Test POST method
     def test_3_post(self):
         print("Testing POST method for model Comment")
+        self.client.login(username='test_admin', password='password')
 
         testmovie = Movie.objects.create(title="TestMovie", length="01:45:44", rating="5")
 
         data = {
             "text":"It was okay.",
             "timestamp":"00:00:00",
-            "related_movie": "http://localhost/movies/" + str(testmovie.id)
+            "movie": "http://localhost/movies/" + str(testmovie.id)
         }
 
         # Create request
-        request = self.factory.post(self.url, data, format="json")
+        request = self.factory.post(self.url, data, content_type='application/hal+json')
 
         # Add user to request session
         request.user = self.user
@@ -319,11 +428,14 @@ class CommentTestCase(APITestCase):
         except:
             print("FAILED")
 
+        self.client.logout()
+
     # Test DELETE method
     def test_4_delete(self):
         print("Testing DELETE method for model Comment")
+        self.client.login(username='test_admin', password='password')
 
-        testObject = Comment.objects.create(text="It was okay.", timestamp="00:00:00", related_movie_id=1, related_user_id=1)
+        testObject = Comment.objects.create(text="It was okay.", timestamp="00:00:00", movie_id=1, author_id=1)
 
         # Create response
         response = self.client.delete(reverse('comment-detail', kwargs={'pk': testObject.pk}))
@@ -335,19 +447,22 @@ class CommentTestCase(APITestCase):
         except:
             print("FAILED")
 
+        self.client.logout()
+
 
     # Test UPDATE method
-    def test_5_delete(self):
+    def test_5_update(self):
         print("Testing UPDATE method for model Comment")
+        self.client.login(username='test_admin', password='password')
 
-        testObject = Comment.objects.create(text="It was okay.", timestamp="00:00:00", related_movie_id=1, related_user_id=1)
+        testObject = Comment.objects.create(text="It was okay.", timestamp="00:00:00", movie_id=1, author_id=1)
 
         data = {
             "text": "It was okay. CHANGED"
         }
 
         # Create response
-        response = self.client.patch(reverse('comment-detail', kwargs={'pk': testObject.pk}), data=data)
+        response = self.client.patch(reverse('comment-detail', kwargs={'pk': testObject.pk}), data=data, content_type='application/hal+json')
 
         try:
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -355,6 +470,8 @@ class CommentTestCase(APITestCase):
             print("SUCCESS")
         except:
             print("FAILED")
+
+        self.client.logout()
 
 
 """
@@ -372,7 +489,7 @@ class ActorTestCase(APITestCase):
     # Test object creation
     def test_1_object_creation(self):
         print("Testing object creation for object Actor")
-        Actor.objects.create(firstname="John", lastname= "Doe", related_user=self.user)
+        Actor.objects.create(firstname="John", lastname= "Doe", author=self.user)
         testActor = Actor.objects.get(firstname="John")
 
         try:
@@ -385,10 +502,10 @@ class ActorTestCase(APITestCase):
     def test_1_2_object_unique(self):
         print("Testing unique constraint for object Actor")
 
-        Actor.objects.create(id=1, firstname="John", lastname= "Doe", related_user=self.user)
+        Actor.objects.create(id=1, firstname="John", lastname= "Doe", author=self.user)
 
         try:
-            Actor.objects.create(id=1, firstname="John", lastname= "Doe", related_user=self.user)
+            Actor.objects.create(id=1, firstname="John", lastname= "Doe", author=self.user)
             self.fail("FAILED")
             print("FAILED")
         except exception.IntegrityError:
@@ -411,6 +528,7 @@ class ActorTestCase(APITestCase):
     # Test POST method
     def test_3_post(self):
         print("Testing POST method for model Actor")
+        self.client.login(username='test_admin', password='password')
 
         data = {
             "firstname":"John",
@@ -418,7 +536,7 @@ class ActorTestCase(APITestCase):
         }
 
         # Create request
-        request = self.factory.post(self.url, data, format="json")
+        request = self.factory.post(self.url, data, content_type='application/hal+json')
 
         # Add user to request session
         request.user = self.user
@@ -434,11 +552,14 @@ class ActorTestCase(APITestCase):
         except:
             print("FAILED")
 
+        self.client.logout()
+
     # Test DELETE method
     def test_4_delete(self):
         print("Testing DELETE method for model Actor")
+        self.client.login(username='test_admin', password='password')
 
-        testObject = Actor.objects.create(firstname="John", lastname= "Doe", related_user=self.user)
+        testObject = Actor.objects.create(firstname="John", lastname= "Doe", author=self.user)
 
         # Create response
         response = self.client.delete(reverse('actor-detail', kwargs={'pk': testObject.pk}))
@@ -450,18 +571,21 @@ class ActorTestCase(APITestCase):
         except:
             print("FAILED")
 
-    # Test UPDATE method
-    def test_5_delete(self):
-        print("Testing UPDATE method for model Actor")
+        self.client.logout()
 
-        testObject = Actor.objects.create(firstname="John", lastname= "Doe", related_user=self.user)
+    # Test UPDATE method
+    def test_5_update(self):
+        print("Testing UPDATE method for model Actor")
+        self.client.login(username='test_admin', password='password')
+
+        testObject = Actor.objects.create(firstname="John", lastname= "Doe", author=self.user)
 
         data = {
             "firstname": "John CHANGED"
         }
 
         # Create response
-        response = self.client.patch(reverse('actor-detail', kwargs={'pk': testObject.pk}), data=data)
+        response = self.client.patch(reverse('actor-detail', kwargs={'pk': testObject.pk}), data=data, content_type='application/hal+json')
 
         try:
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -470,120 +594,8 @@ class ActorTestCase(APITestCase):
         except:
             print("FAILED")
 
+        self.client.logout()
 
-
-"""
-Test case for Trailer model
-"""
-class TrailerTestCase(APITestCase):
-    url = reverse('trailer-list')
-
-    def setUp(self):
-        self.factory = APIRequestFactory()
-        self.user = User.objects.create_user(username='test_admin', email='test_admin@…', password='password')
-
-    # Test object creation
-    def test_1_object_creation(self):
-        print("Testing object creation for object Trailer")
-        Trailer.objects.create(video_path="VIDEO_PATH", related_movie_id=1, related_user_id=1)
-        testTrailer = Trailer.objects.get(video_path="VIDEO_PATH")
-
-        try:
-            self.assertEqual(testTrailer.video_path, 'VIDEO_PATH')
-            print("SUCCESS")
-        except:
-            print("FAILED")
-
-    # Test unique constraint
-    def test_1_2_object_unique(self):
-        print("Testing unique constraint for object Trailer")
-
-        Trailer.objects.create(id=1, video_path="VIDEO_PATH", related_movie_id=1, related_user_id=1)
-
-        try:
-            Trailer.objects.create(id=1, video_path="VIDEO_PATH", related_movie_id=1, related_user_id=1)
-            self.fail("FAILED")
-            print("FAILED")
-        except exception.IntegrityError:
-            print("SUCCESS")
-            pass
-
-    # Test GET method
-    def test_2_get(self):
-        print("Testing GET method for model Trailer")
-
-        response = self.client.get(self.url, format='json')
-
-        try:
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-            self.assertEqual(len(response.data), 4)
-            print("SUCCESS")
-        except:
-            print("FAILED")
-
-    # Test POST method
-    def test_3_post(self):
-        print("Testing POST method for model Trailer")
-
-        testmovie = Movie.objects.create(title="TestMovie", length="01:45:44", rating="5")
-
-        data = {
-            "video_path":"VIDEO_PATH",
-            "related_movie": "http://localhost/movies/" + str(testmovie.id)
-        }
-
-        # Create request
-        request = self.factory.post(self.url, data, format="json")
-
-        # Add user to request session
-        request.user = self.user
-
-        # Get data from view with the user tied to the session
-        response = views.TrailerList.as_view()(request)
-
-        try:
-            self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-            self.assertEqual(Trailer.objects.count(), 1)
-            self.assertEqual(Trailer.objects.get().video_path, 'VIDEO_PATH')
-            print("SUCCESS")
-        except:
-            print("FAILED")
-
-    # Test DELETE method
-    def test_4_delete(self):
-        print("Testing DELETE method for model Trailer")
-
-        testObject = Trailer.objects.create(video_path="VIDEO_PATH", related_movie_id=1, related_user_id=1)
-
-        # Create response
-        response = self.client.delete(reverse('trailer-detail', kwargs={'pk': testObject.pk}))
-
-        try:
-            self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-            self.assertEqual(Review.objects.count(), 0)
-            print("SUCCESS")
-        except:
-            print("FAILED")
-
-    # Test UPDATE method
-    def test_5_delete(self):
-        print("Testing UPDATE method for model Trailer")
-
-        testObject = Trailer.objects.create(video_path="VIDEO_PATH", related_movie_id=1, related_user_id=1)
-
-        data = {
-            "video_path": "VIDEO_PATH CHANGED"
-        }
-
-        # Create response
-        response = self.client.patch(reverse('trailer-detail', kwargs={'pk': testObject.pk}), data=data)
-
-        try:
-            self.assertEqual(response.status_code, status.HTTP_200_OK)
-            self.assertEqual(Trailer.objects.get().video_path, 'VIDEO_PATH CHANGED')
-            print("SUCCESS")
-        except:
-            print("FAILED")
 
 
 """
@@ -638,12 +650,13 @@ class CategoryTestCase(APITestCase):
     # Test POST method
     def test_3_post(self):
         print("Testing POST method for model Category")
+        self.client.login(username='test_admin', password='password')
 
         data = {
-            "name":"Action"
+            "name":"Action",
         }
 
-        response = self.client.post(self.url, data, format='json')
+        response = self.client.post(self.url, data, content_type='application/hal+json')
 
         try:
             self.assertEqual(response.status_code, status.HTTP_201_CREATED)
@@ -653,9 +666,12 @@ class CategoryTestCase(APITestCase):
         except:
             print("FAILED")
 
+        self.client.logout()
+
     # Test DELETE method
     def test_4_delete(self):
         print("Testing DELETE method for model Category")
+        self.client.login(username='test_admin', password='password')
 
         testObject = Category.objects.create(name="TestCategory")
 
@@ -669,9 +685,12 @@ class CategoryTestCase(APITestCase):
         except:
             print("FAILED")
 
+        self.client.logout()
+
     # Test UPDATE method
-    def test_5_delete(self):
+    def test_5_update(self):
         print("Testing UPDATE method for model Category")
+        self.client.login(username='test_admin', password='password')
 
         testObject = Category.objects.create(name="TestCategory")
 
@@ -680,7 +699,7 @@ class CategoryTestCase(APITestCase):
         }
 
         # Create response
-        response = self.client.patch(reverse('category-detail', kwargs={'pk': testObject.pk}), data=data)
+        response = self.client.patch(reverse('category-detail', kwargs={'pk': testObject.pk}), data=data, content_type='application/hal+json')
 
         try:
             self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -688,3 +707,5 @@ class CategoryTestCase(APITestCase):
             print("SUCCESS")
         except:
             print("FAILED")
+
+        self.client.logout()
