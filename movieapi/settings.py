@@ -125,6 +125,7 @@ STATIC_URL = '/static/'
 # Pagination allows you to control how many objects per page are returned.
 
 REST_FRAMEWORK = {
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'DEFAULT_PAGINATION_CLASS': 'drf_hal_json.pagination.HalPageNumberPagination',
+    'DEFAULT_PARSER_CLASSES': ('drf_hal_json.parsers.JsonHalParser',),
     'PAGE_SIZE': 10
 }
