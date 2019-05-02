@@ -43,8 +43,6 @@ db.create_all()
 def add_product(product_name):
     if request.method == "POST":
     # This branch happens when user submits the form
-    # What should be received: a JSON object with 3 fields: handle, weight and price. 
-    # The handle would be what you call product_name.
         try:
             product = Product.query.filter_by(handle=product_name).first()
             if product:
