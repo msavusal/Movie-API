@@ -39,19 +39,19 @@ deployments = db.Table("deployments",
 
 db.create_all()
 
-@app.route("/products/add", methods=["POST"])
-def add_product():
+@app.route("/products/add/", methods=["POST"])
+def add_product(product_name):
     if request.method == "POST":
     # This branch happens when user submits the form
+    # What should be received: a JSON object with 3 fields: handle, weight and price. 
+    # The handle would be what you call product_name.
         try:
-            product_name = str(request.json["product"])
             product = Product.query.filter_by(handle=product_name).first()
             if product:
                 handle = str(request.json["handle"])
                 weight = float(request.json["weight"])
                 price = float(request.json["price"])
                 prod = Product(
-                    id=id,
                     handle=handle,
                     weight=weight,
                     price=price
@@ -73,7 +73,7 @@ def add_product():
     return 201
 
 
-@app.route("/storage/<product>/add", methods=["POST"])
+@app.route("/storage/<product>/add/", methods=["POST"])
 def add_to_storage(product):
     if request.method == "POST":
     # This branch happens when user submits the form
@@ -110,8 +110,9 @@ def add_to_storage(product):
 
 @app.route("/storage/", methods=["GET"])
 def get_inventory():
-    response_data = []
-    storage = StorageItem.query.all()
-    for product in storage:
-        response_data.append([product.handle, product.weight])
+    if request.method == "GET":
+        response_data = []
+        storage = StorageItem.query.all()
+        for product in storage:
+            response_data.append([product.handle, product.weight, product.price, product.inventory])
     return json.dumps(response_data)
