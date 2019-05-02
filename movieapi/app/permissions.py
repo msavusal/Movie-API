@@ -4,6 +4,8 @@ from rest_framework import permissions
 class IsOwnerOrReadOnly(permissions.BasePermission):
     """
     Custom permission to only allow owners of an object to edit it.
+    NOTE: This code is heavily taken from Django guides with only slight modifications
+    https://www.django-rest-framework.org/api-guide/authentication/
     """
 
     def has_object_permission(self, request, view, obj):
@@ -13,4 +15,4 @@ class IsOwnerOrReadOnly(permissions.BasePermission):
             return True
 
         # Write permissions are only allowed to the owner of the snippet.
-        return obj.related_user == request.user
+        return obj.author == request.user
