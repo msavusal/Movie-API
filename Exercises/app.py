@@ -194,11 +194,11 @@ def submit_data(s, ctrl, data):
     return resp
 
 def prompt_from_schema(s, body):
-    body = {}
-    edit = {}
-    resp = s.request(ctrl["schema"])
+    resp = s.get(URL)
+    body = resp.json()
+    schema = body["@controls"]["edit"]["schema"]
     change = False
-    for field, props in schema["properties"].items():
+    for i in props["description"]:
         api_value = body[field]
         local_name = mapping[field]
         tag_value = getattr(tag, local_name)
