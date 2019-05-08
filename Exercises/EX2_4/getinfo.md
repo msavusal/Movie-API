@@ -18,8 +18,8 @@
                 "length": "00:04:26",
                 "artist": "Scandal",
                 "@controls": {
-                    "author": {
-                        "href": "/api/artists/scandal/"
+                    "collection": {
+                        "href": "/api/ArtistCollection/scandal/"
                     },
                     "albums-by": {
                         "href": "/api/artists/scandal/albums/"
@@ -189,6 +189,149 @@
                 "@controls": {
                     "profile": {
                         "href": "/profiles/error-profile/"
+                    }
+                }
+            }
+
++ Response 200 (application/vnd.mason+json)
+
+    + Body
+
+            {
+                "title": "Exördium",
+                "disc_number": 1,
+                "track_number": 1,
+                "length": "00:03:00",
+                "artist": "Emperor",
+                "@controls": {
+                    "author": {
+                        "href": "/api/artists/emperor/"
+                    },
+                    "albums-by": {
+                        "href": "/api/artists/emperor/albums/"
+                    },
+                    "self": {
+                        "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/"
+                    },
+                    "profile": {
+                        "href": "/profiles/track/"
+                    },
+                    "up": {
+                        "href": "/api/artists/VA/albums/Thorns vs Emperor/"
+                    },
+                    "edit": {
+                        "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
+                        "title": "Edit this track",
+                        "encoding": "json",
+                        "method": "PUT",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "title": {
+                                    "description": "Track title",
+                                    "type": "string"
+                                },
+                                "disc_number": {
+                                    "description": "Disc number",
+                                    "type": "integer",
+                                    "default": 1
+                                },
+                                "track_number": {
+                                    "description": "Track number on disc",
+                                    "type": "integer"
+                                },
+                                "length": {
+                                    "description": "Track length",
+                                    "type": "string",
+                                    "pattern": "^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$"
+                                }
+                            },
+                            "required": ["title",
+                            "track_number",
+                            "length"]
+                        }
+                    },
+                    "mumeta:delete": {
+                    "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
+                    "title": "Delete this track",
+                    "method": "DELETE"
+                    }
+                },
+                "@namespaces": {
+                    "mumeta": {
+                    "name": "/musicmeta/link-relations#"
+                    }
+                }
+            }
+
++ Response 200 (application/vnd.mason+json)
+
+    + Body
+
+            {
+                "id": 123,
+                "name": "Mozart",
+                "unique_name": "mozart",
+                "formed": "1756-01-01",
+                "disbanded": null,
+                "location": null,
+                "@controls": {
+                    "author": {
+                        "href": "/api/artists/emperor/"
+                    },
+                    "albums-by": {
+                        "href": "/api/artists/emperor/albums/"
+                    },
+                    "self": {
+                        "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/"
+                    },
+                    "profile": {
+                        "href": "/profiles/track/"
+                    },
+                    "up": {
+                        "href": "/api/artists/VA/albums/Thorns vs Emperor/"
+                    },
+                    "edit": {
+                        "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
+                        "title": "Edit this track",
+                        "encoding": "json",
+                        "method": "PUT",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "title": {
+                                    "description": "Track title",
+                                    "type": "string"
+                                },
+                                "disc_number": {
+                                    "description": "Disc number",
+                                    "type": "integer",
+                                    "default": 1
+                                },
+                                "track_number": {
+                                    "description": "Track number on disc",
+                                    "type": "integer"
+                                },
+                                "length": {
+                                    "description": "Track length",
+                                    "type": "string",
+                                    "pattern": "^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$"
+                                }
+                            },
+                            "required": ["title",
+                            "track_number",
+                            "length"]
+                        }
+                    },
+                    "mumeta:delete": {
+                    "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
+                    "title": "Delete this track",
+                    "method": "DELETE"
+                    }
+                },
+                "@namespaces": {
+                    "mumeta": {
+                    "name": "/musicmeta/link-relations#"
                     }
                 }
             }

@@ -112,6 +112,36 @@ The following [IANA RFC5988](http://www.iana.org/assignments/link-relations/link
  * `disc_number`: Number of the disc of the album this track is on. Default is 1. Unique together with track number per album.
  * `track_number`: Number of the track on the disc it's on. Mandatory. Unique together with disc number per album.
 
+## Artist Profile
+
+Profile definition for all track related resources.
+
+### Link Relations
+
+This section lists all possible link relations associated with tracks; not all of them are necessarily present on each resource type. The following link relations from the mumeta namespace are used:
+
+ * [albums-by](reference/link-relations/artists-by)
+ * [delete](reference/link-relations/delete)
+
+The following [IANA RFC5988](http://www.iana.org/assignments/link-relations/link-relations.xhtml) link relations are also used:
+
+ * author
+ * edit
+ * profile
+ * self
+ * up
+
+### Semantic Descriptors
+
+#### Data Type Artist
+
+ * `name`: 
+ * `unique_name`: 
+ * `formed`: 
+ * `disbanded`: 
+ * `location`: 
+
+
 # Group Entry
 
 This group contains the entry point of the API
@@ -174,37 +204,153 @@ Get list of all artists.
 + Response 200 (application/vnd.mason+json)
 
     + Body
-            {
-                "@namespaces": {
-                    "mumeta": {
-                        "name": "/musicmeta/link-relations#"
-                    }
+    
+        {
+            "@namespaces": {
+                "mumeta": {
+                    "name": "/musicmeta/link-relations#"
+                }
+            },
+            "@controls": {
+                "self": {
+                    "href": "/api/artists/"
                 },
-                "@controls": {
-                    "self": {
-                        "href": "/api/artists/"
-                    },
-                    "mumeta:artists-all": {
-                        "href": "/api/artists/",
-                        "title": "All artists"
-                    }
-                },
-                "items": [
-                    {
-                    "name": "Mozart"
-                    "unique_name": "mozart",
-                    "formed": "1756-01-01",
-                    "disbanded": null,
-                    "location": null,
-                    }
-                ]
-            }
+                "mumeta:artists-all": {
+                    "href": "/api/artists/",
+                    "title": "All artists"
+                }
+            },
+            "items": [
+                {
+                "name": "Mozart"
+                "unique_name": "mozart",
+                "formed": "1756-01-01",
+                "disbanded": null,
+                "location": null,
+                }
+            ]
+        }
 
-+ Response 404 (application/json)
++ Response 404 (application/vnd.mason+json)
+
+    + Body
 
         {
-          "error": "Resource not found."
+            "resource_url": "/api/artists/Mozart/",
+            "@error": {
+                "@message": "Artist not found",
+                "@messages": [null]
+            },
+            "@controls": {
+                "profile": {
+                    "href": "/profiles/error-profile/"
+                }
+            }
         }
+
+### Add artist to collection [POST]
+
++ Relation: add-artist
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.mason+json
+
+    + Body
+
+            {
+                "name": "Mozart"
+                "unique_name": "mozart",
+                "formed": "1756-01-01",
+                "disbanded": null,
+                "location": null,
+            }
+
++ Response 201
+
+    + Headers
+
+            Location: /api/artists/Mozart/
+
+
++ Response 400 (application/vnd.mason+json)
+
+    The client is trying to send a JSON document that doesn't validate against the schema.
+
+    + Body
+
+            {
+                "resource_url": "/api/artists/Mozart/",
+                "@error": {
+                    "@message": "Invalid JSON document",
+                    "@messages": [
+                        "dun goofed up"
+                    ]
+                },
+                "@controls": {
+                    "profile": {
+                        "href": "/profiles/error-profile/"
+                    }
+                }
+            }
+
++ Response 404 (application/vnd.mason+json)
+
+    + Body
+
+            {
+                "resource_url": "/api/artists/wubwub/",
+                "@error": {
+                    "@message": "Artist not found",
+                    "@messages": [null]
+                },
+                "@controls": {
+                    "profile": {
+                        "href": "/profiles/error/"
+                    }
+                }
+            }
+
++ Response 409 (application/vnd.mason+json)
+
+    + Body
+
+            {
+                "resource_url": "/api/artists/Mozart",
+                "@error": {
+                    "@message": "Already exists",
+                    "@messages": [
+                        "Artist already exists"
+                    ]
+                },
+                "@controls": {
+                    "profile": {
+                        "href": "/profiles/error/"
+                    }
+                }
+            }
+
++ Response 415 (application/vnd.mason+json)
+
+
+    + Body
+
+            {
+                "resource_url": "/api/artists/Mozart",
+                "@error": {
+                    "@message": "Unsupported media type",
+                    "@messages": [
+                        "Use JSON"
+                    ]
+                },
+                "@controls": {
+                    "profile": {
+                        "href": "/profiles/error-profile/"
+                    }
+                }
+            }
+
 
 ## Artist [/api/artists/{artist}]
 
@@ -226,12 +372,11 @@ Get list of all artists.
     + Body
 
             {
-                "id": 123,
-                "name": "Mozart",
-                "unique_name": "mozart",
-                "formed": "1756-01-01",
-                "disbanded": null,
-                "location": null,
+                "title": "Exördium",
+                "disc_number": 1,
+                "track_number": 1,
+                "length": "00:03:00",
+                "artist": "Emperor",
                 "@controls": {
                     "author": {
                         "href": "/api/artists/emperor/"
@@ -292,6 +437,7 @@ Get list of all artists.
                     }
                 }
             }
+
 
 ### Create new Artist [POST]
 
