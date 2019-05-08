@@ -38,295 +38,6 @@ Leads to the root level artists collection which is a list of all artists known 
 
 Deletes the associated resource. Must be accessed with DELETE
 
-# Group Artists
-
-## Artist Collection [/api/artists/?sortby={field}]
-
-+ Parameters
-
-    + field (string, optional) - Field to use for sorting
-    
-        + Default: `name`
-        + Member
-        
-            + `artist`
-            + `title`
-            + `genre`
-            + `release`
-
-### List all Artists [GET]
-
-Get list of all artists.
-
-+ Relation: artists-all
-+ Request
-
-    + Headers
-
-            Accept: application/vnd.mason+json
-
-+ Response 200 (application/vnd.mason+json)
-
-    + Body
-            {
-                "@namespaces": {
-                    "mumeta": {
-                        "name": "/musicmeta/link-relations#"
-                    }
-                },
-                "@controls": {
-                    "self": {
-                        "href": "/api/artists/"
-                    },
-                    "mumeta:artists-all": {
-                        "href": "/api/artists/",
-                        "title": "All artists"
-                    }
-                },
-                "items": [
-                    {
-                    "name": "Mozart"
-                    "unique_name": "mozart",
-                    "formed": "1756-01-01",
-                    "disbanded": null,
-                    "location": null,
-                    }
-                ]
-            }
-
-+ Response 404 (application/json)
-
-        {
-          "error": "Resource not found."
-        }
-
-## Artist resource [/api/artists/{artist}/]
-
-Get the artist representation.
-
-+ Relation: self
-+ Request
-
-    + Headers
-    
-            Accept: application/vnd.mason+json
-        
-+ Response 200 (application/vnd.mason+json)
-
-    + Body
-    
-            {
-                "@namespaces": {
-                    "mumeta": {
-                        "name": "/musicmeta/link-relations#"
-                    }
-                },
-                "name": "Mozart",
-                "unique_name": "mozart",
-                "genre": "Pop Rock",
-                "discs": 1,
-                "artist": "Scandal",
-                "@controls": {
-                    "author": {
-                        "href": "/api/artists/mozart/"
-                    },
-                    "mumeta:albums-by": {
-                        "href": "/api/artists/scandal/albums/"
-                    },
-                    "self": {
-                        "href": "/api/artists/scandal/albums/Hello World/"
-                    },
-                    "profile": {
-                        "href": "/profiles/album/"
-                    },
-                    "collection": {
-                        "href": "/api/albums/"
-                    },
-                    "mumeta:artists-all": {
-                        "href": "/api/artists/",
-                        "title": "All artists"
-                    },
-                    "mumeta:add-track": {
-                        "href": "/api/artists/scandal/albums/Hello World/",
-                        "title": "Add a track to this album",
-                        "encoding": "json",
-                        "method": "POST",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "title": {
-                                    "description": "Track title",
-                                    "type": "string"
-                                },
-                                "disc_number": {
-                                    "description": "Disc number",
-                                    "type": "integer",
-                                    "default": 1
-                                },
-                                "track_number": {
-                                    "description": "Track number on disc",
-                                    "type": "integer"
-                                },
-                                "length": {
-                                    "description": "Track length",
-                                    "type": "string",
-                                    "pattern": "^:[0-9]{2}:[0-5][0-9]:[0-5][0-9]$"
-                                }
-                            },
-                            "required": ["title", "track_number", "length"]
-                        }
-                    },
-                    "edit": {
-                        "href": "/api/artists/scandal/albums/Hello World/",
-                        "title": "Edit this album",
-                        "encoding": "json",
-                        "method": "PUT",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "title": {
-                                    "description": "Album title",
-                                    "type": "string"
-                                },
-                                "release": {
-                                    "description": "Release date",
-                                    "type": "string",
-                                    "pattern": "^[0-9]{4}-[01][0-9]-[0-3][0-9]$"
-                                },
-                                "genre": {
-                                    "description": "Album's genre(s)",
-                                    "type": "string"
-                                },
-                                "discs": {
-                                    "description": "Number of discs",
-                                    "type": "integer",
-                                    "default": 1
-                                }
-                            },
-                            "required": ["title", "release"]
-                        }
-                    },
-                    "mumeta:delete": {
-                        "href": "/api/artists/scandal/albums/Hello World/",
-                        "title": "Delete this album",
-                        "method": "DELETE"
-                    }
-                },
-                "items": [
-                    {
-                        "title": "Image",
-                        "length": "00:04:26",
-                        "disc_number": 1,
-                        "track_number": 1,
-                        "@controls": {
-                            "self": {
-                                "href": "/api/artists/scandal/albums/Hello World/1/1/"
-                            },
-                            "profile": {
-                                "href": "/profiles/track/"
-                            }
-                        }
-                    }
-                ]
-            }
-
-
-### Create new Artist [POST]
-
-Create a new artist
-
-+ Relation: add-artist
-+ Request (application/json)
-
-    + Headers
-
-            Accept: application/vnd.mason+json
-        
-    + Body
-    
-            {
-                "name": "Mozart"
-                "unique_name": "mozart",
-                "formed": "1756-01-01",
-                "disbanded": null,
-                "location": null,
-            }
-
-+ Response 201 (application/json)
-
-        {
-          "success": "The request has been fulfilled and has resulted in one or more new resources being created."
-        }
-
-+ Response 400 (application/json)
-
-        {
-          "error": "Unable to process the request."
-        }
-
-+ Response 415 (application/json)
-
-        {
-          "error": "Unsupported Media Type."
-        }
-
-### Show artist resource [GET]
-
-Show artist resource.
-
-+ Response 200 (application/json)
-
-+ Response 404 (application/json)
-
-### Modify Artist resource [PUT]
-
-Modify artist resource.
-
-+ Request (application/json)
-
-        {
-            "artist": "Mozart",
-            "artist's unique name": "01",
-        }
-
-+ Response 200 (application/json)
-
-        {
-          "success": "The request has succeeded."
-        }
-
-+ Response 404 (application/json)
-
-        {
-          "error": "Resource not found."
-        }
-
-+ Response 400 (application/json)
-
-        {
-          "error": "Unable to process the request."
-        }
-
-+ Response 415 (application/json)
-
-        {
-          "error": "Unsupported media type."
-        }
-
-### Delete Artist resource [DELETE]
-
-Delete an artist resource.
-
- + Request (application/json)
-
- + Response 200 (application/json)
-
-        {
-          "success": "The request has succeeded."
-        }
-
- + Response 404 (application/json)
-
 # Group Profiles
 
 This section includes resource profiles which provide semantic descriptions for the attributes of each resource, as well as the list of controls (by link relation) available from that resource.
@@ -437,6 +148,218 @@ Get the API entry point
                 }
             }
 
+# Group Artists
+
+## Artist Collection [/api/artists/]
+
+    + Parameters
+
+        + id
+        + name
+        + unique_name
+        + formed
+        + disbanded
+        + location
+
+### List all Artists [GET]
+
+Get list of all artists.
+
++ Relation: artists-all
++ Request
+
+    + Headers
+
+            Accept: application/vnd.mason+json
+
++ Response 200 (application/vnd.mason+json)
+
+    + Body
+            {
+                "@namespaces": {
+                    "mumeta": {
+                        "name": "/musicmeta/link-relations#"
+                    }
+                },
+                "@controls": {
+                    "self": {
+                        "href": "/api/artists/"
+                    },
+                    "mumeta:artists-all": {
+                        "href": "/api/artists/",
+                        "title": "All artists"
+                    }
+                },
+                "items": [
+                    {
+                    "name": "Mozart"
+                    "unique_name": "mozart",
+                    "formed": "1756-01-01",
+                    "disbanded": null,
+                    "location": null,
+                    }
+                ]
+            }
+
++ Response 404 (application/json)
+
+        {
+          "error": "Resource not found."
+        }
+
+## Artist [/api/artists/{artist}/]
+
+    + Parameters
+
+        + artist: scandal (string) - artist's unique name (unique_name)
+
+
+### Create new Artist [POST]
+
+Create a new artist
+
++ Relation: add-artist
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.mason+json
+        
+    + Body
+    
+        {
+            "name": "Mozart"
+            "unique_name": "mozart",
+            "formed": "1756-01-01",
+            "disbanded": null,
+            "location": null,
+        }
+
++ Response 201 (application/json)
+
+        {
+          "success": "The request has been fulfilled and has resulted in one or more new resources being created."
+        }
+
++ Response 400 (application/json)
+
+        {
+          "error": "Unable to process the request."
+        }
+
++ Response 415 (application/json)
+
+        {
+          "error": "Unsupported Media Type."
+        }
+
+### Show artist resource [GET]
+
+Show artist resource.
+
++ Response 200 (application/json)
+
++ Response 404 (application/json)
+
+### Edit Artist information [PUT]
+
++ Relation: edit
++ Request (application/json)
+
+    + Headers
+
+            Accept: application/vnd.mason+json
+
+    + Body
+
+            {
+                "id": "1",
+                "name": "Pekka",
+                "unique_name": "pekka",
+                "formed": null,
+                "disbanded": null,
+                "location": null,
+            }
+
+
++ Response 200 (application/json)
+
+        {
+          "success": "The request has succeeded."
+        }
+
++ Response 404 (application/json)
+
++ Response 404 (application/vnd.mason+json)
+
+    + Body
+
+            {
+                "resource_url": "/api/artists/Laulaja/",
+                "@error": {
+                    "@message": "Artist not found",
+                    "@messages": [
+                        null
+                    ]
+                },
+                "@controls":{
+                    "profile":{
+                        "href": "/profiles/error-profile/"
+                    }
+                }
+            }
+
++ Response 400 (application/json)
+
+        {
+            "resource_url": "/api/artists/Laulaja/",
+            "@error": {
+                "@message": "Invalid JSON document",
+            },
+            "@controls": {
+                "profile": {
+                    "href": "/profiles/error-profile/"
+                }
+            }
+        }
+
++ Response 415 (application/json)
+
+    + Body
+
+            {
+                "resource_url": "/api/artists/Laulaja/",
+                "@error": {
+                    "@message": "Unsupported media type",
+                    "@messages": [
+                        "Use JSON"
+                    ]
+                },
+                "@controls": {
+                    "profile": {
+                        "href": "/profiles/error-profile/"
+                    }
+                }
+            }
+
+
+### Delete Artist [DELETE]
+
++ Relation: delete
++ Request
+
+    + Headers
+
+            Accept: application/vnd.mason+json
+
++ Response 200 (application/json)
+
+        {
+          "success": "The request has succeeded."
+        }
+
+ + Response 404 (application/json)
+ 
 
 # Group Albums
 
@@ -2186,7 +2109,6 @@ Replace the album's representation with a new one. Missing optinal fields will b
 + Response 400 (application/vnd.mason+json)
 
     + Body
-
             {
                 "resource_url": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
                 "@error": {
