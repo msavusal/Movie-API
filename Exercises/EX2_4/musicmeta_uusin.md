@@ -267,11 +267,16 @@ Get list of all artists.
                 "location": null,
             }
 
-+ Response 201
++ Response 200
 
     + Headers
 
-            Location: /api/artists/Mozart/
+    + Body
+
+            {
+                "resource_url": "/api/artists/{}/"
+            }
+
 
 + Response 400 (application/vnd.mason+json)
 
@@ -355,7 +360,7 @@ Get list of all artists.
 
     + Parameters
 
-        + artist: Pekka (string)
+        + artist: artist (string)
 
 ### Artist information [GET]
 
@@ -378,55 +383,57 @@ Get list of all artists.
                 "disbanded": null,
                 "location": null,
                 "@controls": {
-                    "author": {
+                    "collection": {
                         "href": "/api/artists/emperor/"
                     },
                     "albums-by": {
                         "href": "/api/artists/emperor/albums/"
                     },
                     "self": {
-                        "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/"
-                    },
-                    "profile": {
-                        "href": "/profiles/track/"
-                    },
-                    "up": {
-                        "href": "/api/artists/VA/albums/Thorns vs Emperor/"
+                        "href": "/api/artists/emperor/"
                     },
                     "edit": {
-                        "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
-                        "title": "Edit this track",
+                        "href": "/api/artists/emperor/",
+                        "title": "Edit this artist",
                         "encoding": "json",
                         "method": "PUT",
                         "schema": {
                             "type": "object",
                             "properties": {
-                                "title": {
-                                    "description": "Track title",
-                                    "type": "string"
-                                },
-                                "disc_number": {
-                                    "description": "Disc number",
-                                    "type": "integer",
+                                "id": {
+                                    "description": "Artist id",
+                                    "type": "integer"
                                     "default": 1
                                 },
-                                "track_number": {
-                                    "description": "Track number on disc",
-                                    "type": "integer"
+                                "name": {
+                                    "description": "Artist name",
+                                    "type": "string"
                                 },
-                                "length": {
-                                    "description": "Track length",
+                                "unique_name": {
+                                    "description": "Artist unqiue name",
                                     "type": "string",
-                                    "pattern": "^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$"
+                                },
+                                "formed": {
+                                    "description": "Formation date",
+                                    "type": "date"
+                                },
+                                "disbanded": {
+                                    "description": "Disbandment date",
+                                    "type": "date",
                                 }
+                                "location": {
+                                    "description": "Location",
+                                    "type": "string"
+                                },
                             },
-                            "required": ["title",
-                            "track_number",
-                            "length"]
+                            "required": ["ID",
+                            "name",
+                            "unique_name"
+                            ]
                         }
                     },
                     "mumeta:delete": {
-                    "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
+                    "href": "/api/artists/emperor/",
                     "title": "Delete this track",
                     "method": "DELETE"
                     }
@@ -462,9 +469,9 @@ Create a new artist
 
 + Response 201 (application/json)
 
-        {
-          "success": "The request has been fulfilled and has resulted in one or more new resources being created."
-        }
+    + Headers
+
+            Location: /api/artists/mozart/
 
 + Response 400 (application/json)
 
