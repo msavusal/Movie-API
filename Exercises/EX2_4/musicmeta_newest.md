@@ -371,12 +371,11 @@ Get list of all artists.
     + Body
 
             {
-                "id": 123,
-                "name": "Mozart",
-                "unique_name": "mozart",
-                "formed": "1756-01-01",
-                "disbanded": null,
-                "location": null,
+                "title": "Exördium",
+                "disc_number": 1,
+                "track_number": 1,
+                "length": "00:03:00",
+                "artist": "Emperor",
                 "@controls": {
                     "author": {
                         "href": "/api/artists/emperor/"
