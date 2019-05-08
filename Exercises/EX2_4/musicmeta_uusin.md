@@ -154,7 +154,6 @@ Get the API entry point
 
     + Parameters
 
-        + id
         + name
         + unique_name
         + formed
@@ -207,12 +206,92 @@ Get list of all artists.
           "error": "Resource not found."
         }
 
-## Artist [/api/artists/{artist}/]
+## Artist [/api/artists/{artist}]
 
     + Parameters
 
-        + artist: scandal (string) - artist's unique name (unique_name)
+        + artist: Pekka (string) - artist's unique name (unique_name)
 
+### Artist information [GET]
+
++ Relation: self
++ Request
+
+    + Headers
+
+            Accept: application/vnd.mason+json
+
++ Response 200 (application/vnd.mason+json)
+
+    + Body
+
+            {
+                "id": 123,
+                "name": "Mozart",
+                "unique_name": "mozart",
+                "formed": "1756-01-01",
+                "disbanded": null,
+                "location": null,
+                "@controls": {
+                    "author": {
+                        "href": "/api/artists/emperor/"
+                    },
+                    "albums-by": {
+                        "href": "/api/artists/emperor/albums/"
+                    },
+                    "self": {
+                        "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/"
+                    },
+                    "profile": {
+                        "href": "/profiles/track/"
+                    },
+                    "up": {
+                        "href": "/api/artists/VA/albums/Thorns vs Emperor/"
+                    },
+                    "edit": {
+                        "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
+                        "title": "Edit this track",
+                        "encoding": "json",
+                        "method": "PUT",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "title": {
+                                    "description": "Track title",
+                                    "type": "string"
+                                },
+                                "disc_number": {
+                                    "description": "Disc number",
+                                    "type": "integer",
+                                    "default": 1
+                                },
+                                "track_number": {
+                                    "description": "Track number on disc",
+                                    "type": "integer"
+                                },
+                                "length": {
+                                    "description": "Track length",
+                                    "type": "string",
+                                    "pattern": "^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$"
+                                }
+                            },
+                            "required": ["title",
+                            "track_number",
+                            "length"]
+                        }
+                    },
+                    "mumeta:delete": {
+                    "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
+                    "title": "Delete this track",
+                    "method": "DELETE"
+                    }
+                },
+                "@namespaces": {
+                    "mumeta": {
+                    "name": "/musicmeta/link-relations#"
+                    }
+                }
+            }
 
 ### Create new Artist [POST]
 
@@ -252,14 +331,6 @@ Create a new artist
         {
           "error": "Unsupported Media Type."
         }
-
-### Show artist resource [GET]
-
-Show artist resource.
-
-+ Response 200 (application/json)
-
-+ Response 404 (application/json)
 
 ### Edit Artist information [PUT]
 
