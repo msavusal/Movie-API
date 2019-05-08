@@ -205,7 +205,7 @@ Get list of all artists.
 
     + Body
     
-        {
+            {
             "@namespaces": {
                 "mumeta": {
                     "name": "/musicmeta/link-relations#"
@@ -229,13 +229,13 @@ Get list of all artists.
                 "location": null,
                 }
             ]
-        }
+            }
 
 + Response 404 (application/vnd.mason+json)
 
     + Body
 
-        {
+            {
             "resource_url": "/api/artists/Mozart/",
             "@error": {
                 "@message": "Artist not found",
@@ -246,7 +246,7 @@ Get list of all artists.
                     "href": "/profiles/error-profile/"
                 }
             }
-        }
+            }
 
 ### Add artist to collection [POST]
 
@@ -272,7 +272,6 @@ Get list of all artists.
     + Headers
 
             Location: /api/artists/Mozart/
-
 
 + Response 400 (application/vnd.mason+json)
 
@@ -356,7 +355,7 @@ Get list of all artists.
 
     + Parameters
 
-        + artist: Pekka (string) - artist's unique name (unique_name)
+        + artist: Pekka (string)
 
 ### Artist information [GET]
 
@@ -452,13 +451,13 @@ Create a new artist
         
     + Body
     
-        {
+            {
             "name": "Mozart"
             "unique_name": "mozart",
             "formed": "1756-01-01",
             "disbanded": null,
             "location": null,
-        }
+            }
 
 + Response 201 (application/json)
 
@@ -575,7 +574,7 @@ Create a new artist
           "success": "The request has succeeded."
         }
 
- + Response 404 (application/json)
++ Response 404 (application/json)
  
 
 # Group Albums
@@ -2326,6 +2325,7 @@ Replace the album's representation with a new one. Missing optinal fields will b
 + Response 400 (application/vnd.mason+json)
 
     + Body
+
             {
                 "resource_url": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
                 "@error": {
@@ -2360,7 +2360,7 @@ Replace the album's representation with a new one. Missing optinal fields will b
                     }
                 }
             }
-
+            
 + Response 404 (application/vnd.mason+json)
 
     + Body
