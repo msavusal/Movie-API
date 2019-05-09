@@ -190,7 +190,7 @@ Get the API entry point
         + disbanded
         + location
 
-### List all Artists [GET]
+### List all Artists from collection [GET]
 
 Get list of all artists.
 
