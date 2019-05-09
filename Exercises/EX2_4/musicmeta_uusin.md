@@ -204,32 +204,69 @@ Get list of all artists.
 + Response 200 (application/vnd.mason+json)
 
     + Body
-    
-            {
-            "@namespaces": {
-                "mumeta": {
-                    "name": "/musicmeta/link-relations#"
-                }
-            },
-            "@controls": {
-                "self": {
-                    "href": "/api/artists/"
-                },
-                "mumeta:artists-all": {
-                    "href": "/api/artists/",
-                    "title": "All artists"
-                }
-            },
-            "items": [
-                {
-                "name": "Mozart"
-                "unique_name": "mozart",
-                "formed": "1756-01-01",
-                "disbanded": null,
-                "location": null,
-                }
-            ]
+
+        {
+        "@namespaces": {
+            "mumeta": {
+                "name": "/musicmeta/link-relations#"
             }
+        },
+        "@controls": {
+            "self": {
+                "href": "/api/artists/"
+            },
+            "mumeta:artists-all": {
+                "href": "/api/artists/",
+                "title": "All artists"
+            },
+            "mumeta:albums-all": {
+                "href": "/api/albums/",
+                "title": "All albums"
+            },
+            "mumeta:add-artist": {
+                        "href": "/api/artists/",
+                        "title": "Add a new artist",
+                        "encoding": "json",
+                        "method": "POST",
+                        "schema": {
+                            "type": "object",
+                            "properties": {
+                                "name": {
+                                    "description": "Artist name",
+                                    "type": "string"
+                                },
+                                "unique_name": {
+                                    "description": "Release date",
+                                    "type": "string"
+                                },
+                                "location": {
+                                    "description": "Location",
+                                    "type": "string"
+                                },
+                                "formed": {
+                                    "description": "Formed",
+                                    "type": "string",
+                                    "default": "1990-01-01"
+                                },
+                                "disbanded": {
+                                    "description": "Disbanded",
+                                    "type": "string",
+                                    "default": "11990-01-01"
+                                }
+                            }
+                        }
+                    }
+        },
+        "items": [
+            {
+            "name": "Mozart",
+            "unique_name": "mozart",
+            "formed": "1756-01-01",
+            "disbanded": "1791-01-01",
+            "location": "somewhere"
+            }
+        ]
+        }
 
 + Response 404 (application/vnd.mason+json)
 
@@ -332,7 +369,7 @@ Get list of all artists.
 
             Accept: application/vnd.mason+json
 
-+ Response 204 (application/vnd.mason+json)
++ Response 200 (application/vnd.mason+json)
 
     + Body
 
@@ -354,7 +391,7 @@ Get list of all artists.
                     "href": "/api/artists/mozart/"
                 },
                 "edit": {
-                    "href": "/api/artists/mozart/",
+                    "href": "/api/artist/mozart/",
                     "title": "Edit this artist",
                     "encoding": "json",
                     "method": "PUT",
@@ -386,15 +423,11 @@ Get list of all artists.
                                 "description": "Location",
                                 "type": "string"
                             }
-                        },
-                        "required": ["ID",
-                            "name",
-                            "unique_name"
-                        ]
+                        }
                     }
                 },
                 "mumeta:delete": {
-                    "href": "/api/artists/mozart/",
+                    "href": "/api/artist/",
                     "title": "Delete this track",
                     "method": "DELETE"
                 }
@@ -434,7 +467,7 @@ Get list of all artists.
     + Body
 
             {
-                "resource_url": "/api/artists/duck/",
+                "resource_url": "/api/artist/",
                 "@error": {
                     "@message": "Invalid format",
                     "@messages": [
@@ -479,15 +512,12 @@ Get list of all artists.
 
 + Response 204
 
-
 + Response 404 (application/vnd.mason+json)
-
-    The client is trying to delete an artist that doesn't exist.
 
     + Body
 
             {
-                "resource_url": "/api/artists/Emperor/",
+                "resource_url": "/api/artist/",
                 "@error": {
                     "@message": "Artist not found",
                     "@messages": [null]
@@ -653,7 +683,7 @@ Get a list of albums by an artist.
                                 "release": {
                                     "description": "Release date",
                                     "type": "string",
-                                    "pattern": "^[0-9]{4}-[01][0-9]-[0-3][0-9]$"
+                                    "pattern": "^eka[0-9]-[0-3][0-9]$"
                                 },
                                 "genre": {
                                     "description": "Album's genre(s)",
@@ -737,37 +767,18 @@ Adds a new album for the artist. The album representation must be valid against 
 
     + Body
 
-            {
-                "resource_url": "/api/artists/scandal/albums/",
-                "@error": {
-                    "@message": "Invalid JSON document",
-                    "@messages": [                    
-                        "'release' is a required property
-
-                        Failed validating 'required' in schema:
-                        {'properties': {'discs': {'default': 1,
-                        'description': 'Number of discs',
-                        'type': 'integer'},
-                        'genre': {'description': \"Album's genre(s)\",
-                        'type': 'string'},
-                        'release': {'description': 'Release date',
-                        'pattern': '^[0-9]{4}-[01][0-9]-[0-3][0-9]$',
-                        'type': 'string'},
-                        'title': {'description': 'Album title',
-                        'type': 'string'}},
-                        'required': ['title', 'release'],
-                        'type': 'object'}
-
-                        On instance:
-                        {'title': 'Best Scandal'}"
-                    ]
-                },
-                "@controls": {
-                    "profile": {
-                        "href": "/profiles/error/"
-                    }
+        {
+            "resource_url": "/api/artists/hemuli/albums/",
+            "@error": {
+                "@message": "Artist not found",
+                "@messages": [null]
+            },
+            "@controls": {
+                "profile": {
+                    "href": "/profiles/error/"
                 }
             }
+        }
 
 + Response 404 (application/vnd.mason+json)
 
@@ -896,7 +907,7 @@ Gets the list of VA albums known to the API.
                                 "release": {
                                     "description": "Release date",
                                     "type": "string",
-                                    "pattern": "^[0-9]{4}-[01][0-9]-[0-3][0-9]$"
+                                    "pattern": "^toka[0-9]-[0-3][0-9]$"
                                 },
                                 "genre": {
                                     "description": "Album's genre(s)",
@@ -1118,7 +1129,7 @@ Get the album representation.
                                 "release": {
                                     "description": "Release date",
                                     "type": "string",
-                                    "pattern": "^[0-9]{4}-[01][0-9]-[0-3][0-9]$"
+                                    "pattern": "^kolmas[0-9]-[0-3][0-9]$"
                                 },
                                 "genre": {
                                     "description": "Album's genre(s)",
@@ -1219,7 +1230,7 @@ Adds a new track to the album. The track representation must be valid against th
                 "@error": {
                     "@message": "Invalid JSON document",
                     "@messages": [
-                        "'3:43' does not match '^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$'
+                        "'3:43' does not match '^[toka]{2}:[0-5][0-9]:[0-5][0-9]$'
 
                         Failed validating 'pattern' in schema['properties']['length']:
                         {'description': 'Track length',
@@ -1538,7 +1549,7 @@ Get the album's representation.
                                 "release": {
                                     "description": "Release date",
                                     "type": "string",
-                                    "pattern": "^[0-9]{4}-[01][0-9]-[0-3][0-9]$"
+                                    "pattern": "^neljas[0-9]-[0-3][0-9]$"
                                 },
                                 "genre": {
                                     "description": "Album's genre(s)",
@@ -1652,7 +1663,7 @@ Adds a new track to the album. The track representation must be valid against th
                 "@error": {
                     "@message": "Invalid JSON document",
                     "@messages": [
-                        "'5:04' does not match '^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$'
+                        "'5:04' does not match '^[eka]{2}:[0-5][0-9]:[0-5][0-9]$'
 
                         Failed validating 'pattern' in schema['properties']['length']:
                         {'description': 'Track length',
@@ -2000,35 +2011,15 @@ Replace the album's representation with a new one. Missing optinal fields will b
     + Body
 
             {
-                "resource_url": "/api/artists/scandal/albums/Hello World/1/1/",
-                "@error": {
-                    "@message": "Invalid JSON document",
-                    "@messages": [
-                        "'track_number' is a required property
-
-                        Failed validating 'required' in schema:
-                         {'properties': {'disc_number': {'default': 1,
-                         'description': 'Disc number',
-                         'type': 'integer'},
-                         'length': {'description': 'Track length',
-                         'pattern': '^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$',
-                         'type': 'string'},
-                         'title': {'description': 'Track title',
-                         'type': 'string'},
-                         'track_number': {'description': 'Track number on disc',
-                         'type': 'integer'}},
-                         'required': ['title', 'track_number', 'length'],
-                         'type': 'object'}
-
-                         On instance:
-                         {'length': '00:03:43', 'title': 'イメージ'}"
-                    ]
-                },
-                "@controls": {
-                    "profile": {
-                        "href": "/profiles/error-profile/"
-                    }
-                }
+            	"resource_url": "/api/artists/scandal/albums/Hello World/1/1/",
+            	"@error": {
+            		"@message": "Invalid JSON document",
+            		"@controls": {
+            			"profile": {
+            				"href": "/profiles/error-profile/"
+            			}
+            		}
+            	}
             }
 
 + Response 404 (application/vnd.mason+json)
