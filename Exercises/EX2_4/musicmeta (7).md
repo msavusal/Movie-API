@@ -192,6 +192,8 @@ Get the API entry point
 
 ### List all Artists from collection [GET]
 
+Get list of all artists.
+
 + Relation: artists-all
 + Request
 
@@ -243,11 +245,13 @@ Get the API entry point
                                 },
                                 "formed": {
                                     "description": "Formed",
-                                    "type": "date"
+                                    "type": "string",
+                                    "default": "1990-01-01"
                                 },
                                 "disbanded": {
                                     "description": "Disbanded",
-                                    "type": "date"
+                                    "type": "string",
+                                    "default": "11990-01-01"
                                 }
                             }
                         }
@@ -350,7 +354,7 @@ Get the API entry point
             }
 
 
-## Artist [/api/artists/{artist}]
+## Artist [/api/artist/]
 
     + Parameters
 
@@ -378,16 +382,16 @@ Get the API entry point
             "location": null,
             "@controls": {
                 "collection": {
-                    "href": "/api/artists/mozart/"
+                    "href": "/api/artist/mozart/"
                 },
                 "albums-by": {
-                    "href": "/api/artists/mozart/albums/"
+                    "href": "/api/artist/mozart/albums/"
                 },
                 "self": {
-                    "href": "/api/artists/mozart/"
+                    "href": "/api/artist/mozart/"
                 },
                 "edit": {
-                    "href": "/api/artists/",
+                    "href": "/api/artist/mozart/",
                     "title": "Edit this artist",
                     "encoding": "json",
                     "method": "PUT",
@@ -404,7 +408,7 @@ Get the API entry point
                                 "type": "string"
                             },
                             "unique_name": {
-                                "description": "Artist unique name",
+                                "description": "Artist unqiue name",
                                 "type": "string"
                             },
                             "formed": {
@@ -422,12 +426,9 @@ Get the API entry point
                         }
                     }
                 },
-                "mumeta:albums-by": {
-                "href": "/api/artists/mozart/albums/"
-                },
                 "mumeta:delete": {
-                    "href": "/api/artists/mozart/",
-                    "title": "Delete this artist",
+                    "href": "/api/artist/",
+                    "title": "Delete this track",
                     "method": "DELETE"
                 }
             },
@@ -466,7 +467,7 @@ Get the API entry point
     + Body
 
             {
-                "resource_url": "/api/artists/",
+                "resource_url": "/api/artist/",
                 "@error": {
                     "@message": "Invalid format",
                     "@messages": [
@@ -486,7 +487,7 @@ Get the API entry point
     + Body
 
             {
-                "resource_url": "/api/artists/",
+                "resource_url": "/api/artist/",
                 "@error": {
                     "@message": "Unsupported media type",
                     "@messages": [
@@ -516,7 +517,7 @@ Get the API entry point
     + Body
 
             {
-                "resource_url": "/api/artists/mozart/",
+                "resource_url": "/api/artist/",
                 "@error": {
                     "@message": "Artist not found",
                     "@messages": [null]
@@ -539,10 +540,10 @@ A list of all albums known to the API. This collection can be sorted using the s
 + Parameters
 
     + field (string, optional) - Field to use for sorting
-
+    
         + Default: `title`
         + Members
-
+        
             + `artist`
             + `title`
             + `genre`
@@ -556,11 +557,11 @@ Get a list of all albums known to the API.
 + Request
 
     + Headers
-
+    
             Accept: application/vnd.mason+json
 
 + Response 200 (application/vnd.mason+json)
-
+    
     + Body
 
             {
@@ -589,12 +590,12 @@ Get a list of all albums known to the API.
                         "@controls": {
                             "self": {
                                 "href": "/api/artists/scandal/Hello World/"
-                            },
+                            }, 
                             "profile": {
                                 "href": "/profiles/album/"
                             }
                         },
-                    },
+                    }, 
                     {
                         "title": "Thorns vs Emperor",
                         "artist": "VA",
@@ -609,7 +610,7 @@ Get a list of all albums known to the API.
                     }
                 ]
             }
-
+        
 ## Albums by Artist [/api/artists/{artist}/albums/]
 
 This is an album collection by given artist using the artist's unique name. For each album only artist and title is included, more information can be found by following the `self` relation of each album. Albums released by this artist can be added to this collection.
@@ -626,19 +627,19 @@ Get a list of albums by an artist.
 + Request
 
     + Headers
-
+    
             Accept: application/vnd.mason+json
-
+    
 + Response 200 (application/vnd.mason+json)
 
     + Body
-
+    
             {
                 "@namespaces": {
                     "mumeta": {
                         "name": "/musicmeta/link-relations#"
                     }
-                },
+                }, 
                 "@controls": {
                     "self": {
                         "href": "/api/artists/scandal/albums/"
@@ -682,7 +683,7 @@ Get a list of albums by an artist.
                                 "release": {
                                     "description": "Release date",
                                     "type": "string",
-                                    "pattern": "^eka[0-9]-[0-3][0-9]$"
+                                    "pattern": "^[0-9]{4}-[01][0-9]-[0-3][0-9]$"
                                 },
                                 "genre": {
                                     "description": "Album's genre(s)",
@@ -719,8 +720,8 @@ Get a list of albums by an artist.
     The client is trying to retrieve list of albums for an artist that doesn't exist.
 
     + Body
-
-
+    
+            
             {
                 "resource_url": "/api/artists/hemuli/albums/",
                 "@error": {
@@ -744,9 +745,9 @@ Adds a new album for the artist. The album representation must be valid against 
     + Headers
 
             Accept: application/vnd.mason+json
-
+        
     + Body
-
+    
             {
                 "title": "Best Scandal",
                 "release": "2009-10-21",
@@ -757,7 +758,7 @@ Adds a new album for the artist. The album representation must be valid against 
 + Response 201
 
     + Headers
-
+    
             Location: /api/artists/scandal/albums/Best Scandal/
 
 + Response 400 (application/vnd.mason+json)
@@ -765,26 +766,45 @@ Adds a new album for the artist. The album representation must be valid against 
     The client is trying to send a JSON document that doesn't validate against the schema, or has non-existent release date.
 
     + Body
-
-        {
-            "resource_url": "/api/artists/hemuli/albums/",
-            "@error": {
-                "@message": "Artist not found",
-                "@messages": [null]
-            },
-            "@controls": {
-                "profile": {
-                    "href": "/profiles/error/"
+    
+            {
+                "resource_url": "/api/artists/scandal/albums/",
+                "@error": {
+                    "@message": "Invalid JSON document",
+                    "@messages": [                    
+                        "'release' is a required property
+                        
+                        Failed validating 'required' in schema:
+                        {'properties': {'discs': {'default': 1,
+                        'description': 'Number of discs',
+                        'type': 'integer'},
+                        'genre': {'description': \"Album's genre(s)\",
+                        'type': 'string'},
+                        'release': {'description': 'Release date',
+                        'pattern': '^[0-9]{4}-[01][0-9]-[0-3][0-9]$',
+                        'type': 'string'},
+                        'title': {'description': 'Album title',
+                        'type': 'string'}},
+                        'required': ['title', 'release'],
+                        'type': 'object'}
+                        
+                        On instance:
+                        {'title': 'Best Scandal'}"
+                    ]
+                },
+                "@controls": {
+                    "profile": {
+                        "href": "/profiles/error/"
+                    }
                 }
             }
-        }
 
 + Response 404 (application/vnd.mason+json)
 
     The client is trying to add an album for an artist that doesn't exist.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/hemuli/albums/",
                 "@error": {
@@ -803,7 +823,7 @@ Adds a new album for the artist. The album representation must be valid against 
     The client is trying to add an album with a title that's already used by another album for the same artist.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/scandal/albums/",
                 "@error": {
@@ -818,14 +838,14 @@ Adds a new album for the artist. The album representation must be valid against 
                     }
                 }
             }
-
+            
 
 + Response 415 (application/vnd.mason+json)
 
     The client did not use the proper content type, or the request body was not valid JSON.
 
     + Body
-
+        
             {
                 "resource_url": "/api/artists/scandal/albums/",
                 "@error": {
@@ -840,7 +860,7 @@ Adds a new album for the artist. The album representation must be valid against 
                     }
                 }
             }
-
+        
 ## Albums by Various Artists [/api/artists/VA/albums/]
 
 This is an album collection of collaborative releases aka various artists (VA) albums. For each album only artist and title is included, and artist is listed as "VA". More information can be found by following the `self` relation of each album. VA albums can be added to this collection.
@@ -853,13 +873,13 @@ Gets the list of VA albums known to the API.
 + Request
 
     + Headers
-
+    
             Accept: application/vnd.mason+json
-
+        
 + Response 200 (application/vnd.mason+json)
 
     + Body
-
+    
             {
                 "@namespaces": {
                     "mumeta": {
@@ -906,7 +926,7 @@ Gets the list of VA albums known to the API.
                                 "release": {
                                     "description": "Release date",
                                     "type": "string",
-                                    "pattern": "^toka[0-9]-[0-3][0-9]$"
+                                    "pattern": "^[0-9]{4}-[01][0-9]-[0-3][0-9]$"
                                 },
                                 "genre": {
                                     "description": "Album's genre(s)",
@@ -948,9 +968,9 @@ Adds a new VA album. The album representation must be valid against the album sc
     + Headers
 
             Accept: application/vnd.mason+json
-
+        
     + Body
-
+    
             {
                 "title": "Transcendental",
                 "release": "2015-10-23",
@@ -961,7 +981,7 @@ Adds a new VA album. The album representation must be valid against the album sc
 + Response 201
 
     + Headers
-
+    
             Location: /api/artists/VA/albums/Transcendental/
 
 + Response 400 (application/vnd.mason+json)
@@ -969,7 +989,7 @@ Adds a new VA album. The album representation must be valid against the album sc
     The client is trying to send a JSON document that doesn't validate against the schema, or has non-existent release date.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/VA/albums/",
                 "@error": {
@@ -990,7 +1010,7 @@ Adds a new VA album. The album representation must be valid against the album sc
     The client is trying to add an album with a title that already exists.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/VA/albums/",
                 "@error": {
@@ -1005,13 +1025,13 @@ Adds a new VA album. The album representation must be valid against the album sc
                     }
                 }
             }
-
+            
 + Response 415 (application/vnd.mason+json)
 
     The client sent a request with the wrong content type or the request body was not valid JSON.
 
     + Body
-
+        
             {
                 "resource_url": "/api/artists/scandal/albums/",
                 "@error": {
@@ -1045,13 +1065,13 @@ Get the album representation.
 + Request
 
     + Headers
-
+    
             Accept: application/vnd.mason+json
-
+        
 + Response 200 (application/vnd.mason+json)
 
     + Body
-
+    
             {
                 "@namespaces": {
                     "mumeta": {
@@ -1128,7 +1148,7 @@ Get the album representation.
                                 "release": {
                                     "description": "Release date",
                                     "type": "string",
-                                    "pattern": "^kolmas[0-9]-[0-3][0-9]$"
+                                    "pattern": "^[0-9]{4}-[01][0-9]-[0-3][0-9]$"
                                 },
                                 "genre": {
                                     "description": "Album's genre(s)",
@@ -1172,7 +1192,7 @@ Get the album representation.
     The client is trying to access an album that doesn't exist (either due to non-existent artist or album).
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/scandal/albums/Yellow/",
                 "@error": {
@@ -1185,7 +1205,7 @@ Get the album representation.
                     }
                 }
             }
-
+            
 ### Add track to album [POST]
 
 Adds a new track to the album. The track representation must be valid against the track schema. Also its position on the album (combination of disc number and track number) must be unoccupied.
@@ -1194,11 +1214,11 @@ Adds a new track to the album. The track representation must be valid against th
 + Request (application/json)
 
     + Headers
-
+    
             Accept: application/vnd.mason+json
-
+        
     + Body
-
+    
             {
                 "title": "Your Song",
                 "disc_number": 1,
@@ -1209,13 +1229,13 @@ Adds a new track to the album. The track representation must be valid against th
 + Response 201
 
     + Headers
-
+    
             Location: /api/artists/scandal/albums/Hello World/1/2/
-
+            
     + Body
-
+    
             {}
-
+            
 
 
 + Response 400 (application/vnd.mason+json)
@@ -1223,19 +1243,19 @@ Adds a new track to the album. The track representation must be valid against th
     The client is trying to send a JSON document that doesn't validate against the schema.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/scandal/albums/Hello World/",
                 "@error": {
                     "@message": "Invalid JSON document",
                     "@messages": [
-                        "'3:43' does not match '^[toka]{2}:[0-5][0-9]:[0-5][0-9]$'
-
-                        Failed validating 'eka' in schema['properties']['length']:
+                        "'3:43' does not match '^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$'
+                        
+                        Failed validating 'pattern' in schema['properties']['length']:
                         {'description': 'Track length',
                         'pattern': '^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$',
                         'type': 'string'}
-
+                        
                         On instance
                         ['length']: '3:43'"
                     ]
@@ -1252,7 +1272,7 @@ Adds a new track to the album. The track representation must be valid against th
     The client is trying to add a track to an album that doesn't exist (due to non-existent artist or album).
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/scandal/albums/Yellow/",
                 "@error": {
@@ -1271,7 +1291,7 @@ Adds a new track to the album. The track representation must be valid against th
     The client is trying to add a track with a combination of disc and track numbers that is already occupied.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/scandal/albums/Hello World/",
                 "@error": {
@@ -1287,13 +1307,13 @@ Adds a new track to the album. The track representation must be valid against th
                 }
             }
 
-
+            
 + Response 415 (application/vnd.mason+json)
 
     The client sent a request with the wrong content type or the request body was not valid JSON.
 
     + Body
-
+        
             {
                 "resource_url": "/api/artists/scandal/albums/Hello World/",
                 "@error": {
@@ -1311,24 +1331,24 @@ Adds a new track to the album. The track representation must be valid against th
 
 ### Edit album information [PUT]
 
-Replace the album's representation with a new one. Missing optinal fields will be set to null. Must validate against the album schema.
+Replace the album's representation with a new one. Missing optinal fields will be set to null. Must validate against the album schema. 
 
 + Relation: edit
 + Request (application/json)
 
     + Headers
-
+        
             Accept: application/vnd.mason+json
-
+        
     + Body
-
+    
             {
                 "title": "Hello World",
                 "release": "2014-12-03",
                 "genre": "Pop Rock, Power Pop",
                 "discs": 1
             }
-
+        
 + Response 204
 
 
@@ -1337,7 +1357,7 @@ Replace the album's representation with a new one. Missing optinal fields will b
     The client is trying to send a JSON document that doesn't validate against the schema, or has non-existent release date.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/scandal/albums/Hello World/",
                 "@error": {
@@ -1355,10 +1375,10 @@ Replace the album's representation with a new one. Missing optinal fields will b
 
 + Response 404 (application/vnd.mason+json)
 
-    The client is trying to edit an album that doesn't exist (due to non-existent artist or album).
+    The client is trying to edit an album that doesn't exist (due to non-existent artist or album). 
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/scandal/albums/Yellow/",
                 "@error": {
@@ -1371,13 +1391,13 @@ Replace the album's representation with a new one. Missing optinal fields will b
                     }
                 }
             }
-
+            
 + Response 409 (application/vnd.mason+json)
 
     The client is trying to change the album's title to a one that is already in use for the artist.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/scandal/albums/Honey/",
                 "@error": {
@@ -1392,13 +1412,13 @@ Replace the album's representation with a new one. Missing optinal fields will b
                     }
                 }
             }
-
+        
 + Response 415 (application/vnd.mason+json)
 
     The client sent a request with the wrong content type or the request body was not valid JSON.
 
     + Body
-
+        
             {
                 "resource_url": "/api/artists/scandal/albums/Hello World/",
                 "@error": {
@@ -1422,17 +1442,17 @@ Deletes the album, and all associated tracks.
 + Request
 
     + Headers
-
+        
             Accept: application/vnd.mason+json
-
+        
 + Response 204
 
 + Response 404 (application/vnd.mason+json)
 
-    The client is trying to delete an album that doesn't exist (due to non-existent artist or album).
+    The client is trying to delete an album that doesn't exist (due to non-existent artist or album). 
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/scandal/albums/Yellow/",
                 "@error": {
@@ -1463,13 +1483,13 @@ Get the album's representation.
 + Request
 
     + Headers
-
+    
             Accept: application/vnd.mason+json
-
+        
 + Response 200 (application/vnd.mason+json)
-
+ 
     + Body
-
+    
             {
                 "@namespaces": {
                     "mumeta": {
@@ -1548,7 +1568,7 @@ Get the album's representation.
                                 "release": {
                                     "description": "Release date",
                                     "type": "string",
-                                    "pattern": "neljas$"
+                                    "pattern": "^[0-9]{4}-[01][0-9]-[0-3][0-9]$"
                                 },
                                 "genre": {
                                     "description": "Album's genre(s)",
@@ -1608,7 +1628,7 @@ Get the album's representation.
     The client is trying to get an album that doesn't exist.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/VA/albums/Transcendental/",
                 "@error": {
@@ -1622,7 +1642,7 @@ Get the album's representation.
                 }
             }
 
-
+            
 ### Add track to album [POST]
 
 Adds a new track to the album. The track representation must be valid against the track schema. Also its position on the album (combination of disc number and track number) must be unoccupied. Note that VA tracks have the additional required field `va_artist` which indicates the track's author.
@@ -1631,11 +1651,11 @@ Adds a new track to the album. The track representation must be valid against th
 + Request (application/json)
 
     + Headers
-
+    
             Accept: application/vnd.mason+json
-
+        
     + Body
-
+    
             {
                 "title": "I am",
                 "disc_number": 1,
@@ -1647,7 +1667,7 @@ Adds a new track to the album. The track representation must be valid against th
 + Response 201
 
     + Headers
-
+    
             Location: /api/artists/VA/albums/Thorns vs Emperor/1/2/
 
 
@@ -1656,19 +1676,19 @@ Adds a new track to the album. The track representation must be valid against th
     The client is trying to send a JSON document that doesn't validate against the schema.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/VA/albums/Thorns vs Emperor/",
                 "@error": {
                     "@message": "Invalid JSON document",
                     "@messages": [
-                        "'5:04' does not match '^[eka]{2}:[0-5][0-9]:[0-5][0-9]$'
-
-                        Failed validating 'toka' in schema['properties']['length']:
+                        "'5:04' does not match '^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$'
+                        
+                        Failed validating 'pattern' in schema['properties']['length']:
                         {'description': 'Track length',
                         'pattern': '^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$',
                         'type': 'string'}
-
+                        
                         On instance
                         ['length']: '5:04'"
                     ]
@@ -1685,7 +1705,7 @@ Adds a new track to the album. The track representation must be valid against th
     The client is trying to add a track for an album that doesn't exist.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/VA/albums/Xenogears/",
                 "@error": {
@@ -1698,13 +1718,13 @@ Adds a new track to the album. The track representation must be valid against th
                     }
                 }
             }
-
+        
 + Response 409 (application/vnd.mason+json)
 
     The client is trying to add a track with a combination of disc and track numbers that is already occupied.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/VA/albums/Thorns vs Emperor/",
                 "@error": {
@@ -1719,13 +1739,13 @@ Adds a new track to the album. The track representation must be valid against th
                     }
                 }
             }
-
+        
 + Response 415 (application/vnd.mason+json)
 
     The client sent a request with the wrong content type or the request body was not valid JSON.
 
     + Body
-
+        
             {
                 "resource_url": "/api/artists/VA/albums/Thorns vs Emperor/",
                 "@error": {
@@ -1743,24 +1763,24 @@ Adds a new track to the album. The track representation must be valid against th
 
 ### Edit album information [PUT]
 
-Replace the album's representation with a new one. Missing optinal fields will be set to null. Must validate against the album schema.
+Replace the album's representation with a new one. Missing optinal fields will be set to null. Must validate against the album schema. 
 
 + Relation: edit
 + Request (application/json)
 
     + Headers
-
+        
             Accept: application/vnd.mason+json
-
+        
     + Body
-
+    
             {
                 "title": "Thorns vs Emperor",
                 "release": "1999-01-01",
                 "genre": "Industrial Black Metal",
                 "discs": 1
             }
-
+        
 + Response 204
 
 + Response 400 (application/vnd.mason+json)
@@ -1768,7 +1788,7 @@ Replace the album's representation with a new one. Missing optinal fields will b
     The client is trying to send a JSON document that doesn't validate against the schema, or has non-existent release date.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/VA/albums/Thorns vs Emperor/",
                 "@error": {
@@ -1789,7 +1809,7 @@ Replace the album's representation with a new one. Missing optinal fields will b
     The client is trying to modify an album that doesn't exist.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/VA/albums/Transcendental/",
                 "@error": {
@@ -1802,13 +1822,13 @@ Replace the album's representation with a new one. Missing optinal fields will b
                     }
                 }
             }
-
+            
 + Response 409 (application/vnd.mason+json)
 
     The client is trying to change the title to a one that is already in use.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/VA/albums/Yogsothery/",
                 "@error": {
@@ -1823,13 +1843,13 @@ Replace the album's representation with a new one. Missing optinal fields will b
                     }
                 }
             }
-
+        
 + Response 415 (application/vnd.mason+json)
 
     The client sent a request with the wrong content type or the request body was not valid JSON.
 
     + Body
-
+        
             {
                 "resource_url": "/api/artists/VA/albums/Thorns vs Emperor/",
                 "@error": {
@@ -1851,9 +1871,9 @@ Replace the album's representation with a new one. Missing optinal fields will b
 + Request
 
     + Headers
-
+        
             Accept: application/vnd.mason+json
-
+        
 + Response 204
 
 + Response 404 (application/vnd.mason+json)
@@ -1861,7 +1881,7 @@ Replace the album's representation with a new one. Missing optinal fields will b
     The client is trying to delete an album that doesn't exist.
 
     + Body
-
+    
             {
                 "resource_url": "/api/artists/VA/albums/Transcendental/",
                 "@error": {
@@ -1875,487 +1895,3 @@ Replace the album's representation with a new one. Missing optinal fields will b
                 }
             }
 
-
-# Group Tracks
-
-## Track [/api/artists/{artist}/albums/{title}/{disc}/{track}/]
-
-+ Parameters
-
-    + artist: scandal (string) - artist's unique name (unique_name)
-    + title: Hello World (string) - album's title
-    + disc: 1 (integer) - number of the disc this track is on
-    + track: 1 (integer) - track number on the disc
-
-
-### Track information [GET]
-
-+ Relation: self
-+ Request
-
-    + Headers
-
-            Accept: application/vnd.mason+json
-
-+ Response 200 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "title": "Image",
-                "disc_number": 1,
-                "track_number": 1,
-                "length": "00:04:26",
-                "artist": "Scandal",
-                "@controls": {
-                    "author": {
-                        "href": "/api/artists/scandal/"
-                    },
-                    "albums-by": {
-                        "href": "/api/artists/scandal/albums/"
-                    },
-                    "self": {
-                        "href": "/api/artists/scandal/albums/Hello World/1/1/"
-                    },
-                    "profile": {
-                        "href": "/profiles/track/"
-                    },
-                    "up": {
-                        "href": "/api/artists/scandal/albums/Hello World/"
-                    },
-                    "edit": {
-                        "href": "/api/artists/scandal/albums/Hello World/1/1/",
-                        "title": "Edit this track",
-                        "encoding": "json",
-                        "method": "PUT",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "title": {
-                                    "description": "Track title",
-                                    "type": "string"
-                                },
-                                "disc_number": {
-                                    "description": "Disc number",
-                                    "type": "integer",
-                                    "default": 1
-                                },
-                                "track_number": {
-                                    "description": "Track number on disc",
-                                    "type": "integer"
-                                },
-                                "length": {
-                                    "description": "Track length",
-                                    "type": "string",
-                                    "pattern": "^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$"
-                                }
-                            },
-                            "required": ["title",
-                            "track_number",
-                            "length"]
-                        }
-                    },
-                    "mumeta:delete": {
-                    "href": "/api/artists/scandal/albums/Hello World/1/1/",
-                    "title": "Delete this track",
-                    "method": "DELETE"
-                    }
-                },
-                "@namespaces": {
-                    "mumeta": {
-                    "name": "/musicmeta/link-relations#"
-                    }
-                }
-            }
-
-+ Response 404 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/scandal/albums/Hello World/1/2/",
-                "@error": {
-                    "@message": "Track not found",
-                    "@messages": [null]
-                },
-                "@controls": {
-                    "profile": {
-                        "href": "/profiles/error-profile/"
-                    }
-                }
-            }
-
-### Edit track information [PUT]
-
-+ Relation: edit
-+ Request (application/json)
-
-    + Headers
-
-            Accept: application/vnd.mason+json
-
-    + Body
-
-            {
-                "title": "イメージ",
-                "disc_number": 1,
-                "track_number": 1,
-                "length": "00:04:26"
-            }
-
-+ Response 204
-
-+ Response 400 (application/vnd.mason+json)
-
-    + Body
-
-            {
-            	"resource_url": "/api/artists/scandal/albums/Hello World/1/1/",
-            	"@error": {
-            		"@message": "Invalid JSON document",
-            		"@controls": {
-            			"profile": {
-            				"href": "/profiles/error-profile/"
-            			}
-            		}
-            	}
-            }
-
-+ Response 404 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/scandal/albums/Hello World/1/2/",
-                "@error": {
-                    "@message": "Track not found",
-                    "@messages": [
-                        null
-                    ]
-                },
-                "@controls":{
-                    "profile":{
-                        "href": "/profiles/error-profile/"
-                    }
-                }
-            }
-
-+ Response 409 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/scandal/albums/Hello World/1/4/",
-                "@error": {
-                    "@message": "Position reserved",
-                    "@messages": [
-                        "Album 'Hello World' already has another track at 1.1"
-                    ]
-                },
-                "@controls": {
-                    "profile": {
-                        "href": "/profiles/error/"
-                    }
-                }
-            }
-
-+ Response 415 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/scandal/albums/Hello World/1/1/",
-                "@error": {
-                    "@message": "Unsupported media type",
-                    "@messages": [
-                        "Use JSON"
-                    ]
-                },
-                "@controls": {
-                    "profile": {
-                        "href": "/profiles/error-profile/"
-                    }
-                }
-            }
-
-### Delete track [DELETE]
-
-+ Relation: delete
-+ Request
-
-    + Headers
-
-            Accept: application/vnd.mason+json
-
-+ Response 204
-
-+ Response 404 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/scandal/albums/Hello World/1/2/",
-                "@error": {
-                    "@message": "Track not found",
-                    "@messages": [
-                        null
-                    ]
-                },
-                "@controls":{
-                    "profile":{
-                        "href": "/profiles/error-profile/"
-                    }
-                }
-            }
-
-## VA Track [/api/artists/VA/albums/{title}/{disc}/{track}/]
-
-+ Parameters
-
-    + title: 'Thorns vs Emperor' (string) - album's title
-    + disc: 1 (integer) - number of the disc this track is on
-    + track: 1 (integer) - track number on the disc
-
-### Various artists track information [GET]
-
-+ Relation: self
-+ Request
-
-    + Headers
-
-            Accept: application/vnd.mason+json
-
-+ Response 200 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "title": "Exördium",
-                "disc_number": 1,
-                "track_number": 1,
-                "length": "00:03:00",
-                "artist": "Emperor",
-                "@controls": {
-                    "author": {
-                        "href": "/api/artists/emperor/"
-                    },
-                    "albums-by": {
-                        "href": "/api/artists/emperor/albums/"
-                    },
-                    "self": {
-                        "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/"
-                    },
-                    "profile": {
-                        "href": "/profiles/track/"
-                    },
-                    "up": {
-                        "href": "/api/artists/VA/albums/Thorns vs Emperor/"
-                    },
-                    "edit": {
-                        "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
-                        "title": "Edit this track",
-                        "encoding": "json",
-                        "method": "PUT",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "title": {
-                                    "description": "Track title",
-                                    "type": "string"
-                                },
-                                "disc_number": {
-                                    "description": "Disc number",
-                                    "type": "integer",
-                                    "default": 1
-                                },
-                                "track_number": {
-                                    "description": "Track number on disc",
-                                    "type": "integer"
-                                },
-                                "length": {
-                                    "description": "Track length",
-                                    "type": "string",
-                                    "pattern": "^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$"
-                                }
-                            },
-                            "required": ["title",
-                            "track_number",
-                            "length"]
-                        }
-                    },
-                    "mumeta:delete": {
-                    "href": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
-                    "title": "Delete this track",
-                    "method": "DELETE"
-                    }
-                },
-                "@namespaces": {
-                    "mumeta": {
-                    "name": "/musicmeta/link-relations#"
-                    }
-                }
-            }
-
-+ Response 404 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/VA/albums/Thorns vs Emperor/1/2/",
-                "@error": {
-                    "@message": "Track not found",
-                    "@messages": [null]
-                },
-                "@controls": {
-                    "profile": {
-                        "href": "/profiles/error-profile/"
-                    }
-                }
-            }
-
-### Edit track information [PUT]
-
-+ Relation: edit
-+ Request (application/json)
-
-    + Headers
-
-            Accept: application/vnd.mason+json
-
-    + Body
-
-            {
-                "title": "Exordium",
-                "disc_number": 1,
-                "track_number": 1,
-                "length": "00:03:00",
-                "va_artist": "Emperor"
-            }
-
-+ Response 204
-
-+ Response 400 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
-                "@error": {
-                    "@message": "Invalid JSON document",
-                    "@messages": [
-                        "'va_artist' is a required property
-
-                        Failed validating 'required' in schema:
-                         {'properties': {'disc_number': {'default': 1,
-                         'description': 'Disc number',
-                         'type': 'integer'},
-                         'length': {'description': 'Track length',
-                         'pattern': '^[0-9]{2}:[0-5][0-9]:[0-5][0-9]$',
-                         'type': 'string'},
-                         'title': {'description': 'Track title',
-                         'type': 'string'},
-                         'track_number': {'description': 'Track number on disc',
-                         'type': 'integer'},
-                         'va_artist': {'description': 'Track artist unique name '
-                         '(mandatory on VA albums)',
-                         'type': 'string'}},
-                         'required': ['title', 'track_number', 'length', 'va_artist'],
-                         'type': 'object'}
-
-                         On instance:
-                          {'length': '00:03:00', 'title': 'Exordium', 'track_number': 1}"
-                    ]
-                },
-                "@controls": {
-                    "profile": {
-                        "href": "/profiles/error-profile/"
-                    }
-                }
-            }
-            
-+ Response 404 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/VA/albums/Thorns vs Emperor/1/4/",
-                "@error": {
-                    "@message": "Track not found",
-                    "@messages": [
-                        null
-                    ]
-                },
-                "@controls":{
-                    "profile":{
-                        "href": "/profiles/error-profile/"
-                    }
-                }
-            }
-
-+ Response 409 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/VA/albums/Thorns vs Emperor/1/4/",
-                "@error": {
-                    "@message": "Position reserved",
-                    "@messages": [
-                        "Album 'Thorns vs Emperor' already has another track at 1.1"
-                    ]
-                },
-                "@controls": {
-                    "profile": {
-                        "href": "/profiles/error/"
-                    }
-                }
-            }
-
-+ Response 415 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/VA/albums/Thorns vs Emperor/1/1/",
-                "@error": {
-                    "@message": "Unsupported media type",
-                    "@messages": [
-                        "Use JSON"
-                    ]
-                },
-                "@controls": {
-                    "profile": {
-                        "href": "/profiles/error-profile/"
-                    }
-                }
-            }
-
-### Delete track [DELETE]
-
-+ Relation: delete
-+ Request
-
-    + Headers
-
-            Accept: application/vnd.mason+json
-
-+ Response 204
-
-+ Response 404 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/VA/albums/Thorns vs Emperor/1/4/",
-                "@error": {
-                    "@message": "Track not found",
-                    "@messages": [
-                        null
-                    ]
-                },
-                "@controls":{
-                    "profile":{
-                        "href": "/profiles/error-profile/"
-                    }
-                }
-            }
