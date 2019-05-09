@@ -135,11 +135,11 @@ The following [IANA RFC5988](http://www.iana.org/assignments/link-relations/link
 
 #### Data Type Artist
 
- * `name`: 
- * `unique_name`: 
- * `formed`: 
- * `disbanded`: 
- * `location`: 
+ * `name`:
+ * `unique_name`:
+ * `formed`:
+ * `disbanded`:
+ * `location`:
 
 
 # Group Entry
@@ -203,27 +203,25 @@ Get the API entry point
 
     + Body
 
-        {
-        "@namespaces": {
-            "mumeta": {
-                "name": "/musicmeta/link-relations#"
-            }
-        },
-        "@controls": {
-            "self": {
-                "href": "/api/artists/"
-            },
-            "mumeta:artists-all": {
-                "href": "/api/artists/",
-                "title": "All artists"
-            },
-            "mumeta:albums-all": {
-                "href": "/api/albums/",
-                "title": "All albums"
-            },
-            "mumeta:add-artist": {
+            {
+                "@namespaces": {
+                    "mumeta": {
+                        "name": "/musicmeta/link-relations#"
+                    }
+                },
+                "@controls": {
+                    "self": {
+                        "href": "/api/artists/"
+                    },
+                    "mumeta:albums-all": {
+                        "href": "/api/albums/"
+                    },
+                    "mumeta:artists-all": {
+                        "href": "/api/artists/"
+                    },
+                    "mumeta:add-artist": {
                         "href": "/api/artists/",
-                        "title": "Add a new artist",
+                        "title": "Add new artist",
                         "encoding": "json",
                         "method": "POST",
                         "schema": {
@@ -234,34 +232,46 @@ Get the API entry point
                                     "type": "string"
                                 },
                                 "unique_name": {
-                                    "description": "Release date",
+                                    "description": "Artist unique name",
                                     "type": "string"
+                                },
+                                "formed": {
+                                    "description": "Formation date",
+                                    "type": "string",
+                                    "pattern": "^eka[0-9]-[0-3][0-9]$"
+                                },
+                                "disbanded": {
+                                    "description": "Disbandment date",
+                                    "type": "string",
+                                    "pattern": "^eka[0-9]-[0-3][0-9]$"
                                 },
                                 "location": {
                                     "description": "Location",
                                     "type": "string"
-                                },
-                                "formed": {
-                                    "description": "Formed",
-                                    "type": "date"
-                                },
-                                "disbanded": {
-                                    "description": "Disbanded",
-                                    "type": "date"
                                 }
+                            },
+                            "required": ["name", "unique_name", "formed"]
+                        }
+                    }
+                },
+                "items": [
+                    {
+                        "name": "Mozart",
+                        "unique_name": "mozart",
+                        "formed": "1756-01-01",
+                        "disbanded": "1791-01-01",
+                        "location": "somewhere",
+                        "@controls": {
+                            "self": {
+                                "href": "/api/artists/mozart/"
+                            },
+                            "profile": {
+                                "href": "/profiles/artists/"
                             }
                         }
                     }
-        },
-        "items": [
-            {
-            "name": "Mozart",
-            "unique_name": "mozart",
-            "formed": "1756-01-01",
-            "disbanded": "1791-01-01",
-            "location": "somewhere"
+                ]
             }
-        ]
         }
 
 + Response 404 (application/vnd.mason+json)
@@ -269,16 +279,16 @@ Get the API entry point
     + Body
 
             {
-            "resource_url": "/api/artists/Mozart/",
-            "@error": {
-                "@message": "Artist not found",
-                "@messages": [null]
-            },
-            "@controls": {
-                "profile": {
-                    "href": "/profiles/error-profile/"
+                "resource_url": "/api/artists/mozart/",
+                "@error": {
+                    "@message": "Artist not found",
+                    "@messages": [null]
+                },
+                "@controls": {
+                    "profile": {
+                        "href": "/profiles/error-profile/"
+                    }
                 }
-            }
             }
 
 ### Add artist to collection [POST]
@@ -291,7 +301,7 @@ Get the API entry point
             Accept: application/vnd.mason+json
 
     + Body
-    
+
             {
                 "name": "Mozart",
                 "unique_name": "mozart",
@@ -300,15 +310,11 @@ Get the API entry point
                 "location": "somewhere"
             }
 
-+ Response 200
++ Response 201
 
     + Headers
-    
+
             Location: /api/artists/mozart/
-
-    + Body
-
-            {}
 
 
 + Response 400 (application/vnd.mason+json)
@@ -316,7 +322,7 @@ Get the API entry point
     + Body
 
             {
-                "resource_url": "/api/artists/Mozart/",
+                "resource_url": "/api/artists/mozart/",
                 "@error": {
                     "@message": "Invalid JSON document",
                     "@messages": [
@@ -335,7 +341,7 @@ Get the API entry point
     + Body
 
             {
-                "resource_url": "/api/artists/Mozart",
+                "resource_url": "/api/artists/mozart",
                 "@error": {
                     "@message": "Unsupported media type",
                     "@messages": [
@@ -350,11 +356,11 @@ Get the API entry point
             }
 
 
-## Artist [/api/artists/{artist}]
+## Artist [/api/artists/{artist}/]
 
-    + Parameters
++ Parameters
 
-        + artist: artist (string)
+    + artist: mozart (string) - artist's unique name (unique_name)
 
 ### Artist information [GET]
 
@@ -370,35 +376,29 @@ Get the API entry point
     + Body
 
         {
-            "id": 123,
             "name": "Mozart",
             "unique_name": "mozart",
             "formed": "1756-01-01",
-            "disbanded": null,
-            "location": null,
+            "disbanded": "1756-01-01",
+            "location": "N/A",
             "@controls": {
-                "collection": {
-                    "href": "/api/artists/"
-                },
-                "albums-by": {
-                    "href": "/api/artists/mozart/albums/"
-                },
                 "self": {
                     "href": "/api/artists/mozart/"
                 },
-                "edit": {
+                "collection": {
+                    "href": "/api/artists/"
+                },
+                "mumeta:albums-by": {
+                    "href": "/api/artists/mozart/albums/"
+                },
+                "mumeta:add-artist": {
                     "href": "/api/artists/",
-                    "title": "Edit this artist",
+                    "title": "Add new artist",
                     "encoding": "json",
-                    "method": "PUT",
+                    "method": "POST",
                     "schema": {
                         "type": "object",
                         "properties": {
-                            "id": {
-                                "description": "Artist id",
-                                "type": "integer",
-                                "default": 1
-                            },
                             "name": {
                                 "description": "Artist name",
                                 "type": "string"
@@ -409,21 +409,55 @@ Get the API entry point
                             },
                             "formed": {
                                 "description": "Formation date",
-                                "type": "date"
+                                "type": "string",
+                                "pattern": "^eka[0-9]-[0-3][0-9]$"
                             },
                             "disbanded": {
                                 "description": "Disbandment date",
-                                "type": "date"
+                                "type": "string",
+                                "pattern": "^eka[0-9]-[0-3][0-9]$"
                             },
                             "location": {
                                 "description": "Location",
                                 "type": "string"
                             }
-                        }
+                        },
+                        "required": ["name", "unique_name", "formed"]
                     }
                 },
-                "mumeta:albums-by": {
-                "href": "/api/artists/mozart/albums/"
+                "edit": {
+                    "href": "/api/artists/mozart/",
+                    "title": "Edit this artist",
+                    "encoding": "json",
+                    "method": "PUT",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "name": {
+                                "description": "Artist name",
+                                "type": "string"
+                            },
+                            "unique_name": {
+                                "description": "Artist unique name",
+                                "type": "string"
+                            },
+                            "formed": {
+                                "description": "Formation date",
+                                "type": "string",
+                                "pattern": "^eka[0-9]-[0-3][0-9]$"
+                            },
+                            "disbanded": {
+                                "description": "Disbandment date",
+                                "type": "string",
+                                "pattern": "^eka[0-9]-[0-3][0-9]$"
+                            },
+                            "location": {
+                                "description": "Location",
+                                "type": "string"
+                            }
+                        },
+                        "required": ["name", "unique_name", "formed"]
+                    }
                 },
                 "mumeta:delete": {
                     "href": "/api/artists/mozart/",
@@ -439,7 +473,7 @@ Get the API entry point
         }
 
 
-### Create new Artist [PUT]
+### Edit Artist [PUT]
 
 + Relation: edit
 + Request (application/json)
@@ -447,16 +481,15 @@ Get the API entry point
     + Headers
 
             Accept: application/vnd.mason+json
-        
+
     + Body
-    
+
             {
-            "id": 123,
-            "name": "Mozart",
-            "unique_name": "mozart",
-            "formed": "1756-01-01",
-            "disbanded": "1791-01-01",
-            "location": "somewhere"
+                "name": "Mozart",
+                "unique_name": "mozart",
+                "formed": "1756-01-01",
+                "disbanded": "1791-01-01",
+                "location": "somewhere"
             }
 
 + Response 204
@@ -466,7 +499,7 @@ Get the API entry point
     + Body
 
             {
-                "resource_url": "/api/artists/",
+                "resource_url": "/api/artists/mozart/",
                 "@error": {
                     "@message": "Invalid format",
                     "@messages": [
@@ -486,7 +519,7 @@ Get the API entry point
     + Body
 
             {
-                "resource_url": "/api/artists/",
+                "resource_url": "/api/artists/mozart/",
                 "@error": {
                     "@message": "Unsupported media type",
                     "@messages": [
@@ -516,7 +549,7 @@ Get the API entry point
     + Body
 
             {
-                "resource_url": "/api/artists/",
+                "resource_url": "/api/artists/mozart/",
                 "@error": {
                     "@message": "Artist not found",
                     "@messages": [null]
@@ -2272,7 +2305,7 @@ Replace the album's representation with a new one. Missing optinal fields will b
                     }
                 }
             }
-            
+
 + Response 404 (application/vnd.mason+json)
 
     + Body
