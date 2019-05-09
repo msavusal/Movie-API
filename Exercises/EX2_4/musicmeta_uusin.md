@@ -258,29 +258,27 @@ Get list of all artists.
             Accept: application/vnd.mason+json
 
     + Body
-
+    
             {
-                "name": "Mozart"
+                "name": "Mozart",
                 "unique_name": "mozart",
                 "formed": "1756-01-01",
-                "disbanded": null,
-                "location": null,
+                "disbanded": "1791-01-01",
+                "location": "somewhere"
             }
 
 + Response 200
 
     + Headers
+    
+            Location: /api/artists/mozart/
 
     + Body
 
-            {
-                "resource_url": "/api/artists/{}/"
-            }
+            {}
 
 
 + Response 400 (application/vnd.mason+json)
-
-    The client is trying to send a JSON document that doesn't validate against the schema.
 
     + Body
 
@@ -299,44 +297,7 @@ Get list of all artists.
                 }
             }
 
-+ Response 404 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/wubwub/",
-                "@error": {
-                    "@message": "Artist not found",
-                    "@messages": [null]
-                },
-                "@controls": {
-                    "profile": {
-                        "href": "/profiles/error/"
-                    }
-                }
-            }
-
-+ Response 409 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/Mozart",
-                "@error": {
-                    "@message": "Already exists",
-                    "@messages": [
-                        "Artist already exists"
-                    ]
-                },
-                "@controls": {
-                    "profile": {
-                        "href": "/profiles/error/"
-                    }
-                }
-            }
-
 + Response 415 (application/vnd.mason+json)
-
 
     + Body
 
@@ -371,86 +332,84 @@ Get list of all artists.
 
             Accept: application/vnd.mason+json
 
-+ Response 200 (application/vnd.mason+json)
++ Response 204 (application/vnd.mason+json)
 
     + Body
 
-            {
-                "id": 123,
-                "name": "Mozart",
-                "unique_name": "mozart",
-                "formed": "1756-01-01",
-                "disbanded": null,
-                "location": null,
-                "@controls": {
-                    "collection": {
-                        "href": "/api/artists/emperor/"
-                    },
-                    "albums-by": {
-                        "href": "/api/artists/emperor/albums/"
-                    },
-                    "self": {
-                        "href": "/api/artists/emperor/"
-                    },
-                    "edit": {
-                        "href": "/api/artists/emperor/",
-                        "title": "Edit this artist",
-                        "encoding": "json",
-                        "method": "PUT",
-                        "schema": {
-                            "type": "object",
-                            "properties": {
-                                "id": {
-                                    "description": "Artist id",
-                                    "type": "integer"
-                                    "default": 1
-                                },
-                                "name": {
-                                    "description": "Artist name",
-                                    "type": "string"
-                                },
-                                "unique_name": {
-                                    "description": "Artist unqiue name",
-                                    "type": "string",
-                                },
-                                "formed": {
-                                    "description": "Formation date",
-                                    "type": "date"
-                                },
-                                "disbanded": {
-                                    "description": "Disbandment date",
-                                    "type": "date",
-                                }
-                                "location": {
-                                    "description": "Location",
-                                    "type": "string"
-                                },
+        {
+            "id": 123,
+            "name": "Mozart",
+            "unique_name": "mozart",
+            "formed": "1756-01-01",
+            "disbanded": null,
+            "location": null,
+            "@controls": {
+                "collection": {
+                    "href": "/api/artists/mozart/"
+                },
+                "albums-by": {
+                    "href": "/api/artists/mozart/albums/"
+                },
+                "self": {
+                    "href": "/api/artists/mozart/"
+                },
+                "edit": {
+                    "href": "/api/artists/mozart/",
+                    "title": "Edit this artist",
+                    "encoding": "json",
+                    "method": "PUT",
+                    "schema": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "description": "Artist id",
+                                "type": "integer",
+                                "default": 1
                             },
-                            "required": ["ID",
+                            "name": {
+                                "description": "Artist name",
+                                "type": "string"
+                            },
+                            "unique_name": {
+                                "description": "Artist unqiue name",
+                                "type": "string"
+                            },
+                            "formed": {
+                                "description": "Formation date",
+                                "type": "date"
+                            },
+                            "disbanded": {
+                                "description": "Disbandment date",
+                                "type": "date"
+                            },
+                            "location": {
+                                "description": "Location",
+                                "type": "string"
+                            }
+                        },
+                        "required": ["ID",
                             "name",
                             "unique_name"
-                            ]
-                        }
-                    },
-                    "mumeta:delete": {
-                    "href": "/api/artists/emperor/",
-                    "title": "Delete this track",
-                    "method": "DELETE"
+                        ]
                     }
                 },
-                "@namespaces": {
-                    "mumeta": {
+                "mumeta:delete": {
+                    "href": "/api/artists/mozart/",
+                    "title": "Delete this track",
+                    "method": "DELETE"
+                }
+            },
+            "@namespaces": {
+                "mumeta": {
                     "name": "/musicmeta/link-relations#"
-                    }
                 }
             }
+        }
 
 
-### Create new Artist [POST]
+### Create new Artist [PUT]
 
-Create a new artist
-
-+ Relation: add-artist
++ Relation: edit
 + Request (application/json)
 
     + Headers
@@ -460,99 +419,42 @@ Create a new artist
     + Body
     
             {
-            "name": "Mozart"
+            "id": 123,
+            "name": "Mozart",
             "unique_name": "mozart",
             "formed": "1756-01-01",
-            "disbanded": null,
-            "location": null,
+            "disbanded": "1791-01-01",
+            "location": "somewhere"
             }
 
-+ Response 201 (application/json)
-
-    + Headers
-
-            Location: /api/artists/mozart/
++ Response 204
 
 + Response 400 (application/json)
 
-        {
-          "error": "Unable to process the request."
-        }
-
-+ Response 415 (application/json)
-
-        {
-          "error": "Unsupported Media Type."
-        }
-
-### Edit Artist information [PUT]
-
-+ Relation: edit
-+ Request (application/json)
-
-    + Headers
-
-            Accept: application/vnd.mason+json
-
     + Body
 
             {
-                "id": "1",
-                "name": "Pekka",
-                "unique_name": "pekka",
-                "formed": null,
-                "disbanded": null,
-                "location": null,
-            }
-
-
-+ Response 200 (application/json)
-
-        {
-          "success": "The request has succeeded."
-        }
-
-+ Response 404 (application/json)
-
-+ Response 404 (application/vnd.mason+json)
-
-    + Body
-
-            {
-                "resource_url": "/api/artists/Laulaja/",
+                "resource_url": "/api/artists/duck/",
                 "@error": {
-                    "@message": "Artist not found",
+                    "@message": "Invalid format",
                     "@messages": [
-                        null
+                        " Invalid format"
                     ]
                 },
-                "@controls":{
-                    "profile":{
-                        "href": "/profiles/error-profile/"
+                "@controls": {
+                    "profile": {
+                        "href": "/profiles/error/"
                     }
                 }
             }
 
-+ Response 400 (application/json)
 
-        {
-            "resource_url": "/api/artists/Laulaja/",
-            "@error": {
-                "@message": "Invalid JSON document",
-            },
-            "@controls": {
-                "profile": {
-                    "href": "/profiles/error-profile/"
-                }
-            }
-        }
-
-+ Response 415 (application/json)
++ Response 415 (application/vnd.mason+json)
 
     + Body
 
             {
-                "resource_url": "/api/artists/Laulaja/",
+                "resource_url": "/api/artists/",
                 "@error": {
                     "@message": "Unsupported media type",
                     "@messages": [
@@ -566,7 +468,6 @@ Create a new artist
                 }
             }
 
-
 ### Delete Artist [DELETE]
 
 + Relation: delete
@@ -576,14 +477,27 @@ Create a new artist
 
             Accept: application/vnd.mason+json
 
-+ Response 200 (application/json)
++ Response 204
 
-        {
-          "success": "The request has succeeded."
-        }
 
-+ Response 404 (application/json)
- 
++ Response 404 (application/vnd.mason+json)
+
+    The client is trying to delete an artist that doesn't exist.
+
+    + Body
+
+            {
+                "resource_url": "/api/artists/Emperor/",
+                "@error": {
+                    "@message": "Artist not found",
+                    "@messages": [null]
+                },
+                "@controls": {
+                    "profile": {
+                        "href": "/profiles/error/"
+                    }
+                }
+            }
 
 # Group Albums
 
