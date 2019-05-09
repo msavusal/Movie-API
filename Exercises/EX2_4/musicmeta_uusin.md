@@ -378,7 +378,7 @@ Get the API entry point
             "location": null,
             "@controls": {
                 "collection": {
-                    "href": "/api/artists/mozart/"
+                    "href": "/api/artists/"
                 },
                 "albums-by": {
                     "href": "/api/artists/mozart/albums/"
@@ -516,7 +516,7 @@ Get the API entry point
     + Body
 
             {
-                "resource_url": "/api/artists/mozart/",
+                "resource_url": "/api/artists/",
                 "@error": {
                     "@message": "Artist not found",
                     "@messages": [null]
