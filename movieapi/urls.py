@@ -76,33 +76,12 @@ urlpatterns = [
         views.ActorDetail.as_view(),
         name='actor-detail'),
 
-    path('movieactors/',
-        views.MovieActorList.as_view(),
-        name='movieactor-list'),
-    path('movieactors/<int:pk>',
-        views.MovieActorDetail.as_view(),
-        name='movieactor-detail'),
-
-    path('trailers/',
-        views.TrailerList.as_view(),
-        name='trailer-list'),
-    path('trailers/<int:pk>',
-        views.TrailerDetail.as_view(),
-        name='trailer-detail'),
-
     path('categories/',
         views.CategoryList.as_view(),
         name='category-list'),
     path('categories/<int:pk>',
         views.CategoryDetail.as_view(),
         name='category-detail'),
-
-    path('moviecategories/',
-        views.MovieCategoryList.as_view(),
-        name='moviecategory-list'),
-    path('moviecategories/<int:pk>',
-        views.MovieCategoryDetail.as_view(),
-        name='moviecategory-detail'),
 
     path('users/',
         views.UserList.as_view(),
@@ -119,13 +98,6 @@ urlpatterns = [
     path('users/<int:pk>/actors',
         views.UserDetailActorsList.as_view(),
         name='user-detail-actors-list'),
-
-    path('groups/',
-        views.GroupList.as_view(),
-        name='group-list'),
-    path('groups/<int:pk>/',
-        views.GroupDetail.as_view(),
-        name='group-detail'),
 
     path('', views.index, name='index'),
 

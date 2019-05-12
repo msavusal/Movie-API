@@ -38,7 +38,18 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    "django_nose",
     'movieapi.app',
+]
+
+# Use nose to run all tests
+TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+
+# Tell nose to measure coverage on the 'app'
+NOSE_ARGS = [
+    '--with-coverage',
+    '--cover-html',
+    '--cover-package=movieapi.app',
 ]
 
 MIDDLEWARE = [

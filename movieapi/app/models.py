@@ -11,18 +11,24 @@ class Category(models.Model):
     class Meta:
         ordering = ('created',)     # Ordering elements based on "created" attribute
 
+    def __str__(self):
+        return self.name
+
 
 """
 Actor model
 """
 class Actor(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey('auth.User', related_name='actors', on_delete=models.CASCADE)
+    author = models.ForeignKey('auth.User', related_name='actors', on_delete=models.CASCADE, blank=True, null=True)
     firstname = models.CharField(max_length=100, blank=True, default='')
     lastname = models.CharField(max_length=100, blank=True, default='')
 
     class Meta:
         ordering = ('created',)     # Ordering elements based on "created" attribute
+
+    def __str__(self):
+        return self.firstname + " " + self.lastname
 
 
 """
@@ -49,7 +55,7 @@ Review model
 """
 class Review(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey('auth.User', related_name='reviews', on_delete=models.CASCADE)
+    author = models.ForeignKey('auth.User', related_name='reviews', on_delete=models.CASCADE, blank=True, null=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     text = models.CharField(max_length=3000, blank=True, default='')
     rating = models.IntegerField(blank=True, default=0)
@@ -57,13 +63,16 @@ class Review(models.Model):
     class Meta:
         ordering = ('created',)     # Ordering elements based on "created" attribute
 
+    def __str__(self):
+        return "Review for " + self.movie.title
+
 
 """
 Comment model
 """
 class Comment(models.Model):
     created = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey('auth.User', related_name='comments', on_delete=models.CASCADE)
+    author = models.ForeignKey('auth.User', related_name='comments', on_delete=models.CASCADE, blank=True, null=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     text = models.CharField(max_length=400, blank=True, default='')
     timestamp = models.CharField(max_length=10, blank=True, default='00:00:00')
@@ -71,36 +80,5 @@ class Comment(models.Model):
     class Meta:
         ordering = ('created',)     # Ordering elements based on "created" attribute
 
-
-"""
-Trailer model
-"""
-class Trailer(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    author = models.ForeignKey('auth.User', related_name='trailers', on_delete=models.CASCADE)
-    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-    video_path = models.CharField(max_length=500, blank=True, default='')
-
-    class Meta:
-        ordering = ('created',)     # Ordering elements based on "created" attribute
-
-
-"""
-Intermediate models
-"""
-class MovieCategory(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    related_category = models.ForeignKey(Category, on_delete=models.CASCADE)
-    related_movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-
-    class Meta:
-        ordering = ('created',)     # Ordering elements based on "created" attribute
-
-
-class MovieActor(models.Model):
-    created = models.DateTimeField(auto_now_add=True)
-    related_actor = models.ForeignKey(Actor, on_delete=models.CASCADE)
-    related_movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
-
-    class Meta:
-        ordering = ('created',)     # Ordering elements based on "created" attribute
+    def __str__(self):
+        return "Comment for " + self.movie.title
