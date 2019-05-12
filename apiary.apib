@@ -41,21 +41,19 @@ A single user containing all its information.
     
             {
                 "_links": {
-                    "self": {
-                        "href": "/users/1"
-                    },
-                    "groups": {
-                        "href": "/users/1/groups"
-                    },
-                    "reviews": {
-                        "href": "/users/1/reviews"
-                    },
-                    "comments": {
-                        "href": "/users/1/comments"
-                    },
-                    "actors": {
-                        "href": "/users/1/actors"
-                    }
+                    "url": /users/1/,
+                    "groups": [
+                        "/users/1/groups/1"
+                    ],
+                    "reviews": [
+                        "/users/1/reviews/1"
+                    ],
+                    "comments": [
+                        "/users/1/comments/1"
+                    ],
+                    "actors": [
+                        "/users/1/actors/1"
+                    ]
                 },
                 "username": "admin",
                 "email": "admin@test.com"
@@ -120,36 +118,32 @@ Get list of all created users containing their data.
 
         {
             "_links": {
-                "self": {
-                    "href": "/users"
-                }
+                "url": "/users/",
+                "next": null,
+                "previous": null
             },
             "count": 1,
-            "_embedded": {
-                "user": [
-                    {
-                        "_links": {
-                            "self": {
-                                "href": "/users/1"
-                            },
-                            "groups": {
-                                "href": "/users/1/groups"
-                            },
-                            "reviews": {
-                                "href": "/users/1/reviews"
-                            },
-                            "comments": {
-                                "href": "/users/1/comments"
-                            },
-                            "actors": {
-                                "href": "/users/1/actors"
-                            }
-                        },
-                        "username": "admin",
-                        "email": "admin@test.com"
-                    }
-                ]
-            }
+            "_embedded": [
+                {
+                    "_links": {
+                        "url": /users/1/,
+                        "groups": [
+                            "/users/1/groups/1"
+                        ],
+                        "reviews": [
+                            "/users/1/reviews/1"
+                        ],
+                        "comments": [
+                            "/users/1/comments/1"
+                        ],
+                        "actors": [
+                            "/users/1/actors/1"
+                        ]
+                    },
+                    "username": "admin",
+                    "email": "admin@test.com"
+                }
+            ]
         }
 
 ### Create a new User [POST]
@@ -183,6 +177,7 @@ object containing a username, email-address and a optional collection of groups 
         }
 
 # Group Group
+## (NOT IMPLEMENTED)
 ## Profile
 
 ### Description
@@ -210,12 +205,10 @@ A single group containing all its information.
     
             {
                 "_links": {
-                    "self": {
-                        "href": "/groups/1"
-                    },
-                    "users": {
-                        "href": "/groups/1/users"
-                    }
+                    "url": "/groups/1"
+                    "users": [
+                        "/groups/1/users/1"
+                    ]
                 },
                 "name": "admin-group",
                 "isAdmin": 1
@@ -287,22 +280,18 @@ Get list of all created groups containing their data.
                 }
             },
             "count": 1,
-            "_embedded": {
-                "group": [
-                    {
-                        "_links": {
-                            "self": {
-                                "href": "/groups/1"
-                            },
-                            "users": {
-                                "href": "/groups/1/users"
-                            }
-                        },
-                        "name": "admin-group",
-                        "isAdmin": 1
-                    }
-                ]
-            }
+            "_embedded": [
+                {
+                    "_links": {
+                        "url": "/groups/1"
+                        "users": [
+                            "/groups/1/users/1"
+                        ]
+                    },
+                    "name": "admin-group",
+                    "isAdmin": 1
+                }
+            ]
         }
 
 ### Create a new Group [POST]
@@ -366,15 +355,15 @@ A single movie containing all its information.
     
             {
                 "_links": {
-                    "self": {
-                        "href": "/movies/1"
-                    },
-                    "categories": {
-                        "href": "/movies/1/categories"
-                    },
-                    "actors": {
-                        "href": "/movies/1/actors"
-                    }
+                    "url": "/movies/1",
+                    "categories": [
+                        "/categories/1",
+                        "/categories/2"
+                    ],
+                    "actors": [
+                        "/actors/1",
+                        "/actors/2"
+                    ]
                 },
                 "title": "Movie 1",
                 "length": "01:34:56",
@@ -443,31 +432,29 @@ Get list of all created movies containing their data.
 
         {
             "_links": {
-                "self": {
-                    "href": "/movies"
-                }
+                "url": "http://localhost:8000/movies/",
+                "next": null,
+                "previous": null
             },
             "count": 1,
-            "_embedded": {
-                "movie": [
-                    {
-                        "_links": {
-                            "self": {
-                                "href": "/movies/1"
-                            },
-                            "categories": {
-                                "href": "/movies/1/categories"
-                            },
-                            "actors": {
-                                "href": "/movies/1/actors"
-                            }
-                        },
-                        "title": "Movie 1",
-                        "length": "01:34:56",
-                        "rating": 3
-                    }
-                ]
-            }
+            "_embedded": [
+                {
+                    "_links": {
+                        "url": "/movies/1",
+                        "categories": [
+                            "/categories/1",
+                            "/categories/2"
+                        ],
+                        "actors": [
+                            "/actors/1",
+                            "/actors/2"
+                        ]
+                    },
+                    "title": "Movie 1",
+                    "length": "01:34:56",
+                    "rating": 3
+                }
+            ]
         }
 
 ### Create a new Movie [POST]
@@ -521,6 +508,7 @@ Review model containing review profile information.
 ### Semantic descriptors
  - **text**: STRING. Content of the review.
  - **rating**: INTEGER. Rating associated with the review. Ranges from 1 to 5.
+ - **author**: STRING. Name of the author.
 
 ## Review [/movies/{movie_id}/reviews/{id}]
 A single review for specific movie containing all its information.
@@ -535,18 +523,12 @@ A single review for specific movie containing all its information.
     
             {
                 "_links": {
-                    "self": {
-                        "href": "/movies/1/reviews/1"
-                    },
-                    "author": {
-                        "href": "/users/1"
-                    },
-                    "movie": {
-                        "href": "/movies/1"
-                    }
+                    "url": "/reviews/1",
+                    "movie": "/movies/1"
                 },
-                "text": "This is a review.",
-                "rating": 4
+                "text": "This is a review 1.",
+                "rating": 4,
+                "author": "admin"
             }
             
     + Headers
@@ -613,33 +595,22 @@ Get list of all created reviews containing their data for a specific movie.
 
         {
             "_links": {
-                "movie": {
-                    "href": "/movies/1"
-                },
-                "self": {
-                    "href": "/movies/1/reviews"
-                }
+                "url": "/movies/1/reviews",
+                "next": null,
+                "previous": null
             },
             "count": 1,
-            "_embedded": {
-                "review": [
-                    {
-                        "_links": {
-                            "self": {
-                              "href": "/movies/1/reviews/1"
-                            },
-                            "author": {
-                              "href": "/users/1"
-                            },
-                            "movie": {
-                              "href": "/movies/1"
-                            }
-                        },
-                        "text": "This is a review.",
-                        "rating": 4
-                    }
-                ]
-            }
+            "_embedded":[
+                {
+                    "_links": {
+                        "url": "/reviews/1",
+                        "movie": "/movies/1"
+                    },
+                    "text": "This is a review 1.",
+                    "rating": 4,
+                    "author": "admin"
+                }
+            ]
         }
 
 ### Create a new Review [POST]
@@ -688,6 +659,7 @@ Comment model containing comment profile information.
 
 ### Semantic descriptors
  - **text**: STRING. Content of the comment.
+ - **author**: STRING. Name of the author.
 
 ## Comment [/movies/{movie_id}/comments/{id}]
 A single comment for specific movie containing all its information.
@@ -702,17 +674,12 @@ A single comment for specific movie containing all its information.
     
             {
                 "_links": {
-                    "self": {
-                      "href": "/movies/1/comments/1"
-                    },
-                    "author": {
-                      "href": "/users/1"
-                    },
-                    "movie": {
-                      "href": "/movies/1"
-                    }
+                    "url": "/comments/1",
+                    "movie": "/movies/1"
                 },
-                "text": "This is a comment."
+                "text": "This is a comment 1.",
+                "timestamp": "00:15:15",
+                "author": "admin"
             }
             
     + Headers
@@ -778,32 +745,22 @@ Get list of all created comments containing their data for a specific movie.
 
         {
             "_links": {
-                "movie": {
-                    "href": "/movies/1"
-                },
-                "self": {
-                    "href": "/movies/1/comments"
-                }
+                "url": "/movies/1/comments",
+                "next": null,
+                "previous": null
             },
             "count": 1,
-            "_embedded": {
-                "review": [
-                    {
-                        "_links": {
-                            "self": {
-                              "href": "/movies/1/comments/1"
-                            },
-                            "author": {
-                              "href": "/users/1"
-                            },
-                            "movie": {
-                              "href": "/movies/1"
-                            }
-                        },
-                        "text": "This is a comment."
-                    }
-                ]
-            }
+            "_embedded": [
+                {
+                    "_links": {
+                        "url": "/comments/1",
+                        "movie": "/movies/1"
+                    },
+                    "text": "This is a comment 1.",
+                    "timestamp": "00:15:15",
+                    "author": "admin"
+                }
+            ]
         }
 
 ### Create a new Comment [POST]
@@ -852,6 +809,7 @@ Actor model containing actor profile information.
 ### Semantic descriptors
  - **firstname**: STRING. First name of the actor.
  - **lastname**: STRING. Last name of the actor.
+ - **author**: STRING. Name of the author.
 
 ## Actor [/actors/{id}]
 A single actor containing all its information.
@@ -865,18 +823,11 @@ A single actor containing all its information.
     
             {
                 "_links": {
-                    "self": {
-                      "href": "/actors/1"
-                    },
-                    "author": {
-                      "href": "/users/1"
-                    },
-                    "movies": {
-                      "href": "/actors/1/movies"
-                    }
+                    "url": "/actors/1"
                 },
-                "firstname": "John",
-                "lasttname": "Doe"
+                "firstname": "Test",
+                "lastname": "Testerson",
+                "author": "admin"
             }
             
     + Headers
@@ -940,30 +891,29 @@ Get list of all created actors containing their data.
 
         {
             "_links": {
-                "self": {
-                  "href": "/actors"
-                }
+                "url": "/actors/",
+                "next": null,
+                "previous": null
             },
             "count": 1,
-            "_embedded": {
-                "actor": [
-                    {
-                        "_links": {
-                            "self": {
-                              "href": "/actors/1"
-                            },
-                            "author": {
-                              "href": "/users/1"
-                            },
-                            "movies": {
-                              "href": "/actors/1/movies"
-                            }
-                        },
-                        "firstname": "John",
-                        "lasttname": "Doe"
-                    }
-                ]
-            }
+            "_embedded": [
+                {
+                    "_links": {
+                        "url": "/actors/1"
+                    },
+                    "firstname": "Test",
+                    "lastname": "Testerson",
+                    "author": "admin"
+                },
+                {
+                    "_links": {
+                        "url": "/actors/2"
+                    },
+                    "firstname": "Test 2",
+                    "lastname": "Testerson 2",
+                    "author": "admin"
+                }
+            ]
         }
 
 ### Create a new Actor [POST]
@@ -1023,14 +973,9 @@ A single category containing all its information.
     
             {
                 "_links": {
-                    "self": {
-                      "href": "/categories/1"
-                    },
-                    "movies": {
-                      "href": "/categories/1/movies"
-                    }
+                    "url": "/categories/1"
                 },
-                "name": "Horror"
+                "name": "New category 1"
             }
             
     + Headers
@@ -1093,26 +1038,31 @@ Get list of all created categories containing their data.
 
         {
             "_links": {
-                "self": {
-                  "href": "/categories"
-                }
+                "url": "/categories/",
+                "next": null,
+                "previous": null
             },
-            "count": 1,
-            "_embedded": {
-                "category": [
-                    {
-                        "_links": {
-                            "self": {
-                              "href": "/categories/1"
-                            },
-                            "movies": {
-                              "href": "/categories/1/movies"
-                            }
-                        },
-                        "name": "Horror"
-                    }
-                ]
-            }
+            "count": 3,
+            "_embedded": [
+                {
+                    "_links": {
+                        "url": "/categories/1"
+                    },
+                    "name": "category 1"
+                },
+                {
+                    "_links": {
+                        "url": "/categories/2"
+                    },
+                    "name": "category 2"
+                },
+                {
+                    "_links": {
+                        "url": "/categories/3"
+                    },
+                    "name": "category 3"
+                }
+            ]
         }
 
 ### Create a new Category [POST]
