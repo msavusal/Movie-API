@@ -1,2 +1,6 @@
 Django==2.1.5
 djangorestframework==3.9.1
+drf-nested-fields==0.9.4
+drf-hal-json==0.9.1
+coverage==4.5.3
+django-nose==1.4.6

@@ -7,15 +7,19 @@
 
 
 ## All dependencies (external libraries) and how to install them
-This project uses Django and Django REST Framework.
+This project uses Django and Django REST Framework along with drf-hal-json.
 To install use *requirements.txt*:
 ```
 pip install -r requirements.txt
 ```
-*Alternatively* you can manually install the two packages:
+*Alternatively* you can manually install the required packages:
 ```
 pip install django==2.1.5
 pip install djangorestframework==3.9.1
+pip install drf-nested-fields==0.9.4
+pip install drf-hal-json==0.9.1
+pip install coverage==4.5.3
+pip install django-nose==1.4.6
 ```
 
 ## How to run the server
@@ -47,17 +51,25 @@ python manage.py runserver
 ```
 This starts a local server **localhost:8000**
 
-## How to setup and populate the database
+## How to setup and populate the database (not necessary)
 To populate database run the following command (in the main Movie-API folder):
 ```python
 python manage.py loaddata db.json
 ```
 This uses a json dump file to populate the database. Howerver, an already populated database file is already included in the repository.
+
 ## How to run the tests
 To run the test run the following command (in the main Movie-API folder):
 ```python
 python manage.py test
 ```
+This will use **coverage** to create a cover html report in the following folder:
+```
+Movie-API  
+└───cover
+    └───index.html
+```
+
 ## Main files
 Location of ORM models (code) in project:
 ```
@@ -67,7 +79,7 @@ Movie-API
         │   models.py
 ```        
 
-All other main files containing our code (updated 04.04.):
+All other main files containing our code:
 ```
 Movie-API  
 └───movieapi
