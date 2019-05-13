@@ -103,12 +103,12 @@ MOVIE - Class-based views
 class MovieList(generics.ListCreateAPIView):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class MovieDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 class MovieDetailCategoriesList(generics.ListCreateAPIView):
     serializer_class = CategorySerializer
@@ -121,7 +121,7 @@ class MovieDetailCategoriesList(generics.ListCreateAPIView):
 
 class MovieDetailActorsList(generics.ListCreateAPIView):
     serializer_class = ActorSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     # Override perform_create
     def perform_create(self, serializer):
@@ -139,7 +139,7 @@ class MovieDetailActorsList(generics.ListCreateAPIView):
 
 class MovieDetailReviewsList(generics.ListCreateAPIView):
     serializer_class = ReviewSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     # Override perform_create
     def perform_create(self, serializer):
@@ -158,7 +158,7 @@ class MovieDetailReviewsList(generics.ListCreateAPIView):
 class MovieDetailReviewsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 
     # Override get function
     def get(self, request, pk=None, pk2=None, format=None):
@@ -169,7 +169,7 @@ class MovieDetailReviewsDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class MovieDetailCommentsList(generics.ListCreateAPIView):
     serializer_class = CommentSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     # Override perform_create
     def perform_create(self, serializer):
@@ -188,7 +188,7 @@ class MovieDetailCommentsList(generics.ListCreateAPIView):
 class MovieDetailCommentsDetail(generics.RetrieveUpdateDestroyAPIView):
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
-    permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
+    #permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 
     # Override get function
     def get(self, request, pk=None, pk2=None, format=None):
