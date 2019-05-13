@@ -15,11 +15,8 @@
   {% block navbar %}
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
     <a class="navbar-brand" href="/">Internet Database of Movies</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
 
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <div class="navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item">
           <a class="nav-link disabled">User profile</a>
@@ -28,7 +25,7 @@
           <a class="nav-link" href="{% url 'MovieDetailView' 1 %}">Add new movie</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" href="{% url 'ActorDetailView' 1 %}">Add new actor</a>
+          <a class="nav-link active" href="{% url 'ActorDetailView' 1 %}">Add new actor</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="{% url 'CategoryDetailView' 1 %}">Add new category</a>
@@ -36,7 +33,7 @@
       </ul>
       <form id="searchform" action="{% url 'MovieSearchListView' %}" method="get" accept-charset="utf-8" class="form-inline my-2 my-lg-0">
         <input id="searchbox" class="form-control mr-sm-2" type="search" name="q" placeholder="Search for movie" aria-label="Search">
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+        <button class="btn btn-outline-secondary my-2 my-sm-0" type="submit">Search</button>
       </form>
     </div>
   </nav>
@@ -46,15 +43,28 @@
     <div class="row">
       <div class="col-sm-2 customSidebar">
       </div>
-      <div class="col-sm-8 text-center">
+      <div class="col-sm-8 ">
         {% block content %}
         <div class="mainContainer">
-          <h1>Welcome to the </br>
-          Internet Database of Movies</h1>
-        </div>
-        <div class="bigDivider"></div>
-        <div class="buttonContainer">
-          <a href="{% url 'MovieSearchListView' %}" type="button" class="btn btn-dark btn-lg"><h2>See all movies</h2></a>
+            {% if actor %}
+              <h1>{{ actor }}</h1>
+              <div class="bigDivider"></div>
+              <h3>Firstname: </h3><input class="form-control" placeholder="{{ actor.firstname }}">
+              <div class="bigDivider"></div>
+              <h3>Lastname: </h3><input class="form-control" placeholder="{{ actor.lastname }}">
+
+              </br></br>
+              <h2>Related movies</h2>
+              <div class="bigDivider"></div>
+              <ul>
+                {% for movie in movies %}
+                  <li><a href="{% url 'MovieDetailView' movie.id %}"><h4>{{ movie }}</h4></a></li>
+                {% endfor %}
+              </ul>
+            {% endif %}
+            {% if not actor %}
+              <h2> Actor doesn't exist. </h2>
+            {% endif %}
         </div>
         {% endblock %}
       </div>

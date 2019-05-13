@@ -1,3 +1,4 @@
+import operator
 from django.shortcuts import render
 
 from django.http import Http404, HttpResponse
@@ -9,19 +10,13 @@ from rest_framework.reverse import reverse
 from rest_framework import generics
 from rest_framework import permissions
 from django.shortcuts import get_object_or_404
+from django.db.models import Q
 
 from movieapi.app.permissions import IsOwnerOrReadOnly
 from django.contrib.auth.models import User
 from movieapi.app.models import Movie, Review, Comment, Actor, Category
 from movieapi.app.serializers import UserSerializer, MovieSerializer, ReviewSerializer, CommentSerializer, ActorSerializer, CategorySerializer
 from drf_hal_json.views import HalCreateModelMixin
-
-"""
-TODO:
-- Comment
-- Add all the models
-- Remove unused imports
-"""
 
 
 """
@@ -275,15 +270,119 @@ class CategoryDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
 
+class MovieSearchListView(MovieList):
+    """
+    Display a Movie List page filtered by the search query.
+    """
+    paginate_by = 10
+
+    def get_queryset(self):
+        result = super(MovieSearchListView, self).get_queryset()
+
+        query = self.request.GET.get('q')
+        if query:
+            query_list = query.split()
+            result = result.filter(
+                reduce(operator.and_,
+                       (Q(title__icontains=q) for q in query_list)) |
+                reduce(operator.and_,
+                       (Q(content__icontains=q) for q in query_list))
+            )
+
+        return result
+
+
 """
-TEMPLATES
+TEMPLATES (HTML)
 """
 def index(request):
-    """View function for home page of site."""
+    """View function for main page of site."""
 
+    # Populate the context
     context = {
         'version': 0.1,
     }
 
     # Render the HTML template index.html with the data in the context variable
     return render(request, 'index.html', context=context)
+
+
+def MovieSearchListView(request):
+    """View function for search page for movies."""
+
+    query = request.GET.get('q')
+    movies = None
+    q = None
+
+    # Partial sentence match (Source: dani herrera, https://stackoverflow.com/questions/11594010/django-text-search-with-partial-sentence-match)
+    if query:
+        for word in query.split():
+            q_aux = Q( title__icontains = word )
+            q = ( q_aux & q ) if bool( q ) else q_aux
+            movies = Movie.objects.filter(q)
+    else:
+        movies = Movie.objects.all()
+        query = ""
+
+    # Populate the context
+    context = {
+        'query': query,
+        'movies': movies
+    }
+
+    # Render the HTML template index.html with the data in the context variable
+    return render(request, 'movie_search_list_view.html', context=context)
+
+
+def MovieDetailView(request, pk):
+    """View function for Movie Detail page."""
+
+    # Check if id is available
+    if pk:
+        movie = Movie.objects.get(id=pk)
+        reviews = Review.objects.filter(movie=movie) # Get the related reviews to the movie
+
+    # Populate the context
+    context = {
+        'movie': movie,
+        'reviews': reviews
+    }
+
+    # Render the HTML template index.html with the data in the context variable
+    return render(request, 'movie_detail.html', context=context)
+
+
+def ActorDetailView(request, pk):
+    """View function for Actor Detail page."""
+
+    # Check if id is available
+    if pk:
+        actor = Actor.objects.get(id=pk)
+        movies = Movie.objects.filter(actors=actor) # Get the related movies to this actor
+
+    # Populate the context
+    context = {
+        'actor': actor,
+        'movies': movies
+    }
+
+    # Render the HTML template index.html with the data in the context variable
+    return render(request, 'actor_detail.html', context=context)
+
+
+def CategoryDetailView(request, pk):
+    """View function for Category Detail page."""
+
+    # Check if id is available
+    if pk:
+        category = Category.objects.get(id=pk)
+        movies = Movie.objects.filter(categories=category) # Get the related movies to this category
+
+    # Populate the context
+    context = {
+        'category': category,
+        'movies': movies
+    }
+
+    # Render the HTML template index.html with the data in the context variable
+    return render(request, 'category_detail.html', context=context)

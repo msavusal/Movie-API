@@ -99,6 +99,10 @@ urlpatterns = [
         views.UserDetailActorsList.as_view(),
         name='user-detail-actors-list'),
 
+    path('movielist/', views.MovieSearchListView, name='MovieSearchListView'),
+    path('moviedetail/<int:pk>', views.MovieDetailView, name='MovieDetailView'),
+    path('actordetail/<int:pk>', views.ActorDetailView, name='ActorDetailView'),
+    path('categorydetail/<int:pk>', views.CategoryDetailView, name='CategoryDetailView'),
     path('', views.index, name='index'),
 
     path('api-auth/', include('rest_framework.urls')),
