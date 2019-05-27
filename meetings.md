@@ -89,22 +89,6 @@ scenarios the project was in a good state.
 ### Comments from staff
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
 
-## Midterm meeting
-* **DATE:**
-* **ASSISTANTS:**
-* **GRADE:** *To be filled by course staff*
-
-### Minutes
-*Summary of what was discussed during the meeting*
-
-### Action points
-*List here the actions points discussed with assistants*
-
-
-### Comments from staff
-*ONLY USED BY COURSE STAFF: Additional comments from the course staff*
-
-
 ## Final meeting
 * **DATE: 16.05.2019**
 * **ASSISTANTS: Mika Oja**
@@ -112,8 +96,8 @@ scenarios the project was in a good state.
 
 ### Minutes
 
- Koko pisteytys:
-1. Related workissä on ohjeistustekstiä 4 puuttuu, sovelluksia, konk esimerkit
+Koko pisteytys:
+1. Related workissä on ohjeistustekstiä 4 puuttuu, sovelluksia, konkreettiset esimerkit
 2. Melkein täydet pisteet, kommentit
 3. Error viesteissä kaikki paitsi 400 bad request, hal, meidän apin kannalta stateless ei toteudu/ ei ole määritelty, periaatteessa stateful koska user säilyy serverside, create actor list ei pitäisi tulla statesta, autentikaatio header tai json, apikey taulukosta pitäisi voida lukea, jos machine client ei tallenna cookie, hyvin kuitenkin pisteistä 2 kommentit koodissa
 4. Serializerissa docstring, koodin kommentointi puutteellista 2 ei ole kuvattu dokumentit
@@ -123,7 +107,6 @@ Kannattaa tehdä client jos haluaa nostaa arvosanan kolmesta neljään
 
 ### Action points
 * Possible client
-
 
 ### Comments from staff
 *ONLY USED BY COURSE STAFF: Additional comments from the course staff*
