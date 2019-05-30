@@ -13,10 +13,10 @@ from movieapi.app import views
 from drf_hal_json import LINKS_FIELD_NAME, EMBEDDED_FIELD_NAME
 
 
+class MovieTestCase(APITestCase):
 """
 Test case for Movie model
 """
-class MovieTestCase(APITestCase):
     TESTSERVER_URL = "http://testserver"
     url = reverse('movie-list')
 
@@ -214,10 +214,10 @@ class MovieTestCase(APITestCase):
         self.client.logout()
 
 
+class ReviewTestCase(APITestCase):
 """
 Test case for Review model
 """
-class ReviewTestCase(APITestCase):
     TESTSERVER_URL = "http://testserver"
     url = reverse('review-list')
 
@@ -414,10 +414,10 @@ class ReviewTestCase(APITestCase):
         self.client.logout()
 
 
+class CommentTestCase(APITestCase):
 """
 Test case for Comment model
 """
-class CommentTestCase(APITestCase):
     TESTSERVER_URL = "http://testserver"
     url = reverse('comment-list')
 
@@ -615,10 +615,10 @@ class CommentTestCase(APITestCase):
         self.client.logout()
 
 
+class ActorTestCase(APITestCase):
 """
 Test case for Actor model
 """
-class ActorTestCase(APITestCase):
     TESTSERVER_URL = "http://testserver"
     url = reverse('actor-list')
 
@@ -808,10 +808,10 @@ class ActorTestCase(APITestCase):
         self.client.logout()
 
 
+class CategoryTestCase(APITestCase):
 """
 Test case for Category model
 """
-class CategoryTestCase(APITestCase):
     TESTSERVER_URL = "http://testserver"
     url = reverse('category-list')
 

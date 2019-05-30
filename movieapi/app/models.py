@@ -1,10 +1,10 @@
 from django.db import models
 
 
-"""
-Category model
-"""
 class Category(models.Model):
+    """
+    Category model
+    """
     created = models.DateTimeField(auto_now_add=True)
     name = models.CharField(max_length=100, blank=True, default='')
 
@@ -15,10 +15,10 @@ class Category(models.Model):
         return self.name
 
 
-"""
-Actor model
-"""
 class Actor(models.Model):
+    """
+    Actor model
+    """
     created = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey('auth.User', related_name='actors', on_delete=models.CASCADE, blank=True, null=True)
     firstname = models.CharField(max_length=100, blank=True, default='')
@@ -31,10 +31,10 @@ class Actor(models.Model):
         return self.firstname + " " + self.lastname
 
 
-"""
-Movie model
-"""
 class Movie(models.Model):
+    """
+    Movie model
+    """
     created = models.DateTimeField(auto_now_add=True)
     title = models.CharField(max_length=200, blank=True, default='untitled')
     length = models.CharField(max_length=10, blank=True, default='00:00:00')
@@ -50,10 +50,10 @@ class Movie(models.Model):
         return self.title
 
 
-"""
-Review model
-"""
 class Review(models.Model):
+    """
+    Review model
+    """
     created = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey('auth.User', related_name='reviews', on_delete=models.CASCADE, blank=True, null=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
@@ -67,10 +67,10 @@ class Review(models.Model):
         return "Review for " + self.movie.title
 
 
-"""
-Comment model
-"""
 class Comment(models.Model):
+    """
+    Comment model
+    """
     created = models.DateTimeField(auto_now_add=True)
     author = models.ForeignKey('auth.User', related_name='comments', on_delete=models.CASCADE, blank=True, null=True)
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)

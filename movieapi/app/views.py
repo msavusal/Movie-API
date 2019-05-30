@@ -19,11 +19,12 @@ from movieapi.app.serializers import UserSerializer, MovieSerializer, ReviewSeri
 from drf_hal_json.views import HalCreateModelMixin
 
 
-"""
-MAIN VIEW
-"""
 @api_view(['GET'])
 def api_root(request, format=None):
+    """
+    MAIN VIEW
+    """
+
     return Response({
         'users': reverse('user-list', request=request, format=format),
         'groups': reverse('group-list', request=request, format=format),
@@ -35,10 +36,11 @@ def api_root(request, format=None):
     })
 
 
-"""
-USER - Class-based views
-"""
 class UserList(generics.ListCreateAPIView):
+    """
+    USERLIST - Class-based view for user list
+    """
+
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -97,10 +99,11 @@ class UserDetailCommentsList(generics.ListCreateAPIView):
         return queryset
 
 
-"""
-MOVIE - Class-based views
-"""
 class MovieList(generics.ListCreateAPIView):
+    """
+    MOVIELIST - Class-based view for movie list
+    """
+
     queryset = Movie.objects.all()
     serializer_class = MovieSerializer
     #permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -198,10 +201,11 @@ class MovieDetailCommentsDetail(generics.RetrieveUpdateDestroyAPIView):
         return Response(serializer.data)
 
 
-"""
-REVIEW - Class-based views
-"""
 class ReviewList(generics.ListCreateAPIView):
+    """
+    REVIEWLIST - Class-based view for review list
+    """
+
     queryset = Review.objects.all()
     serializer_class = ReviewSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -218,10 +222,11 @@ class ReviewDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 
 
-"""
-COMMENT - Class-based views
-"""
 class CommentList(generics.ListCreateAPIView):
+    """
+    COMMENTLIST - Class-based view for comment list
+    """
+
     queryset = Comment.objects.all()
     serializer_class = CommentSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -237,10 +242,11 @@ class CommentDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 
 
-"""
-ACTOR - Class-based views
-"""
 class ActorList(generics.ListCreateAPIView):
+    """
+    ACTOR - Class-based view for actor list
+    """
+
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -256,10 +262,11 @@ class ActorDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly,)
 
 
-"""
-CATEGORY - Class-based views
-"""
 class CategoryList(generics.ListCreateAPIView):
+    """
+    CATEGORY - Class-based view for category list
+    """
+
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
     permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
@@ -292,9 +299,9 @@ class MovieSearchListView(MovieList):
         return result
 
 
-"""
-TEMPLATES (HTML)
-"""
+
+# TEMPLATES (HTML)
+
 def index(request):
     """View function for main page of site."""
 
